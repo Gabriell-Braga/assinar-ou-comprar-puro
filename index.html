@@ -1,0 +1,542 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        <style type="text/tailwindcss">
+            .size-control{
+                @apply xl:min-w-[1050px] xl:w-[1050px] xl:p-0 px-5 w-full min-w-full;
+            }
+
+            .form-group input, .form-group select {
+                @apply bg-white mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out !outline-none;
+            }
+        </style>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="global.css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="script.js"></script>
+    </head>
+    <body class="flex flex-col items-center justify-start min-h-screen h-fit bg-white">
+        <!-- INFORMAÇÕES BÁSICAS -->
+        <div class="size-control my-16">
+            <h1 class="text-6xl font-bold text-blue-500 max-w-4/5 border-l-4 border-yellow-500 pl-4">ASSINAR OU COMPRAR UM CARRO?</h1>
+            <hr class="my-4 border-gray-300" />
+            <form id="basic-form" class="w-1/3">
+                <div class="form-group mb-5">
+                    <label for="modelo" class="block text-lg font-medium text-gray-700">Escolha o modelo do carro</label>
+                    <select required name="modelo" class="" id="modelo">
+                        <option value="">Selecione um modelo</option>
+                        <option value="modelo1">Modelo 1</option>
+                        <option value="modelo2">Modelo 2</option>
+                        <option value="modelo3">Modelo 3</option>
+                    </select>
+                </div>
+                <div class="form-group mb-5">
+                    <label for="periodo" class="block text-lg font-medium text-gray-700">Período</label>
+                    <select required name="periodo" class="" id="periodo">
+                        <option value="">Selecione um período</option>
+                        <option value="12" selected>12 meses</option>
+                        <option value="24">24 meses</option>
+                        <option value="36">36 meses</option>
+                    </select>
+                </div>
+                <div class="form-group mb-5">
+                    <label for="uso_mensal" class="block text-lg font-medium text-gray-700">Uso mensal</label>
+                    <select required name="uso_mensal" class="" id="uso_mensal">
+                        <option value="">Selecione um uso mensal</option>
+                        <option value="1000" selected>1000 Km/mês</option>
+                        <option value="1500">1500 Km/mês</option>
+                        <option value="2000">2000 Km/mês</option>
+                        <option value="2500">2500 Km/mês</option>
+                        <option value="3000">3000 Km/mês</option>
+                    </select>
+                </div>
+                <div class="form-group mb-5">
+                    <label for="preco" class="block text-lg font-medium text-gray-700">
+                        Preço público mercado 0KM
+                        <div class="tooltip-container ml-2">
+                            <i class="fa-solid fa-circle-question text-blue-500"></i>
+                            <div class="tooltip-content">
+                                Preço de tabela do veículo vendido no site oficial
+                            </div>
+                        </div>
+                    </label>
+                    <input required type="number" name="preco" class="" id="preco"/>
+                </div>
+
+                <button class="mt-5 text-blue-500 font-semibold cursor-pointer hover:underline transition duration-300 ease-in-out text-lg" id="submit-button">Próximo ↓</button>
+            </form>
+        </div>
+
+        <!-- INFORMAÇÕES COMPLEMENTARES -->
+        <div class="bg-blue-50 py-10 w-full flex flex-col items-center justify-center hidden">
+            <form class="size-control flex flex-col justify-center items-center gap-16" id="form-complementary">
+                <!-- ASSINATURA -->
+                <div class="w-full">
+                    <h2 class="text-3xl font-bold text-blue-500 border-l-4 border-yellow-500 pl-3 mb-2">ASSINATURA</h2>
+                    <div class="flex flex-row justify-start items-center w-full gap-5">
+                        <div class="form-group w-full max-w-1/3">
+                            <label for="parcelas_iniciais" class="block text-lg font-medium text-gray-700">Parcelas Iniciais</label>
+                            <input type="number" name="parcelas_iniciais" id="parcelas_iniciais"/>
+                        </div>
+                        <div class="form-group w-full max-w-1/3">
+                            <label for="parcelas_restantes" class="block text-lg font-medium text-gray-700">Parcelas restantes</label>
+                            <input type="number" name="parcelas_restantes" id="parcelas_restantes"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PAGAMENTO À VISTA -->
+                <div class="w-full">
+                    <h2 class="text-3xl font-bold text-blue-500 border-l-4 border-yellow-500 pl-3 mb-2">PAGAMENTO À VISTA</h2>
+                    <div class="flex flex-row items-end w-full gap-5">
+                        <div class="form-group w-full">
+                            <label for="seguro" class="block text-lg font-medium text-gray-700">
+                                Seguro
+                                <div class="tooltip-container ml-2">
+                                    <i class="fa-solid fa-circle-question text-blue-500"></i>
+                                    <div class="tooltip-content">
+                                        SEGURO <br>
+                                        O custo do seguro é em média de 4% do preço de compra do carro. No Livre, você não se preocupa com seguro.
+                                    </div>
+                                </div>
+                            </label>
+                            <div class="min-h-16">
+                                <input type="number" name="seguro" id="seguro"/>
+                                <small>R$  no Total</small>
+                            </div>                            
+                        </div>
+                        <div class="form-group w-full">
+                            <label for="ipva" class="block text-lg font-medium text-gray-700">IPVA</label>
+                            <div class="min-h-16">
+                                <input type="number" name="ipva" id="ipva"/>
+                                <small>R$  no Total</small>
+                            </div>
+                        </div>
+                        <div class="form-group w-full">
+                            <label for="licenciamento_seguro" class="block text-lg font-medium text-gray-700">Licenciamento + Seguro obrigatório</label>
+                            <div class="min-h-16">
+                                <input type="number" name="licenciamento_seguro" id="licenciamento_seguro"/>
+                            </div>
+                        </div>
+                        <div class="form-group w-full">
+                            <label for="emplacamento" class="block text-lg font-medium text-gray-700">
+                                Emplacamento
+                                <div class="tooltip-container ml-2">
+                                    <i class="fa-solid fa-circle-question text-blue-500"></i>
+                                    <div class="tooltip-content">
+                                        EMPLACAMENTO <br>
+                                        O valor do emplacamento e despachante é cobrado somente no 1° ano do carro e custa em média R$ 450,00. No Livre, você não tem esse custo.
+                                    </div>
+                                </div>
+                            </label>
+                            <div class="min-h-16">
+                                <input type="number" name="emplacamento" id="emplacamento"/>
+                            </div>
+                        </div>
+                        <div class="form-group w-full">
+                            <label for="manutencao" class="block text-lg font-medium text-gray-700">
+                                Manutenção mensal
+                                <div class="tooltip-container ml-2">
+                                    <i class="fa-solid fa-circle-question text-blue-500"></i>
+                                    <div class="tooltip-content">
+                                        MANUTENÇÃO MENSAL <br>
+                                        O custo de manutenção são as revisões previstas em manual (a cada 10.000 KM para a maioria dos carros e a cada 12.000 KM para Renegade e Compass) feitas na concessionária somado a troca dos pneus a cada 40.000 KM. No Livre, você não se preocupa com as despesas de manutenção preventiva.
+                                    </div>
+                                </div>
+                            </label>
+                            <div class="min-h-16">
+                                <input type="number" name="manutencao" id="manutencao"/>
+                                <small>R$  no Total</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FINANCIAMENTO -->
+                <div class="w-full">
+                    <h2 class="text-3xl font-bold text-blue-500 border-l-4 border-yellow-500 pl-3 mb-2">FINANCIAMENTO</h2>
+                    <div class="flex flex-row justify-start items-center w-full gap-5">
+                        <div class="form-group w-full max-w-1/3">
+                            <label for="entrada" class="block text-lg font-medium text-gray-700">
+                                Entrada
+                                <div class="tooltip-container ml-2">
+                                    <i class="fa-solid fa-circle-question text-blue-500"></i>
+                                    <div class="tooltip-content">
+                                        VALOR TOTAL DE ENTRADA <br>
+                                        Consideramos a entrada do financiamento de 30% do preço ofertado pela montadora. Na compra do carro à vista e no Unidas Livre, não há valor de entrada.
+                                    </div>
+                                </div>
+                            </label>
+                            <div class="min-h-16">
+                                <input type="number" name="entrada" id="entrada"/>
+                                <small>R$</small>
+                            </div>
+                        </div>
+                        <div class="form-group w-full max-w-1/3">
+                            <label for="taxa_am" class="block text-lg font-medium text-gray-700">Taxa a.m.</label>
+                            <div class="min-h-16">
+                                <input type="number" name="taxa_am" id="taxa_am"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- RESULTADO -->
+        <div class="size-control my-16 hidden">
+            <h2 class="text-5xl font-bold text-blue-500 max-w-3/5 border-l-4 border-yellow-500 pl-4">RESULTADO</h2>
+
+            <!-- GRÁFICO -->
+            <div class="w-full flex flex-col items-center justify-center mt-12">
+                <span class="text-medium">Valor corrigido ao final do período</span>
+                <div class="w-full h-96 bg-gray-50 flex items-end justify-between gap-10 mt-8 bg-[repeating-linear-gradient(to_bottom,#ddd_0px,#ddd_1px,#fbf9fa_1px,#fbf9fa_35px)]">
+                    <div class="w-full h-full flex flex-col items-center justify-end bg-blue-900 text-white p-4 gap-5">
+                        <p>Compra financiada</p>
+                        <span class="text-2xl font-bold">R$ 0,00</span>
+                    </div>
+                    <div class="w-full h-5/6 flex flex-col items-center justify-end bg-blue-900 text-white p-4 gap-5">
+                        <p>Compra à vista</p>
+                        <span class="text-2xl font-bold">R$ 0,00</span>
+                    </div>
+                    <div class="w-full h-2/6 flex flex-col items-center justify-end bg-blue-900 text-white p-4 gap-5">
+                        <p>Assinatura</p>
+                        <span class="text-2xl font-bold">R$ 0,00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMPARAÇÃO -->
+            <div class="flex justify-center items-stretch gap-5 mt-24">
+                <!-- COMPRA FINANCIADA RESULTADO -->
+                <div class="w-full rounded-xl shadow-lg bg-white p-5 border border-gray-200">
+                    <div class="flex justify-start items-center gap-3 mb-5 text-blue-500 text-2xl">
+                        <i class="fa-solid fa-calculator"></i>
+                        <h3 class="font-bold">COMPRA FINANCIADA</h3>
+                    </div>
+                    <hr class="mb-5 border-gray-300" />
+                    <div class="flex flex-col">
+                        <span class="text-xl font-bold text-blue-500 mb-2">
+                            R$ 0,00
+                            <div class="tooltip-container ml-2">
+                                <i class="fa-solid fa-circle-question text-blue-500"></i>
+                                <div class="tooltip-content">
+                                    R$ 0,00 Seguro
+                                    + R$ 0,00 IPVA
+                                    + R$ 0,00 Licenciamento+DPVAT
+                                    + R$ 0,00 Emplacamento
+                                    + R$ 0,00 Manutenção
+                                    + R$ 0,00 Depreciação
+                                    + R$ 0,00 Custo oportunidade
+                                    + R$ 0,00 Custo juros
+                                </div>
+                            </div>
+                        </span>
+                        <small class="text-gray-400">Seguro + IPVA + Licenciamento e DPVAT + Emplacamento + Manutenção + Depreciação + Custo oportunidade + Custo juros</small>
+                    </div>
+                    <div class="flex flex-col mt-5">
+                        <span class="text-lg/120%">
+                            Seguro: <br>
+                            R$ 0,00
+                            <div class="tooltip-container ml-2">
+                                <i class="fa-solid fa-circle-question text-blue-500"></i>
+                                <div class="tooltip-content">
+                                    SEGURO <br>
+                                    O custo do seguro é em média de 4% do preço de compra do carro. No Livre, você não se preocupa com seguro.
+                                </div>
+                            </div>
+                        </span>
+                        <small class="text-gray-400">* R$ 0,00 no 1º ano</small>
+                    </div>
+                    <div class="flex flex-col mt-5">
+                        <span class="text-lg/120%">
+                            IPVA: <br>
+                            R$ 0,00
+                            <div class="tooltip-container ml-2">
+                                <i class="fa-solid fa-circle-question text-blue-500"></i>
+                                <div class="tooltip-content">
+                                    DOCUMENTAÇÃO <br>
+                                    O custo da documentação é anual. Sendo: o IPVA em média 4% do valor de compra do veículo (varia conforme estado), o licenciamento em média R$ 150,00 (varia conforme estado) e o DPVAT de R$ 16,21, independente da localidade. No Livre, todos os custos de manutenção estão inclusos na mensalidade.
+                                </div>
+                            </div>
+                        </span>
+                        <small class="text-gray-400">* R$ 0,00 no 1º ano</small>
+                    </div>
+                    <div class="flex flex-col mt-5">
+                        <span class="text-lg/120%">
+                            Licenciamento + DPVAT: <br>
+                            R$ 0,00
+                            <div class="tooltip-container ml-2">
+                                <i class="fa-solid fa-circle-question text-blue-500"></i>
+                                <div class="tooltip-content">
+                                    LICENCIAMENTO + DPVAT <br>
+                                    O licenciamento em média R$100,00 (varia conforme o estado) e o DPVAT de R$ 16,21 independente da localidade.
+                                </div>
+                            </div>
+                        </span>
+                        <small class="text-gray-400">* R$ 0,00 no 1º ano</small>
+                    </div>
+                    <div class="flex flex-col mt-5">
+                        <span class="text-lg/120%">
+                            Emplacamento: <br>
+                            R$ 0,00
+                            <div class="tooltip-container ml-2">
+                                <i class="fa-solid fa-circle-question text-blue-500"></i>
+                                <div class="tooltip-content">
+                                    EMPLACAMENTO <br>
+                                    O valor do emplacamento e despachante é cobrado somente no 1° ano do carro e custa em média R$ 450,00. No Livre, você não tem esse custo.
+                                </div>
+                            </div>
+                        </span>
+                        <small class="text-gray-400">* Apenas no primeiro mês</small>
+                    </div>
+                    <div class="flex flex-col mt-5">
+                        <span class="text-lg/120%">
+                            Manutenção: <br>
+                            R$ 0,00
+                            <div class="tooltip-container ml-2">
+                                <i class="fa-solid fa-circle-question text-blue-500"></i>
+                                <div class="tooltip-content">
+                                    MANUTENÇÃO <br>
+                                    O custo de manutenção são as revisões previstas em manual (a cada 10.000 KM para a maioria dos carros e a cada 12.000 KM para Renegade e Compass) feitas na concessionária somado a troca dos pneus a cada 40.000 KM. No Livre, você não se preocupa com as despesas de manutenção preventiva.
+                                </div>
+                            </div>
+                        </span>
+                        <small class="text-gray-400">* R$ 0,00/mês</small>
+                    </div>
+                    <div class="flex flex-col mt-5">
+                        <span class="text-lg/120%">
+                            Depreciação: <br>
+                            R$ 0,00
+                            <div class="tooltip-container ml-2">
+                                <i class="fa-solid fa-circle-question text-blue-500"></i>
+                                <div class="tooltip-content">
+                                    Valor de compra do carro: <br>
+                                    R$ 100.000,00
+                                    <div class="mt-2 w-full"></div>
+                                    Valor de venda após 12 meses: <br>
+                                    R$ 100.000,00
+                                    <div class="mt-2 w-full"></div>
+                                    Resultado da perda: <br>
+                                    R$ 0,00
+                                </div>
+                            </div>
+                        </span>
+                        <small class="text-gray-400">Valor a ser depreciado em 12 meses</small>
+                    </div>
+                    <div class="flex flex-col mt-5">
+                        <span class="text-lg/120%">
+                            Custo de oportunidade financiamento: <br>
+                            R$ 0,00
+                            <div class="tooltip-container ml-2">
+                                <i class="fa-solid fa-circle-question text-blue-500"></i>
+                                <div class="tooltip-content">
+                                    O custo de oportunidade é o valor que você ganharia caso tivesse investido a grana da compra do carro ou da entrada (em caso de financiamento) no tesouro direto. No Livre, você não se preocupa com o alto investimento de comprar um carro e pode aplicar o seu dinheiro em outro sonho!
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="flex flex-col mt-5">
+                        <span class="text-lg/120%">
+                            Custo do juros: <br>
+                            R$ 0,00
+                        </span>
+                        <small class="text-gray-400">* Juros de 0.0% por 12 meses</small>
+                    </div>
+                </div>
+
+                <!-- COMPRA À VISTA RESULTADO -->
+                <div class="w-full rounded-xl shadow-lg bg-white p-5 border border-gray-200">
+                    <div class="flex justify-start items-center gap-3 mb-5 text-blue-500 text-2xl">
+                        <i class="fa-solid fa-dollar-sign"></i>
+                        <h3 class="font-bold">COMPRA À VISTA</h3>
+                    </div>
+                    <hr class="mb-5 border-gray-300" />
+                    <div class="flex flex-col">
+                        <span class="text-xl font-bold text-blue-500 mb-2">
+                            R$ 0,00
+                            <div class="tooltip-container ml-2">
+                                <i class="fa-solid fa-circle-question text-blue-500"></i>
+                                <div class="tooltip-content">
+                                    R$ 0,00 Seguro
+                                    + R$ 0,00 IPVA
+                                    + R$ 0,00 Licenciamento+DPVAT
+                                    + R$ 0,00 Emplacamento
+                                    + R$ 0,00 Manutenção
+                                    + R$ 0,00 Depreciação
+                                    + R$ 0,00 Custo oportunidade
+                                    + R$ 0,00 Custo juros
+                                </div>
+                            </div>
+                        </span>
+                        <small class="text-gray-400">Seguro + IPVA + Licenciamento e DPVAT + Emplacamento + Manutenção + Depreciação + Custo oportunidade + Custo juros</small>
+                    </div>
+                    <div class="flex flex-col mt-5">
+                        <span class="text-lg/120%">
+                            Seguro: <br>
+                            R$ 0,00
+                            <div class="tooltip-container ml-2">
+                                <i class="fa-solid fa-circle-question text-blue-500"></i>
+                                <div class="tooltip-content">
+                                    SEGURO <br>
+                                    O custo do seguro é em média de 4% do preço de compra do carro. No Livre, você não se preocupa com seguro.
+                                </div>
+                            </div>
+                        </span>
+                        <small class="text-gray-400">* R$ 0,00 no 1º ano</small>
+                    </div>
+                    <div class="flex flex-col mt-5">
+                        <span class="text-lg/120%">
+                            IPVA: <br>
+                            R$ 0,00
+                            <div class="tooltip-container ml-2">
+                                <i class="fa-solid fa-circle-question text-blue-500"></i>
+                                <div class="tooltip-content">
+                                    DOCUMENTAÇÃO <br>
+                                    O custo da documentação é anual. Sendo: o IPVA em média 4% do valor de compra do veículo (varia conforme estado), o licenciamento em média R$ 150,00 (varia conforme estado) e o DPVAT de R$ 16,21, independente da localidade. No Livre, todos os custos de manutenção estão inclusos na mensalidade.
+                                </div>
+                            </div>
+                        </span>
+                        <small class="text-gray-400">* R$ 0,00 no 1º ano</small>
+                    </div>
+                    <div class="flex flex-col mt-5">
+                        <span class="text-lg/120%">
+                            Licenciamento + DPVAT: <br>
+                            R$ 0,00
+                            <div class="tooltip-container ml-2">
+                                <i class="fa-solid fa-circle-question text-blue-500"></i>
+                                <div class="tooltip-content">
+                                    LICENCIAMENTO + DPVAT <br>
+                                    O licenciamento em média R$100,00 (varia conforme o estado) e o DPVAT de R$ 16,21 independente da localidade.
+                                </div>
+                            </div>
+                        </span>
+                        <small class="text-gray-400">* R$ 0,00 no 1º ano</small>
+                    </div>
+                    <div class="flex flex-col mt-5">
+                        <span class="text-lg/120%">
+                            Emplacamento: <br>
+                            R$ 0,00
+                            <div class="tooltip-container ml-2">
+                                <i class="fa-solid fa-circle-question text-blue-500"></i>
+                                <div class="tooltip-content">
+                                    EMPLACAMENTO <br>
+                                    O valor do emplacamento e despachante é cobrado somente no 1° ano do carro e custa em média R$ 450,00. No Livre, você não tem esse custo.
+                                </div>
+                            </div>
+                        </span>
+                        <small class="text-gray-400">* Apenas no primeiro mês</small>
+                    </div>
+                    <div class="flex flex-col mt-5">
+                        <span class="text-lg/120%">
+                            Manutenção: <br>
+                            R$ 0,00
+                            <div class="tooltip-container ml-2">
+                                <i class="fa-solid fa-circle-question text-blue-500"></i>
+                                <div class="tooltip-content">
+                                    MANUTENÇÃO <br>
+                                    O custo de manutenção são as revisões previstas em manual (a cada 10.000 KM para a maioria dos carros e a cada 12.000 KM para Renegade e Compass) feitas na concessionária somado a troca dos pneus a cada 40.000 KM. No Livre, você não se preocupa com as despesas de manutenção preventiva.
+                                </div>
+                            </div>
+                        </span>
+                        <small class="text-gray-400">* R$ 0,00/mês</small>
+                    </div>
+                    <div class="flex flex-col mt-5">
+                        <span class="text-lg/120%">
+                            Depreciação: <br>
+                            R$ 0,00
+                            <div class="tooltip-container ml-2">
+                                <i class="fa-solid fa-circle-question text-blue-500"></i>
+                                <div class="tooltip-content">
+                                    Valor de compra do carro: <br>
+                                    R$ 100.000,00
+                                    <div class="mt-2 w-full"></div>
+                                    Valor de venda após 12 meses: <br>
+                                    R$ 100.000,00
+                                    <div class="mt-2 w-full"></div>
+                                    Resultado da perda: <br>
+                                    R$ 0,00
+                                </div>
+                            </div>
+                        </span>
+                        <small class="text-gray-400">Média anual de todos os valores FIPE do modelo</small>
+                    </div>
+                    <div class="flex flex-col mt-5">
+                        <span class="text-lg/120%">
+                            Custo de oportunidade à vista: <br>
+                            R$ 0,00
+                            <div class="tooltip-container ml-2">
+                                <i class="fa-solid fa-circle-question text-blue-500"></i>
+                                <div class="tooltip-content">
+                                    O custo de oportunidade é o valor que você ganharia caso tivesse investido a grana da compra do carro ou da entrada (em caso de financiamento) no tesouro direto. No Livre, você não se preocupa com o alto investimento de comprar um carro e pode aplicar o seu dinheiro em outro sonho!
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- ASSINATURA RESULTADO -->
+                <div class="w-full rounded-xl shadow-lg bg-white p-5 border border-gray-200">
+                    <div class="flex justify-start items-center gap-3 mb-5 text-blue-500 text-2xl">
+                        <i class="fa-solid fa-car-rear"></i>
+                        <h3 class="font-bold">ASSINATURA</h3>
+                    </div>
+                    <hr class="mb-5 border-gray-300" />
+                    <div class="flex flex-col">
+                        <span class="text-xl font-bold text-blue-500 mb-2">
+                            R$ 0,00
+                            <div class="tooltip-container ml-2">
+                                <i class="fa-solid fa-circle-question text-blue-500"></i>
+                                <div class="tooltip-content">
+                                    Soma das mensalidades da assinatura
+                                </div>
+                            </div>
+                        </span>
+                        <small class="text-gray-400">Soma das 12 mensalidades <br> R$ 0,00 do 1º ao 8º mês <br> R$ 0,00 do 9º ao último mês</small>
+                    </div>
+                    <div class="flex flex-col mt-5">
+                        <span class="text-lg/120%">
+                            Custo Assinatura: <br>
+                            R$ 0,00
+                        </span>
+                        <small class="text-gray-400">Total dos custos de assinatura mensais</small>
+                    </div>
+                    <div class="flex flex-col mt-5">
+                        <span class="text-lg/120%">
+                            Custo rentabilidade assinatura: <br>
+                            R$ 0,00
+                        </span>
+                        <small class="text-gray-400">Diferença do investimento total para o custo de assinatura</small>
+                    </div>
+                    <div class="flex justify-start items-center gap-4 mb-5 mt-10">
+                        <div class="flex justify-center items-center min-w-16 w-16 h-16">
+                            <i class="fa-solid fa-car-side text-blue-500 text-5xl"></i>
+                        </div>
+                        <h3 class="font-medium">Manutenções preventivas de custo zero</h3>
+                    </div>
+                    <div class="flex justify-start items-center gap-4 mb-5">
+                        <div class="flex justify-center items-center min-w-16 w-16 h-16">
+                            <i class="fa-solid fa-clock text-blue-500 text-5xl"></i>
+                        </div>
+                        <h3 class="font-medium">Assistência 24h inclusa</h3>
+                    </div>
+                    <div class="flex justify-start items-center gap-4 mb-5">
+                        <div class="flex justify-center items-center min-w-16 w-16 h-16">
+                            <i class="fa-solid fa-id-card text-blue-500 text-5xl"></i>
+                        </div>
+                        <h3 class="font-medium">Sem gastos com documentação e despachante</h3>
+                    </div>
+                    <div class="flex justify-start items-center gap-4 mb-5">
+                        <div class="flex justify-center items-center min-w-16 w-16 h-16">
+                            <i class="fa-solid fa-money-bill text-blue-500 text-5xl"></i>
+                        </div>
+                        <h3 class="font-medium">Sem entrada e mensalidades fixas sem juros</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
