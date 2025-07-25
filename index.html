@@ -16,7 +16,6 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="global.css" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-        <script src="script.js"></script>
     </head>
     <body class="flex flex-col items-center justify-start min-h-screen h-fit bg-white">
         <!-- INFORMAÇÕES BÁSICAS -->
@@ -26,7 +25,7 @@
             <form id="basic-form" class="w-1/3">
                 <div class="form-group mb-5">
                     <label for="modelo" class="block text-lg font-medium text-gray-700">Escolha o modelo do carro</label>
-                    <select required name="modelo" class="" id="modelo">
+                    <select onchange="onFormChange()"required name="modelo" class="" id="modelo">
                         <option value="">Selecione um modelo</option>
                         <option value="modelo1">Modelo 1</option>
                         <option value="modelo2">Modelo 2</option>
@@ -35,7 +34,7 @@
                 </div>
                 <div class="form-group mb-5">
                     <label for="periodo" class="block text-lg font-medium text-gray-700">Período</label>
-                    <select required name="periodo" class="" id="periodo">
+                    <select onchange="onFormChange()"required name="periodo" class="" id="periodo">
                         <option value="">Selecione um período</option>
                         <option value="12" selected>12 meses</option>
                         <option value="24">24 meses</option>
@@ -44,7 +43,7 @@
                 </div>
                 <div class="form-group mb-5">
                     <label for="uso_mensal" class="block text-lg font-medium text-gray-700">Uso mensal</label>
-                    <select required name="uso_mensal" class="" id="uso_mensal">
+                    <select onchange="onFormChange()"required name="uso_mensal" class="" id="uso_mensal">
                         <option value="">Selecione um uso mensal</option>
                         <option value="1000" selected>1000 Km/mês</option>
                         <option value="1500">1500 Km/mês</option>
@@ -63,27 +62,27 @@
                             </div>
                         </div>
                     </label>
-                    <input required type="number" name="preco" class="" id="preco"/>
+                    <input onchange="onFormChange()" required type="number" name="preco" class="" id="preco"/>
                 </div>
 
-                <button class="mt-5 text-blue-500 font-semibold cursor-pointer hover:underline transition duration-300 ease-in-out text-lg" id="submit-button">Próximo ↓</button>
+                <button class="mt-5 text-blue-500 font-semibold cursor-pointer hover:underline transition duration-300 ease-in-out text-lg">Próximo ↓</button>
             </form>
         </div>
 
         <!-- INFORMAÇÕES COMPLEMENTARES -->
-        <div class="bg-blue-50 py-10 w-full flex flex-col items-center justify-center hidden">
-            <form class="size-control flex flex-col justify-center items-center gap-16" id="form-complementary">
+        <div class="bg-blue-50 py-16 w-full flex flex-col items-center justify-center hidden" id="step-2">
+            <form class="size-control flex flex-col justify-center items-center gap-20" id="complementary-form">
                 <!-- ASSINATURA -->
                 <div class="w-full">
                     <h2 class="text-3xl font-bold text-blue-500 border-l-4 border-yellow-500 pl-3 mb-2">ASSINATURA</h2>
                     <div class="flex flex-row justify-start items-center w-full gap-5">
                         <div class="form-group w-full max-w-1/3">
                             <label for="parcelas_iniciais" class="block text-lg font-medium text-gray-700">Parcelas Iniciais</label>
-                            <input type="number" name="parcelas_iniciais" id="parcelas_iniciais"/>
+                            <input onchange="onFormChange()" type="number" name="parcelas_iniciais" id="parcelas_iniciais"  required/>
                         </div>
                         <div class="form-group w-full max-w-1/3">
                             <label for="parcelas_restantes" class="block text-lg font-medium text-gray-700">Parcelas restantes</label>
-                            <input type="number" name="parcelas_restantes" id="parcelas_restantes"/>
+                            <input onchange="onFormChange()" type="number" name="parcelas_restantes" id="parcelas_restantes" required/>
                         </div>
                     </div>
                 </div>
@@ -104,21 +103,21 @@
                                 </div>
                             </label>
                             <div class="min-h-16">
-                                <input type="number" name="seguro" id="seguro"/>
-                                <small>R$  no Total</small>
+                                <input onchange="onFormChange()" type="number" name="seguro" id="seguro" value="4" required/>
+                                <small>R$ <span data-total="seguro"></span> no Total</small>
                             </div>                            
                         </div>
                         <div class="form-group w-full">
                             <label for="ipva" class="block text-lg font-medium text-gray-700">IPVA</label>
                             <div class="min-h-16">
-                                <input type="number" name="ipva" id="ipva"/>
-                                <small>R$  no Total</small>
+                                <input onchange="onFormChange()" type="number" name="ipva" id="ipva" value="4" required/>
+                                <small>R$ <span data-total="ipva"></span> no Total</small>
                             </div>
                         </div>
                         <div class="form-group w-full">
                             <label for="licenciamento_seguro" class="block text-lg font-medium text-gray-700">Licenciamento + Seguro obrigatório</label>
                             <div class="min-h-16">
-                                <input type="number" name="licenciamento_seguro" id="licenciamento_seguro"/>
+                                <input onchange="onFormChange()" type="number" name="licenciamento_seguro" id="licenciamento_seguro" value="150" required/>
                             </div>
                         </div>
                         <div class="form-group w-full">
@@ -133,7 +132,7 @@
                                 </div>
                             </label>
                             <div class="min-h-16">
-                                <input type="number" name="emplacamento" id="emplacamento"/>
+                                <input onchange="onFormChange()" type="number" name="emplacamento" id="emplacamento" value="450" required/>
                             </div>
                         </div>
                         <div class="form-group w-full">
@@ -148,8 +147,8 @@
                                 </div>
                             </label>
                             <div class="min-h-16">
-                                <input type="number" name="manutencao" id="manutencao"/>
-                                <small>R$  no Total</small>
+                                <input onchange="onFormChange()" type="number" name="manutencao" id="manutencao" required/>
+                                <small>R$ <span data-total="manutencao"></span> nos <span data-total="periodo"></span> meses</small>
                             </div>
                         </div>
                     </div>
@@ -171,23 +170,24 @@
                                 </div>
                             </label>
                             <div class="min-h-16">
-                                <input type="number" name="entrada" id="entrada"/>
-                                <small>R$</small>
+                                <input onchange="onFormChange()" type="number" name="entrada" id="entrada" value="30" required/>
+                                <small>R$ <span data-total="entrada"></span></small>
                             </div>
                         </div>
                         <div class="form-group w-full max-w-1/3">
                             <label for="taxa_am" class="block text-lg font-medium text-gray-700">Taxa a.m.</label>
                             <div class="min-h-16">
-                                <input type="number" name="taxa_am" id="taxa_am"/>
+                                <input onchange="onFormChange()" type="number" name="taxa_am" id="taxa_am" value="1.3" step="0.01" required/>
                             </div>
                         </div>
                     </div>
                 </div>
+                <button class="mt-5 text-blue-500 font-semibold cursor-pointer hover:underline transition duration-300 ease-in-out text-lg self-start">Ver Resultado ↓</button>
             </form>
         </div>
 
         <!-- RESULTADO -->
-        <div class="size-control my-16 hidden">
+        <div class="size-control my-16 hidden" id="result">
             <h2 class="text-5xl font-bold text-blue-500 max-w-3/5 border-l-4 border-yellow-500 pl-4">RESULTADO</h2>
 
             <!-- GRÁFICO -->
@@ -240,7 +240,7 @@
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
                             Seguro: <br>
-                            R$ 0,00
+                            R$ <span data-total="seguro"></span>
                             <div class="tooltip-container ml-2">
                                 <i class="fa-solid fa-circle-question text-blue-500"></i>
                                 <div class="tooltip-content">
@@ -249,12 +249,12 @@
                                 </div>
                             </div>
                         </span>
-                        <small class="text-gray-400">* R$ 0,00 no 1º ano</small>
+                        <small class="text-gray-400">* R$ <span data-total="seguro"></span> no 1º ano</small>
                     </div>
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
                             IPVA: <br>
-                            R$ 0,00
+                            R$ <span data-total="ipva"></span>
                             <div class="tooltip-container ml-2">
                                 <i class="fa-solid fa-circle-question text-blue-500"></i>
                                 <div class="tooltip-content">
@@ -263,12 +263,12 @@
                                 </div>
                             </div>
                         </span>
-                        <small class="text-gray-400">* R$ 0,00 no 1º ano</small>
+                        <small class="text-gray-400">* R$ <span data-total="ipva"></span> no 1º ano</small>
                     </div>
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
                             Licenciamento + DPVAT: <br>
-                            R$ 0,00
+                            R$ <span data-total="licenciamento_seguro"></span>
                             <div class="tooltip-container ml-2">
                                 <i class="fa-solid fa-circle-question text-blue-500"></i>
                                 <div class="tooltip-content">
@@ -277,12 +277,12 @@
                                 </div>
                             </div>
                         </span>
-                        <small class="text-gray-400">* R$ 0,00 no 1º ano</small>
+                        <small class="text-gray-400">* R$ <span data-total="licenciamento_seguro"></span> no 1º ano</small>
                     </div>
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
                             Emplacamento: <br>
-                            R$ 0,00
+                            R$ <span data-total="emplacamento"></span>
                             <div class="tooltip-container ml-2">
                                 <i class="fa-solid fa-circle-question text-blue-500"></i>
                                 <div class="tooltip-content">
@@ -296,7 +296,7 @@
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
                             Manutenção: <br>
-                            R$ 0,00
+                            R$ <span data-total="manutencao"></span>
                             <div class="tooltip-container ml-2">
                                 <i class="fa-solid fa-circle-question text-blue-500"></i>
                                 <div class="tooltip-content">
@@ -305,7 +305,7 @@
                                 </div>
                             </div>
                         </span>
-                        <small class="text-gray-400">* R$ 0,00/mês</small>
+                        <small class="text-gray-400">* R$ <span data-total="manutencao_mes"></span>/mês</small>
                     </div>
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
@@ -342,9 +342,9 @@
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
                             Custo do juros: <br>
-                            R$ 0,00
+                            R$ <span data-total="juros"></span>
                         </span>
-                        <small class="text-gray-400">* Juros de 0.0% por 12 meses</small>
+                        <small class="text-gray-400">* Juros de <span data-total="juros_taxa"></span> por <span data-total="periodo"></span> meses</small>
                     </div>
                 </div>
 
@@ -538,5 +538,6 @@
                 </div>
             </div>
         </div>
+        <script src="script.js"></script>
     </body>
 </html>
