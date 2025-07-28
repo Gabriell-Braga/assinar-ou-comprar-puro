@@ -31,6 +31,9 @@ let manutencaoMesElement;
 let jurosTotalElement;
 let jurosMesElement;
 let entradaTotalElement;
+let custoAssinaturaTotalElement;
+let assinatura1_8TotalElement;
+let assinatura9_12TotalElement;
 
 //elementos para inserir totais gerais
 let financiadaTotalElement;
@@ -64,6 +67,9 @@ $(document).ready(function() {
     jurosTotalElement = $('[data-total="juros"]');
     jurosMesElement = $('[data-total="juros_mes"]');
     entradaTotalElement = $('[data-total="entrada"]');
+    custoAssinaturaTotalElement = $('[data-total="custo_assinatura"]');
+    assinatura1_8TotalElement = $('[data-total="assinatura_1_8"]');
+    assinatura9_12TotalElement = $('[data-total="assinatura_9_12"]');
 
     //elementos para inserir totais gerais
     financiadaTotalElement = $('[data-total="financiada"]');
@@ -105,19 +111,30 @@ $(document).ready(function() {
 function onFormChange(){
     seguroTotal = seguroElement.value * precoElement.value / 100 ;
     ipvaTotal = ipvaElement.value * precoElement.value / 100;
-    manutencaoTotal = manutencaoElement.value * periodoElement.value / 100;
+    manutencaoTotal = manutencaoElement.value * periodoElement.value;
     parcelasTotal = (precoElement.value - (precoElement.value * entradaElement.value / 100)) / periodoElement.value;
     jurosTotal = parcelasTotal * taxaAMElement.value / 100;
     entradaTotal = entradaElement.value * precoElement.value / 100;
+
+    // Convert string values from input elements to numbers
+    const licenciamentoSeguroValue = parseFloat(licenciamentoSeguroElement.value);
+    const emplacamentoValue = parseFloat(emplacamentoElement.value);
 
     // Atualiza os valores totais
     periodoTotalElement.text(`${periodoElement.value}`);
     seguroTotalElement.text(`${seguroTotal.toFixed(2)}`);
     ipvaTotalElement.text(`${ipvaTotal.toFixed(2)}`);
-    licenciamentoSeguroTotalElement.text(`${licenciamentoSeguroElement.value}`);
-    emplacamentoTotalElement.text(`${emplacamentoElement.value}`);
+    licenciamentoSeguroTotalElement.text(`${licenciamentoSeguroValue.toFixed(2)}`); // Also fix toFixed here
+    emplacamentoTotalElement.text(`${emplacamentoValue.toFixed(2)}`); // Also fix toFixed here
     manutencaoMesElement.text(`${manutencaoElement.value}`);
     manutencaoTotalElement.text(`${manutencaoTotal.toFixed(2)}`);
-    
     entradaTotalElement.text(`${entradaTotal.toFixed(2)}`);
+    custoAssinaturaTotalElement.text(`${(parcelasIniciaisElement.value * 8 + parcelasRestantesElement.value * 4).toFixed(2)}`);
+    assinatura1_8TotalElement.text(`${parcelasIniciaisElement.value}`);
+    assinatura9_12TotalElement.text(`${parcelasRestantesElement.value}`);
+
+    const totalCalculatedValue = seguroTotal + ipvaTotal + manutencaoTotal + licenciamentoSeguroValue + emplacamentoValue;
+    financiadaTotalElement.text(`${totalCalculatedValue.toFixed(2)}`);
+    assinadaTotalElement.text(`${totalCalculatedValue.toFixed(2)}`); // Use the same calculated total
+    assinaturaTotalElement.text(`${(parseFloat(parcelasIniciaisElement.value) * 8 + parseFloat(parcelasRestantesElement.value) * 4).toFixed(2)}`);
 }
