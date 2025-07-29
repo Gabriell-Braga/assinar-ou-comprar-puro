@@ -104,14 +104,14 @@
                             </label>
                             <div class="min-h-16">
                                 <input onchange="onFormChange()" type="number" name="seguro" id="seguro" value="4" required/>
-                                <small>R$ <span data-total="seguro"></span> no Total</small>
+                                <small><span data-total="seguro"></span> no Total</small>
                             </div>                            
                         </div>
                         <div class="form-group w-full">
                             <label for="ipva" class="block text-lg font-medium text-gray-700">IPVA</label>
                             <div class="min-h-16">
                                 <input onchange="onFormChange()" type="number" name="ipva" id="ipva" value="4" required/>
-                                <small>R$ <span data-total="ipva"></span> no Total</small>
+                                <small><span data-total="ipva"></span> no Total</small>
                             </div>
                         </div>
                         <div class="form-group w-full">
@@ -127,7 +127,7 @@
                                     <i class="fa-solid fa-circle-question text-blue-500"></i>
                                     <div class="tooltip-content">
                                         EMPLACAMENTO <br>
-                                        O valor do emplacamento e despachante é cobrado somente no 1° ano do carro e custa em média R$ 450,00. No Livre, você não tem esse custo.
+                                        O valor do emplacamento e despachante é cobrado somente no 1° ano do carro e custa em média 450,00. No Livre, você não tem esse custo.
                                     </div>
                                 </div>
                             </label>
@@ -147,8 +147,8 @@
                                 </div>
                             </label>
                             <div class="min-h-16">
-                                <input onchange="onFormChange()" type="number" name="manutencao" id="manutencao" required/>
-                                <small>R$ <span data-total="manutencao"></span> nos <span data-total="periodo"></span> meses</small>
+                                <input onchange="onFormChange()" type="number" name="manutencao" id="manutencao" value="0" required/>
+                                <small><span data-total="manutencao"></span> nos <span data-total="periodo"></span> meses</small>
                             </div>
                         </div>
                     </div>
@@ -171,7 +171,7 @@
                             </label>
                             <div class="min-h-16">
                                 <input onchange="onFormChange()" type="number" name="entrada" id="entrada" value="30" required/>
-                                <small>R$ <span data-total="entrada"></span></small>
+                                <small><span data-total="entrada"></span></small>
                             </div>
                         </div>
                         <div class="form-group w-full max-w-1/3">
@@ -194,17 +194,17 @@
             <div class="w-full flex flex-col items-center justify-center mt-12">
                 <span class="text-medium">Valor corrigido ao final do período</span>
                 <div class="w-full h-96 bg-gray-50 flex items-end justify-between gap-10 mt-8 bg-[repeating-linear-gradient(to_bottom,#ddd_0px,#ddd_1px,#fbf9fa_1px,#fbf9fa_35px)]">
-                    <div class="w-full h-full flex flex-col items-center justify-end bg-blue-900 text-white p-4 gap-5">
+                    <div class="w-full h-full flex flex-col items-center justify-end bg-blue-900 text-white p-4 gap-5" id="chart-financiada">
                         <p>Compra financiada</p>
-                        <span class="text-2xl font-bold">R$ <span data-total="financiada"></span></span>
+                        <span class="text-2xl font-bold"><span data-total="financiada"></span></span>
                     </div>
-                    <div class="w-full h-5/6 flex flex-col items-center justify-end bg-blue-900 text-white p-4 gap-5">
+                    <div class="w-full h-5/6 flex flex-col items-center justify-end bg-blue-900 text-white p-4 gap-5" id="chart-vista">
                         <p>Compra à vista</p>
-                        <span class="text-2xl font-bold">R$ <span data-total="assinada"></span></span>
+                        <span class="text-2xl font-bold"><span data-total="vista"></span></span>
                     </div>
-                    <div class="w-full h-2/6 flex flex-col items-center justify-end bg-blue-900 text-white p-4 gap-5">
+                    <div class="w-full h-2/6 flex flex-col items-center justify-end bg-blue-900 text-white p-4 gap-5" id="chart-assinatura">
                         <p>Assinatura</p>
-                        <span class="text-2xl font-bold">R$ <span data-total="assinatura"></span></span>
+                        <span class="text-2xl font-bold"><span data-total="assinatura"></span></span>
                     </div>
                 </div>
             </div>
@@ -220,18 +220,18 @@
                     <hr class="mb-5 border-gray-300" />
                     <div class="flex flex-col">
                         <span class="text-xl font-bold text-blue-500 mb-2">
-                            R$ <span data-total="financiada"></span>
+                            <span data-total="financiada"></span>
                             <div class="tooltip-container ml-2">
                                 <i class="fa-solid fa-circle-question text-blue-500"></i>
                                 <div class="tooltip-content">
-                                    R$ 0,00 Seguro <br>
-                                    + R$ 0,00 IPVA <br>
-                                    + R$ 0,00 Licenciamento+DPVAT <br>
-                                    + R$ 0,00 Emplacamento <br>
-                                    + R$ 0,00 Manutenção <br>
-                                    + R$ 0,00 Depreciação <br>
-                                    + R$ 0,00 Custo oportunidade <br>
-                                    + R$ 0,00 Custo juros
+                                    <span data-total="seguro"></span> Seguro <br>
+                                    + <span data-total="ipva"></span> IPVA <br>
+                                    + <span data-total="licenciamento_seguro"></span> Licenciamento+DPVAT <br>
+                                    + <span data-total="emplacamento"></span> Emplacamento <br>
+                                    + <span data-total="manutencao"></span> Manutenção <br>
+                                    + <span data-total="depreciacao"></span> Depreciação <br>
+                                    + <span data-total="custo_oportunidade_financiada"></span> Custo oportunidade <br>
+                                    + <span data-total="juros"></span> Custo juros
                                 </div>
                             </div>
                         </span>
@@ -240,7 +240,7 @@
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
                             Seguro: <br>
-                            R$ <span data-total="seguro"></span>
+                            <span data-total="seguro"></span>
                             <div class="tooltip-container ml-2">
                                 <i class="fa-solid fa-circle-question text-blue-500"></i>
                                 <div class="tooltip-content">
@@ -249,45 +249,45 @@
                                 </div>
                             </div>
                         </span>
-                        <small class="text-gray-400">* R$ <span data-total="seguro"></span> no 1º ano</small>
+                        <small class="text-gray-400">* <span data-total="seguro"></span> no 1º ano</small>
                     </div>
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
                             IPVA: <br>
-                            R$ <span data-total="ipva"></span>
+                            <span data-total="ipva"></span>
                             <div class="tooltip-container ml-2">
                                 <i class="fa-solid fa-circle-question text-blue-500"></i>
                                 <div class="tooltip-content">
                                     DOCUMENTAÇÃO <br>
-                                    O custo da documentação é anual. Sendo: o IPVA em média 4% do valor de compra do veículo (varia conforme estado), o licenciamento em média R$ 150,00 (varia conforme estado) e o DPVAT de R$ 16,21, independente da localidade. No Livre, todos os custos de manutenção estão inclusos na mensalidade.
+                                    O custo da documentação é anual. Sendo: o IPVA em média 4% do valor de compra do veículo (varia conforme estado), o licenciamento em média 150,00 (varia conforme estado) e o DPVAT de 16,21, independente da localidade. No Livre, todos os custos de manutenção estão inclusos na mensalidade.
                                 </div>
                             </div>
                         </span>
-                        <small class="text-gray-400">* R$ <span data-total="ipva"></span> no 1º ano</small>
+                        <small class="text-gray-400">* <span data-total="ipva"></span> no 1º ano</small>
                     </div>
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
                             Licenciamento + DPVAT: <br>
-                            R$ <span data-total="licenciamento_seguro"></span>
+                            <span data-total="licenciamento_seguro"></span>
                             <div class="tooltip-container ml-2">
                                 <i class="fa-solid fa-circle-question text-blue-500"></i>
                                 <div class="tooltip-content">
                                     LICENCIAMENTO + DPVAT <br>
-                                    O licenciamento em média R$100,00 (varia conforme o estado) e o DPVAT de R$ 16,21 independente da localidade.
+                                    O licenciamento em média R$100,00 (varia conforme o estado) e o DPVAT de 16,21 independente da localidade.
                                 </div>
                             </div>
                         </span>
-                        <small class="text-gray-400">* R$ <span data-total="licenciamento_seguro"></span> no 1º ano</small>
+                        <small class="text-gray-400">* <span data-total="licenciamento_seguro"></span> no 1º ano</small>
                     </div>
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
                             Emplacamento: <br>
-                            R$ <span data-total="emplacamento"></span>
+                            <span data-total="emplacamento"></span>
                             <div class="tooltip-container ml-2">
                                 <i class="fa-solid fa-circle-question text-blue-500"></i>
                                 <div class="tooltip-content">
                                     EMPLACAMENTO <br>
-                                    O valor do emplacamento e despachante é cobrado somente no 1° ano do carro e custa em média R$ 450,00. No Livre, você não tem esse custo.
+                                    O valor do emplacamento e despachante é cobrado somente no 1° ano do carro e custa em média 450,00. No Livre, você não tem esse custo.
                                 </div>
                             </div>
                         </span>
@@ -296,7 +296,7 @@
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
                             Manutenção: <br>
-                            R$ <span data-total="manutencao"></span>
+                            <span data-total="manutencao"></span>
                             <div class="tooltip-container ml-2">
                                 <i class="fa-solid fa-circle-question text-blue-500"></i>
                                 <div class="tooltip-content">
@@ -305,23 +305,23 @@
                                 </div>
                             </div>
                         </span>
-                        <small class="text-gray-400">* R$ <span data-total="manutencao_mes"></span>/mês</small>
+                        <small class="text-gray-400">* <span data-total="manutencao_mes"></span>/mês</small>
                     </div>
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
                             Depreciação: <br>
-                            R$ 0,00
+                            0,00
                             <div class="tooltip-container ml-2">
                                 <i class="fa-solid fa-circle-question text-blue-500"></i>
                                 <div class="tooltip-content">
                                     Valor de compra do carro: <br>
-                                    R$ 100.000,00
+                                    100.000,00
                                     <div class="mt-2 w-full"></div>
                                     Valor de venda após 12 meses: <br>
-                                    R$ 100.000,00
+                                    100.000,00
                                     <div class="mt-2 w-full"></div>
                                     Resultado da perda: <br>
-                                    R$ 0,00
+                                    0,00
                                 </div>
                             </div>
                         </span>
@@ -330,7 +330,7 @@
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
                             Custo de oportunidade financiamento: <br>
-                            R$ 0,00
+                            <span data-total="custo_oportunidade_financiada"></span>
                             <div class="tooltip-container ml-2">
                                 <i class="fa-solid fa-circle-question text-blue-500"></i>
                                 <div class="tooltip-content">
@@ -342,7 +342,7 @@
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
                             Custo do juros: <br>
-                            R$ <span data-total="juros"></span>
+                            <span data-total="juros"></span>
                         </span>
                         <small class="text-gray-400">* Juros de <span data-total="juros_taxa"></span> por <span data-total="periodo"></span> meses</small>
                     </div>
@@ -357,18 +357,18 @@
                     <hr class="mb-5 border-gray-300" />
                     <div class="flex flex-col">
                         <span class="text-xl font-bold text-blue-500 mb-2">
-                            R$ <span data-total="assinada"></span>
+                            <span data-total="vista"></span>
                             <div class="tooltip-container ml-2">
                                 <i class="fa-solid fa-circle-question text-blue-500"></i>
                                 <div class="tooltip-content">
-                                    R$ 0,00 Seguro <br>
-                                    + R$ 0,00 IPVA <br>
-                                    + R$ 0,00 Licenciamento+DPVAT <br>
-                                    + R$ 0,00 Emplacamento <br>
-                                    + R$ 0,00 Manutenção <br>
-                                    + R$ 0,00 Depreciação <br>
-                                    + R$ 0,00 Custo oportunidade <br>
-                                    + R$ 0,00 Custo juros
+                                    <span data-total="seguro"></span> Seguro <br>
+                                    + <span data-total="ipva"></span> IPVA <br>
+                                    + <span data-total="licenciamento_seguro"></span> Licenciamento+DPVAT <br>
+                                    + <span data-total="emplacamento"></span> Emplacamento <br>
+                                    + <span data-total="manutencao"></span> Manutenção <br>
+                                    + <span data-total="depreciacao"></span> Depreciação <br>
+                                    + <span data-total="custo_oportunidade_vista"></span> Custo oportunidade <br>
+                                    + <span data-total="juros"></span> Custo juros
                                 </div>
                             </div>
                         </span>
@@ -377,7 +377,7 @@
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
                             Seguro: <br>
-                            R$ <span data-total="seguro"></span>
+                            <span data-total="seguro"></span>
                             <div class="tooltip-container ml-2">
                                 <i class="fa-solid fa-circle-question text-blue-500"></i>
                                 <div class="tooltip-content">
@@ -386,45 +386,45 @@
                                 </div>
                             </div>
                         </span>
-                        <small class="text-gray-400">* R$ <span data-total="seguro"></span> no 1º ano</small>
+                        <small class="text-gray-400">* <span data-total="seguro"></span> no 1º ano</small>
                     </div>
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
                             IPVA: <br>
-                            R$ <span data-total="ipva"></span>
+                            <span data-total="ipva"></span>
                             <div class="tooltip-container ml-2">
                                 <i class="fa-solid fa-circle-question text-blue-500"></i>
                                 <div class="tooltip-content">
                                     DOCUMENTAÇÃO <br>
-                                    O custo da documentação é anual. Sendo: o IPVA em média 4% do valor de compra do veículo (varia conforme estado), o licenciamento em média R$ 150,00 (varia conforme estado) e o DPVAT de R$ 16,21, independente da localidade. No Livre, todos os custos de manutenção estão inclusos na mensalidade.
+                                    O custo da documentação é anual. Sendo: o IPVA em média 4% do valor de compra do veículo (varia conforme estado), o licenciamento em média 150,00 (varia conforme estado) e o DPVAT de 16,21, independente da localidade. No Livre, todos os custos de manutenção estão inclusos na mensalidade.
                                 </div>
                             </div>
                         </span>
-                        <small class="text-gray-400">* R$ <span data-total="ipva"></span> no 1º ano</small>
+                        <small class="text-gray-400">* <span data-total="ipva"></span> no 1º ano</small>
                     </div>
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
                             Licenciamento + DPVAT: <br>
-                            R$ <span data-total="licenciamento_seguro"></span>
+                            <span data-total="licenciamento_seguro"></span>
                             <div class="tooltip-container ml-2">
                                 <i class="fa-solid fa-circle-question text-blue-500"></i>
                                 <div class="tooltip-content">
                                     LICENCIAMENTO + DPVAT <br>
-                                    O licenciamento em média R$100,00 (varia conforme o estado) e o DPVAT de R$ 16,21 independente da localidade.
+                                    O licenciamento em média R$100,00 (varia conforme o estado) e o DPVAT de 16,21 independente da localidade.
                                 </div>
                             </div>
                         </span>
-                        <small class="text-gray-400">* R$ <span data-total="licenciamento_seguro"></span> no 1º ano</small>
+                        <small class="text-gray-400">* <span data-total="licenciamento_seguro"></span> no 1º ano</small>
                     </div>
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
                             Emplacamento: <br>
-                            R$ <span data-total="emplacamento"></span>
+                            <span data-total="emplacamento"></span>
                             <div class="tooltip-container ml-2">
                                 <i class="fa-solid fa-circle-question text-blue-500"></i>
                                 <div class="tooltip-content">
                                     EMPLACAMENTO <br>
-                                    O valor do emplacamento e despachante é cobrado somente no 1° ano do carro e custa em média R$ 450,00. No Livre, você não tem esse custo.
+                                    O valor do emplacamento e despachante é cobrado somente no 1° ano do carro e custa em média 450,00. No Livre, você não tem esse custo.
                                 </div>
                             </div>
                         </span>
@@ -433,7 +433,7 @@
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
                             Manutenção: <br>
-                            R$ <span data-total="manutencao"></span>
+                            <span data-total="manutencao"></span>
                             <div class="tooltip-container ml-2">
                                 <i class="fa-solid fa-circle-question text-blue-500"></i>
                                 <div class="tooltip-content">
@@ -442,23 +442,23 @@
                                 </div>
                             </div>
                         </span>
-                        <small class="text-gray-400">* R$ <span data-total="manutencao_mes"></span>/mês</small>
+                        <small class="text-gray-400">* <span data-total="manutencao_mes"></span>/mês</small>
                     </div>
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
                             Depreciação: <br>
-                            R$ <span data-total="depreciacao"></span>
+                            <span data-total="depreciacao"></span>
                             <div class="tooltip-container ml-2">
                                 <i class="fa-solid fa-circle-question text-blue-500"></i>
                                 <div class="tooltip-content">
                                     Valor de compra do carro: <br>
-                                    R$ 100.000,00
+                                    100.000,00
                                     <div class="mt-2 w-full"></div>
                                     Valor de venda após 12 meses: <br>
-                                    R$ 100.000,00
+                                    100.000,00
                                     <div class="mt-2 w-full"></div>
                                     Resultado da perda: <br>
-                                    R$ 0,00
+                                    0,00
                                 </div>
                             </div>
                         </span>
@@ -467,7 +467,7 @@
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
                             Custo de oportunidade à vista: <br>
-                            R$ 0,00
+                            <span data-total="custo_oportunidade_vista"></span>
                             <div class="tooltip-container ml-2">
                                 <i class="fa-solid fa-circle-question text-blue-500"></i>
                                 <div class="tooltip-content">
@@ -487,7 +487,7 @@
                     <hr class="mb-5 border-gray-300" />
                     <div class="flex flex-col">
                         <span class="text-xl font-bold text-blue-500 mb-2">
-                            R$ <span data-total="assinatura"></span>
+                            <span data-total="assinatura"></span>
                             <div class="tooltip-container ml-2">
                                 <i class="fa-solid fa-circle-question text-blue-500"></i>
                                 <div class="tooltip-content">
@@ -495,19 +495,19 @@
                                 </div>
                             </div>
                         </span>
-                        <small class="text-gray-400">Soma das 12 mensalidades <br> R$ <span data-total="assinatura_1_8"></span> do 1º ao 8º mês <br> R$ <span data-total="assinatura_9_12"></span> do 9º ao último mês</small>
+                        <small class="text-gray-400">Soma das 12 mensalidades <br> <span data-total="assinatura_1_8"></span> do 1º ao 8º mês <br> <span data-total="assinatura_9_12"></span> do 9º ao último mês</small>
                     </div>
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
                             Custo Assinatura: <br>
-                            R$ <span data-total="custo_assinatura"></span>
+                            <span data-total="custo_assinatura"></span>
                         </span>
                         <small class="text-gray-400">Total dos custos de assinatura mensais</small>
                     </div>
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
                             Custo rentabilidade assinatura: <br>
-                            R$ 0,00
+                            0,00
                         </span>
                         <small class="text-gray-400">Diferença do investimento total para o custo de assinatura</small>
                     </div>
