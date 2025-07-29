@@ -35,7 +35,7 @@ let custoAssinaturaTotalElement;
 let assinatura1_12TotalElement;
 let custoRentabilidadeAssinaturaTotalElement;
 let precoTotalElement;
-let baseCalculoElement; // Nova variável para o elemento de base de cálculo
+let baseCalculoElement;
 
 let financiadaTotalElement;
 let vistaTotalElement;
@@ -60,7 +60,6 @@ async function fetchApiData() {
     }
 }
 
-// Função para popular o select de modelos
 function populateModelSelect() {
     if (modeloElement && catalogData && catalogData.items) {
         $(modeloElement).empty();
@@ -82,11 +81,83 @@ function populateModelSelect() {
     }
 }
 
+// IR aliquots based on months
+const irAliquots = [
+    { months: 6, aliquot: 0.2250 }, // Up to 6 months (180 days)
+    { months: 12, aliquot: 0.20 }, // 7 to 12 months (181 to 360 days)
+    { months: 24, aliquot: 0.1750 }, // 13 to 24 months (361 to 720 days)
+    { months: Infinity, aliquot: 0.15 } // 24+ months (over 720 days)
+];
+
+function getIRAliquot(months) {
+    for (const rule of irAliquots) {
+        if (months <= rule.months) {
+            return rule.aliquot;
+        }
+    }
+    return 0; // Should not happen if Infinity is the last rule
+}
+
+function createJurosCurveTable() {
+    const jurosCurve = [];
+    if (!anbimaData || Object.keys(anbimaData).length === 0) {
+        console.warn('Dados da ANBIMA não carregados para criar a curva de juros.');
+        return;
+    }
+
+    // Usar os valores completos da ANBIMA sem arredondamento para o cálculo da tabela
+    const beta1 = anbimaData.beta1;
+    const beta2 = anbimaData.beta2;
+    const beta3 = anbimaData.beta3;
+    const beta4 = anbimaData.beta4;
+    const lambda1 = anbimaData.lambda1;
+    const lambda2 = anbimaData.lambda2;
+
+    // Custo de corretagem médio mensal (0,04% a.m.)
+    const custoCorretagemMensal = 0.000416; // 0.04% / 100
+
+    for (let month = 1; month <= 36; month++) {
+        const periodYears = month / 12;
+        let yieldAnnual = 0;
+
+        if (periodYears > 0) {
+            const term1 = (1 - Math.exp(-lambda1 * periodYears)) / (lambda1 * periodYears);
+            const term2 = term1 - Math.exp(-lambda1 * periodYears);
+            const term3 = (1 - Math.exp(-lambda2 * periodYears)) / (lambda2 * periodYears);
+            const term4 = term3 - Math.exp(-lambda2 * periodYears);
+
+            yieldAnnual = beta1 + beta2 * term1 + beta3 * term2 + beta4 * term4;
+        } else {
+            yieldAnnual = beta1 + beta2 + beta3 + beta4;
+        }
+
+        const yieldMonthly = Math.pow(1 + yieldAnnual, 1/12) - 1;
+        const taxaBrutaAoPeriodo = Math.pow(1 + yieldMonthly, month) - 1;
+        
+        const irAliquot = getIRAliquot(month);
+        // Calcula a taxa líquida ao período, subtraindo o custo de corretagem acumulado
+        // A taxa líquida é a taxa bruta menos o IR e o custo de corretagem
+        const taxaLiquidaAoPeriodo = (1 - irAliquot) * (taxaBrutaAoPeriodo - custoCorretagemMensal);
+
+        jurosCurve.push({
+            "Mês": month,
+            // Formatando as porcentagens para ter no mínimo 2 e no máximo 4 casas decimais
+            "Taxa Bruta ao ano": `${(yieldAnnual * 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}%`,
+            "Taxa Bruta ao período": `${(taxaBrutaAoPeriodo * 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}%`,
+            "Taxa Líquida ao período": `${(taxaLiquidaAoPeriodo * 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}%`
+        });
+    }
+    console.log('Curva de Juros (ANBIMA):');
+    console.table(jurosCurve);
+}
+
+
 $(document).ready(function() {
     console.log('Script carregado com sucesso!');
 
     fetchApiData().then(() => {
         populateModelSelect();
+        createJurosCurveTable(); // Chama a função para criar a tabela de juros
         onFormChange();
     });
 
@@ -120,7 +191,7 @@ $(document).ready(function() {
     assinatura1_12TotalElement = $('[data-total="assinatura_1_12"]');
     custoRentabilidadeAssinaturaTotalElement = $('[data-total="custo_rentabilidade_assinatura"]');
     precoTotalElement = $('[data-total="preco"]');
-    baseCalculoElement = $('[data-total="base_calculo"]'); // Inicializa o novo elemento
+    baseCalculoElement = $('[data-total="base_calculo"]');
 
     financiadaTotalElement = $('[data-total="financiada"]');
     vistaTotalElement = $('[data-total="vista"]');
@@ -181,6 +252,8 @@ function calculateOpportunityCost(principal, period, anbimaData) {
     let opportunityCost = 0;
 
     if (anbimaData && Object.keys(anbimaData).length > 0 && period > 0) {
+        // Para o cálculo do custo de oportunidade, os betas e lambdas ainda são arredondados para 2 casas,
+        // conforme a instrução anterior para este cálculo específico.
         const beta1 = parseFloat(anbimaData.beta1.toFixed(2));
         const beta2 = parseFloat(anbimaData.beta2.toFixed(2));
         const beta3 = parseFloat(anbimaData.beta3.toFixed(2));
@@ -376,7 +449,6 @@ function onFormChange(){
 
     assinaturaTotalElement.text(formatCurrency(assinaturaTotal + custoRentabilidadeAssinatura));
 
-    // Atualiza o elemento com os dados da ANBIMA formatados
     if (anbimaData && Object.keys(anbimaData).length > 0) {
         const formattedAnbima = `beta1: ${anbimaData.beta1.toFixed(2).replace('.', ',')} | beta2: ${anbimaData.beta2.toFixed(2).replace('.', ',')} | beta3: ${anbimaData.beta3.toFixed(2).replace('.', ',')} | beta4: ${anbimaData.beta4.toFixed(2).replace('.', ',')} | lambda1: ${anbimaData.lambda1.toFixed(2).replace('.', ',')} | lambda2: ${anbimaData.lambda2.toFixed(2).replace('.', ',')}`;
         baseCalculoElement.text(formattedAnbima);
