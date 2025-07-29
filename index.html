@@ -20,9 +20,9 @@
     <body class="flex flex-col items-center justify-start min-h-screen h-fit bg-white">
         <!-- INFORMAÇÕES BÁSICAS -->
         <div class="size-control my-16">
-            <h1 class="text-6xl font-bold text-blue-500 max-w-4/5 border-l-4 border-yellow-500 pl-4">ASSINAR OU COMPRAR UM CARRO?</h1>
+            <h1 class="text-6xl font-bold text-blue-500 md:max-w-4/5 border-l-4 border-yellow-500 pl-4">ASSINAR OU COMPRAR UM CARRO?</h1>
             <hr class="my-4 border-gray-300" />
-            <form id="basic-form" class="w-1/3">
+            <form id="basic-form" class="w-full md:w-1/3">
                 <div class="form-group mb-5">
                     <label for="modelo" class="block text-lg font-medium text-gray-700">Escolha o modelo do carro</label>
                     <select onchange="onFormChange()"required name="modelo" class="" id="modelo">
@@ -37,8 +37,8 @@
                     <select onchange="onFormChange()"required name="periodo" class="" id="periodo">
                         <option value="">Selecione um período</option>
                         <option value="12" selected>12 meses</option>
-                        <option value="24">24 meses</option>
-                        <option value="36">36 meses</option>
+                        <!-- <option value="24">24 meses</option>
+                        <option value="36">36 meses</option> -->
                     </select>
                 </div>
                 <div class="form-group mb-5">
@@ -62,7 +62,7 @@
                             </div>
                         </div>
                     </label>
-                    <input onchange="onFormChange()" required type="number" name="preco" class="" id="preco"/>
+                    <input onchange="onFormChange()" required type="text" name="preco" class="" id="preco" value="0" data-type="currency"/>
                 </div>
 
                 <button class="mt-5 text-blue-500 font-semibold cursor-pointer hover:underline transition duration-300 ease-in-out text-lg">Próximo ↓</button>
@@ -75,14 +75,14 @@
                 <!-- ASSINATURA -->
                 <div class="w-full">
                     <h2 class="text-3xl font-bold text-blue-500 border-l-4 border-yellow-500 pl-3 mb-2">ASSINATURA</h2>
-                    <div class="flex flex-row justify-start items-center w-full gap-5">
-                        <div class="form-group w-full max-w-1/3">
+                    <div class="flex flex-col md:flex-row justify-start items-center w-full gap-5">
+                        <div class="form-group w-full md:max-w-1/3">
                             <label for="parcelas_iniciais" class="block text-lg font-medium text-gray-700">Parcelas Iniciais</label>
-                            <input onchange="onFormChange()" type="number" name="parcelas_iniciais" id="parcelas_iniciais"  required/>
+                            <input onchange="onFormChange()" type="text" name="parcelas_iniciais" id="parcelas_iniciais" value="0" required data-type="currency"/>
                         </div>
-                        <div class="form-group w-full max-w-1/3">
+                        <div class="form-group w-full md:max-w-1/3">
                             <label for="parcelas_restantes" class="block text-lg font-medium text-gray-700">Parcelas restantes</label>
-                            <input onchange="onFormChange()" type="number" name="parcelas_restantes" id="parcelas_restantes" required/>
+                            <input onchange="onFormChange()" type="text" name="parcelas_restantes" id="parcelas_restantes" value="0" required data-type="currency"/>
                         </div>
                     </div>
                 </div>
@@ -90,7 +90,7 @@
                 <!-- PAGAMENTO À VISTA -->
                 <div class="w-full">
                     <h2 class="text-3xl font-bold text-blue-500 border-l-4 border-yellow-500 pl-3 mb-2">PAGAMENTO À VISTA</h2>
-                    <div class="flex flex-row items-end w-full gap-5">
+                    <div class="flex flex-col md:flex-row items-end w-full gap-5">
                         <div class="form-group w-full">
                             <label for="seguro" class="block text-lg font-medium text-gray-700">
                                 Seguro
@@ -103,21 +103,21 @@
                                 </div>
                             </label>
                             <div class="min-h-16">
-                                <input onchange="onFormChange()" type="number" name="seguro" id="seguro" value="4" required/>
+                                <input onchange="onFormChange()" type="text" name="seguro" id="seguro" value="4" required data-type="percentage"/>
                                 <small><span data-total="seguro"></span> no Total</small>
                             </div>                            
                         </div>
                         <div class="form-group w-full">
                             <label for="ipva" class="block text-lg font-medium text-gray-700">IPVA</label>
                             <div class="min-h-16">
-                                <input onchange="onFormChange()" type="number" name="ipva" id="ipva" value="4" required/>
+                                <input onchange="onFormChange()" type="text" name="ipva" id="ipva" value="4" required data-type="percentage"/>
                                 <small><span data-total="ipva"></span> no Total</small>
                             </div>
                         </div>
                         <div class="form-group w-full">
                             <label for="licenciamento_seguro" class="block text-lg font-medium text-gray-700">Licenciamento + Seguro obrigatório</label>
                             <div class="min-h-16">
-                                <input onchange="onFormChange()" type="number" name="licenciamento_seguro" id="licenciamento_seguro" value="150" required/>
+                                <input onchange="onFormChange()" type="text" name="licenciamento_seguro" id="licenciamento_seguro" value="150" required data-type="currency"/>
                             </div>
                         </div>
                         <div class="form-group w-full">
@@ -132,7 +132,7 @@
                                 </div>
                             </label>
                             <div class="min-h-16">
-                                <input onchange="onFormChange()" type="number" name="emplacamento" id="emplacamento" value="450" required/>
+                                <input onchange="onFormChange()" type="text" name="emplacamento" id="emplacamento" value="450" required data-type="currency"/>
                             </div>
                         </div>
                         <div class="form-group w-full">
@@ -147,7 +147,7 @@
                                 </div>
                             </label>
                             <div class="min-h-16">
-                                <input onchange="onFormChange()" type="number" name="manutencao" id="manutencao" value="0" required/>
+                                <input onchange="onFormChange()" type="text" name="manutencao" id="manutencao" value="0" required data-type="currency"/>
                                 <small><span data-total="manutencao"></span> nos <span data-total="periodo"></span> meses</small>
                             </div>
                         </div>
@@ -157,8 +157,8 @@
                 <!-- FINANCIAMENTO -->
                 <div class="w-full">
                     <h2 class="text-3xl font-bold text-blue-500 border-l-4 border-yellow-500 pl-3 mb-2">FINANCIAMENTO</h2>
-                    <div class="flex flex-row justify-start items-center w-full gap-5">
-                        <div class="form-group w-full max-w-1/3">
+                    <div class="flex flex-col md:flex-row justify-start items-center w-full gap-5">
+                        <div class="form-group w-full md:max-w-1/3">
                             <label for="entrada" class="block text-lg font-medium text-gray-700">
                                 Entrada
                                 <div class="tooltip-container ml-2">
@@ -170,14 +170,14 @@
                                 </div>
                             </label>
                             <div class="min-h-16">
-                                <input onchange="onFormChange()" type="number" name="entrada" id="entrada" value="30" required/>
+                                <input onchange="onFormChange()" type="text" name="entrada" id="entrada" value="30" required  data-type="percentage"/>
                                 <small><span data-total="entrada"></span></small>
                             </div>
                         </div>
-                        <div class="form-group w-full max-w-1/3">
+                        <div class="form-group w-full md:max-w-1/3">
                             <label for="taxa_am" class="block text-lg font-medium text-gray-700">Taxa a.m.</label>
                             <div class="min-h-16">
-                                <input onchange="onFormChange()" type="number" name="taxa_am" id="taxa_am" value="1.3" step="0.01" required/>
+                                <input onchange="onFormChange()" type="text" name="taxa_am" id="taxa_am" value="1.3" step="0.01" required data-type="percentage"/>
                             </div>
                         </div>
                     </div>
@@ -210,7 +210,7 @@
             </div>
 
             <!-- COMPARAÇÃO -->
-            <div class="flex justify-center items-stretch gap-5 mt-24">
+            <div class="flex flex-col md:flex-row justify-center items-stretch gap-5 mt-24">
                 <!-- COMPRA FINANCIADA RESULTADO -->
                 <div class="w-full rounded-xl shadow-lg bg-white p-5 border border-gray-200">
                     <div class="flex justify-start items-center gap-3 mb-5 text-blue-500 text-2xl">
@@ -310,18 +310,18 @@
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
                             Depreciação: <br>
-                            0,00
+                            <span data-total="depreciacao"></span>
                             <div class="tooltip-container ml-2">
                                 <i class="fa-solid fa-circle-question text-blue-500"></i>
                                 <div class="tooltip-content">
                                     Valor de compra do carro: <br>
-                                    100.000,00
+                                    <span data-total="preco"></span>
                                     <div class="mt-2 w-full"></div>
                                     Valor de venda após 12 meses: <br>
-                                    100.000,00
+                                    <span data-total="preco"></span>
                                     <div class="mt-2 w-full"></div>
                                     Resultado da perda: <br>
-                                    0,00
+                                    R$ 0,00
                                 </div>
                             </div>
                         </span>
@@ -452,13 +452,13 @@
                                 <i class="fa-solid fa-circle-question text-blue-500"></i>
                                 <div class="tooltip-content">
                                     Valor de compra do carro: <br>
-                                    100.000,00
+                                    <span data-total="preco"></span>
                                     <div class="mt-2 w-full"></div>
                                     Valor de venda após 12 meses: <br>
-                                    100.000,00
+                                    <span data-total="preco"></span>
                                     <div class="mt-2 w-full"></div>
                                     Resultado da perda: <br>
-                                    0,00
+                                    R$ 0,00
                                 </div>
                             </div>
                         </span>
@@ -507,7 +507,7 @@
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
                             Custo rentabilidade assinatura: <br>
-                            0,00
+                            <span data-total="custo_rentabilidade_assinatura"></span>
                         </span>
                         <small class="text-gray-400">Diferença do investimento total para o custo de assinatura</small>
                     </div>

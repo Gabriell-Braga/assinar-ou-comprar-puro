@@ -26,6 +26,7 @@ let licenciamentoSeguroTotalElement;
 let emplacamentoTotalElement;
 let manutencaoTotalElement;
 let manutencaoMesTotalElement;
+let depreciacaoTotalElement;
 let custoOportunidadeFinanciadaTotalElement;
 let custoOportunidadeVistaTotalElement;
 let jurosTotalElement;
@@ -34,9 +35,11 @@ let entradaTotalElement;
 let custoAssinaturaTotalElement;
 let assinatura1_8TotalElement;
 let assinatura9_12TotalElement;
+let custoRentabilidadeAssinaturaTotalElement;
+let precoTotalElement;
 
 let financiadaTotalElement;
-let vistaTotalElement; // Renomeado de assinadaTotalElement
+let vistaTotalElement;
 let assinaturaTotalElement;
 
 let anbimaData = {};
@@ -58,10 +61,35 @@ async function fetchApiData() {
     }
 }
 
+// Função para popular o select de modelos
+function populateModelSelect() {
+    if (modeloElement && catalogData && catalogData.items) {
+        $(modeloElement).empty();
+        $(modeloElement).append('<option value="">Selecione um modelo</option>');
+
+        // Acessa o item diretamente, já que 'items' agora é o objeto do carro
+        const item = catalogData.items; 
+        
+        // Verifica se o item é um objeto válido antes de tentar acessar suas propriedades
+        if (typeof item === 'object' && item !== null && item.title && item.title.rendered && item.slug) {
+            const option = document.createElement('option');
+            option.value = item.slug;
+            option.textContent = item.title.rendered;
+            modeloElement.appendChild(option);
+        } else {
+            console.warn('Estrutura de item do catálogo inesperada:', item);
+        }
+        console.log('Select de modelos populado.');
+    } else {
+        console.warn('Elemento modelo ou dados do catálogo não disponíveis para popular o select.');
+    }
+}
+
 $(document).ready(function() {
     console.log('Script carregado com sucesso!');
 
     fetchApiData().then(() => {
+        populateModelSelect();
         onFormChange();
     });
 
@@ -86,6 +114,7 @@ $(document).ready(function() {
     emplacamentoTotalElement = $('[data-total="emplacamento"]');
     manutencaoTotalElement = $('[data-total="manutencao"]');
     manutencaoMesTotalElement = $('[data-total="manutencao_mes"]');
+    depreciacaoTotalElement = $('[data-total="depreciacao"]');
     custoOportunidadeFinanciadaTotalElement = $('[data-total="custo_oportunidade_financiada"]');
     custoOportunidadeVistaTotalElement = $('[data-total="custo_oportunidade_vista"]');
     jurosTotalElement = $('[data-total="juros"]');
@@ -94,15 +123,16 @@ $(document).ready(function() {
     custoAssinaturaTotalElement = $('[data-total="custo_assinatura"]');
     assinatura1_8TotalElement = $('[data-total="assinatura_1_8"]');
     assinatura9_12TotalElement = $('[data-total="assinatura_9_12"]');
+    custoRentabilidadeAssinaturaTotalElement = $('[data-total="custo_rentabilidade_assinatura"]');
+    precoTotalElement = $('[data-total="preco"]');
 
     financiadaTotalElement = $('[data-total="financiada"]');
-    vistaTotalElement = $('[data-total="vista"]'); // Renomeado
+    vistaTotalElement = $('[data-total="vista"]');
     assinaturaTotalElement = $('[data-total="assinatura"]');
 
     $('#basic-form').on('submit', function(event) {
         event.preventDefault();
         if (this.checkValidity()) {
-            console.log('Formulário válido!');
             const formData = {
                 modelo: $('#modelo').val(),
                 periodo: $('#periodo').val(),
@@ -111,6 +141,9 @@ $(document).ready(function() {
             };
             onFormChange();
             $('#step-2').removeClass('hidden');
+            $('html, body').animate({
+                scrollTop: $('#step-2').offset().top
+            }, 1000);
         } else {
             console.log('Formulário inválido!');
         }
@@ -119,28 +152,39 @@ $(document).ready(function() {
     $('#complementary-form').on('submit', function(event) {
         event.preventDefault();
         if (this.checkValidity()) {
-            console.log('Formulário complementar válido!');
             $('#result').removeClass('hidden');
+            onFormChange();
+            $('html, body').animate({
+                scrollTop: $('#result').offset().top
+            }, 1000);
         } else {
             console.log('Formulário complementar inválido!');
         }
     });
+
+    setupInputFormatting();
 });
 
 function formatCurrency(value) {
-    // Usar toLocaleString para formatação de moeda brasileira (milhares com ponto, decimais com vírgula)
     return `R$ ${parseFloat(value).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
+function formatPercentage(value) {
+    return `${parseFloat(value).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
 }
 
 function parseCurrencyToFloat(currencyString) {
     return parseFloat(currencyString.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
 }
 
+function parsePercentageToFloat(percentageString) {
+    return parseFloat(percentageString.replace('%', '').replace(',', '.').trim());
+}
+
 function calculateOpportunityCost(principal, period, anbimaData) {
     let opportunityCost = 0;
 
     if (anbimaData && Object.keys(anbimaData).length > 0 && period > 0) {
-        // Arredondar os dados da ANBIMA para duas casas decimais
         const beta1 = parseFloat(anbimaData.beta1.toFixed(2));
         const beta2 = parseFloat(anbimaData.beta2.toFixed(2));
         const beta3 = parseFloat(anbimaData.beta3.toFixed(2));
@@ -199,19 +243,89 @@ function updateChartHeights() {
     });
 }
 
+function setupInputFormatting() {
+    // Inputs de moeda
+    $('[data-type="currency"]').each(function() {
+        const $input = $(this);
+
+        // Formata o valor inicial ao carregar a página
+        if ($input.val()) {
+            $input.val(formatCurrency(parseCurrencyToFloat($input.val())));
+        }
+
+        $input.on('input', function() {
+            let value = $input.val();
+            value = value.replace(/\D/g, ''); // Remove tudo que não for dígito
+
+            if (value.length === 0) {
+                $input.val('');
+                return;
+            }
+
+            let numericValue = parseInt(value, 10);
+            let floatValue = numericValue / 100;
+
+            $input.val(formatCurrency(floatValue));
+        });
+
+        $input.on('blur', function() {
+            const rawValue = $input.val();
+            if (!rawValue || parseCurrencyToFloat(rawValue) === 0) {
+                $input.val(formatCurrency(0));
+            } else {
+                $input.val(formatCurrency(parseCurrencyToFloat(rawValue)));
+            }
+        });
+    });
+
+    // Inputs de porcentagem
+    $('[data-type="percentage"]').each(function() {
+        const $input = $(this);
+
+        // Formata o valor inicial ao carregar a página
+        if ($input.val()) {
+            $input.val(formatPercentage(parsePercentageToFloat($input.val())));
+        }
+
+        $input.on('input', function() {
+            let value = $input.val();
+            value = value.replace(/\D/g, ''); // Remove tudo que não for dígito
+
+            if (value.length === 0) {
+                $input.val('');
+                return;
+            }
+
+            let numericValue = parseInt(value, 10);
+            let floatValue = numericValue / 100;
+
+            $input.val(formatPercentage(floatValue));
+        });
+
+        $input.on('blur', function() {
+            const rawValue = $input.val();
+            if (!rawValue || parsePercentageToFloat(rawValue) === 0) {
+                $input.val(formatPercentage(0));
+            } else {
+                $input.val(formatPercentage(parsePercentageToFloat(rawValue)));
+            }
+        });
+    });
+}
+
 
 function onFormChange(){
-    const preco = parseFloat(precoElement.value);
+    const preco = parseCurrencyToFloat(precoElement.value);
     const periodo = parseFloat(periodoElement.value);
-    const seguroPercentage = parseFloat(seguroElement.value);
-    const ipvaPercentage = parseFloat(ipvaElement.value);
-    const manutencaoMonthly = parseFloat(manutencaoElement.value);
-    const entradaPercentage = parseFloat(entradaElement.value);
-    const taxaAM = parseFloat(taxaAMElement.value);
-    const licenciamentoSeguroValue = parseFloat(licenciamentoSeguroElement.value);
-    const emplacamentoValue = parseFloat(emplacamentoElement.value);
-    const parcelasIniciais = parseFloat(parcelasIniciaisElement.value);
-    const parcelasRestantes = parseFloat(parcelasRestantesElement.value);
+    const seguroPercentage = parsePercentageToFloat(seguroElement.value);
+    const ipvaPercentage = parsePercentageToFloat(ipvaElement.value);
+    const manutencaoMonthly = parseCurrencyToFloat(manutencaoElement.value);
+    const entradaPercentage = parsePercentageToFloat(entradaElement.value);
+    const taxaAM = parsePercentageToFloat(taxaAMElement.value);
+    const licenciamentoSeguroValue = parseCurrencyToFloat(licenciamentoSeguroElement.value);
+    const emplacamentoValue = parseCurrencyToFloat(emplacamentoElement.value);
+    const parcelasIniciais = parseCurrencyToFloat(parcelasIniciaisElement.value);
+    const parcelasRestantes = parseCurrencyToFloat(parcelasRestantesElement.value);
 
     seguroTotal = seguroPercentage * preco / 100;
     ipvaTotal = ipvaPercentage * preco / 100;
@@ -233,9 +347,12 @@ function onFormChange(){
     jurosTotal = totalPagoComJuros - valorFinanciado;
     
     parcelasTotal = parcelaMensal; 
+    const assinaturaTotal = parcelasIniciais * 8 + parcelasRestantes * 4;
 
     const custoOportunidadeFinanciada = calculateOpportunityCost(entradaTotal, periodo, anbimaData);
     const custoOportunidadeVista = calculateOpportunityCost(preco, periodo, anbimaData);
+    const custoRentabilidadeAssinatura = calculateOpportunityCost(assinaturaTotal, periodo, anbimaData);
+    console.log('Custo de Rentabilidade Assinatura:', custoRentabilidadeAssinatura);
 
     periodoTotalElement.text(`${periodo}`);
     seguroTotalElement.text(formatCurrency(seguroTotal));
@@ -244,17 +361,20 @@ function onFormChange(){
     emplacamentoTotalElement.text(formatCurrency(emplacamentoValue));
     manutencaoMesTotalElement.text(formatCurrency(manutencaoMonthly));
     manutencaoTotalElement.text(formatCurrency(manutencaoTotal));
+    depreciacaoTotalElement.text(formatCurrency(0));
     entradaTotalElement.text(formatCurrency(entradaTotal));
 
     jurosTotalElement.text(formatCurrency(jurosTotal));
-    jurosTaxaElement.text(`${taxaAM}%`); // Mantido como taxa percentual
+    jurosTaxaElement.text(`${taxaAM.toFixed(2).replace('.', ',')}%`);
 
     custoAssinaturaTotalElement.text(formatCurrency(parcelasIniciais * 8 + parcelasRestantes * 4));
     assinatura1_8TotalElement.text(formatCurrency(parcelasIniciais));
     assinatura9_12TotalElement.text(formatCurrency(parcelasRestantes));
+    precoTotalElement.text(formatCurrency(preco));
 
     custoOportunidadeFinanciadaTotalElement.text(formatCurrency(custoOportunidadeFinanciada));
     custoOportunidadeVistaTotalElement.text(formatCurrency(custoOportunidadeVista));
+    custoRentabilidadeAssinaturaTotalElement.text(formatCurrency(custoRentabilidadeAssinatura));
 
     const financiadaCalcTotal = seguroTotal + ipvaTotal + manutencaoTotal + licenciamentoSeguroValue + emplacamentoValue + jurosTotal + custoOportunidadeFinanciada;
     financiadaTotalElement.text(formatCurrency(financiadaCalcTotal));
@@ -262,7 +382,7 @@ function onFormChange(){
     const vistaCalcTotal = seguroTotal + ipvaTotal + manutencaoTotal + licenciamentoSeguroValue + emplacamentoValue + custoOportunidadeVista;
     vistaTotalElement.text(formatCurrency(vistaCalcTotal));
 
-    assinaturaTotalElement.text(formatCurrency(parcelasIniciais * 8 + parcelasRestantes * 4));
+    assinaturaTotalElement.text(formatCurrency(assinaturaTotal + custoRentabilidadeAssinatura));
 
     console.log('--- Totais Atuais (para depuração) ---');
     console.log(`Preço: ${preco}`);
