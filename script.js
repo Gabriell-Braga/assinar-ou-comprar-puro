@@ -5,7 +5,7 @@ let precoElement;
 let parcelasElement;
 let seguroElement;
 let ipvaElement;
-let licenciamentoSeguroElement;
+let licenciamentoElement;
 let emplacamentoElement;
 let manutencaoElement;
 let entradaElement;
@@ -21,10 +21,10 @@ let parcelasTotal = 0;
 let periodoTotalElement;
 let seguroTotalElement;
 let ipvaTotalElement;
-let licenciamentoSeguroTotalElement;
+let licenciamentoTotalElement;
 let emplacamentoTotalElement;
 let manutencaoTotalElement;
-let manutencaoMesTotalElement;
+let manutencaoAnoTotalElement;
 let depreciacaoTotalElement;
 let custoOportunidadeFinanciadaTotalElement;
 let custoOportunidadeVistaTotalElement;
@@ -97,7 +97,7 @@ $(document).ready(function() {
     parcelasElement = document.getElementById('parcelas');
     seguroElement = document.getElementById('seguro');
     ipvaElement = document.getElementById('ipva');
-    licenciamentoSeguroElement = document.getElementById('licenciamento_seguro');
+    licenciamentoElement = document.getElementById('licenciamento');
     emplacamentoElement = document.getElementById('emplacamento');
     manutencaoElement = document.getElementById('manutencao');
     entradaElement = document.getElementById('entrada');
@@ -106,10 +106,10 @@ $(document).ready(function() {
     periodoTotalElement = $('[data-total="periodo"]');
     seguroTotalElement = $('[data-total="seguro"]');
     ipvaTotalElement = $('[data-total="ipva"]');
-    licenciamentoSeguroTotalElement = $('[data-total="licenciamento_seguro"]');
+    licenciamentoTotalElement = $('[data-total="licenciamento"]');
     emplacamentoTotalElement = $('[data-total="emplacamento"]');
     manutencaoTotalElement = $('[data-total="manutencao"]');
-    manutencaoMesTotalElement = $('[data-total="manutencao_mes"]');
+    manutencaoAnoTotalElement = $('[data-total="manutencao_ano"]');
     depreciacaoTotalElement = $('[data-total="depreciacao"]');
     custoOportunidadeFinanciadaTotalElement = $('[data-total="custo_oportunidade_financiada"]');
     custoOportunidadeVistaTotalElement = $('[data-total="custo_oportunidade_vista"]');
@@ -315,16 +315,16 @@ function onFormChange(){
     const periodo = parseFloat(periodoElement.value);
     const seguroPercentage = parsePercentageToFloat(seguroElement.value);
     const ipvaPercentage = parsePercentageToFloat(ipvaElement.value);
-    const manutencaoMonthly = parseCurrencyToFloat(manutencaoElement.value);
+    const manutencao = parseCurrencyToFloat(manutencaoElement.value);
     const entradaPercentage = parsePercentageToFloat(entradaElement.value);
     const taxaAM = parsePercentageToFloat(taxaAMElement.value);
-    const licenciamentoSeguroValue = parseCurrencyToFloat(licenciamentoSeguroElement.value);
+    const licenciamentoValue = parseCurrencyToFloat(licenciamentoElement.value);
     const emplacamentoValue = parseCurrencyToFloat(emplacamentoElement.value);
     const parcelas = parseCurrencyToFloat(parcelasElement.value);
 
     seguroTotal = seguroPercentage * preco / 100;
     ipvaTotal = ipvaPercentage * preco / 100;
-    manutencaoTotal = manutencaoMonthly * periodo;
+    manutencaoTotal = manutencao;
     entradaTotal = entradaPercentage * preco / 100;
 
     const valorFinanciado = preco - entradaTotal;
@@ -350,9 +350,9 @@ function onFormChange(){
     periodoTotalElement.text(`${periodo}`);
     seguroTotalElement.text(formatCurrency(seguroTotal));
     ipvaTotalElement.text(formatCurrency(ipvaTotal));
-    licenciamentoSeguroTotalElement.text(formatCurrency(licenciamentoSeguroValue));
+    licenciamentoTotalElement.text(formatCurrency(licenciamentoValue));
     emplacamentoTotalElement.text(formatCurrency(emplacamentoValue));
-    manutencaoMesTotalElement.text(formatCurrency(manutencaoMonthly));
+    manutencaoAnoTotalElement.text(formatCurrency(manutencao));
     manutencaoTotalElement.text(formatCurrency(manutencaoTotal));
     depreciacaoTotalElement.text(formatCurrency(0));
     entradaTotalElement.text(formatCurrency(entradaTotal));
@@ -368,10 +368,10 @@ function onFormChange(){
     custoOportunidadeVistaTotalElement.text(formatCurrency(custoOportunidadeVista));
     custoRentabilidadeAssinaturaTotalElement.text(formatCurrency(custoRentabilidadeAssinatura));
 
-    const financiadaCalcTotal = seguroTotal + ipvaTotal + manutencaoTotal + licenciamentoSeguroValue + emplacamentoValue + jurosTotal + custoOportunidadeFinanciada;
+    const financiadaCalcTotal = seguroTotal + ipvaTotal + manutencaoTotal + licenciamentoValue + emplacamentoValue + jurosTotal + custoOportunidadeFinanciada;
     financiadaTotalElement.text(formatCurrency(financiadaCalcTotal));
 
-    const vistaCalcTotal = seguroTotal + ipvaTotal + manutencaoTotal + licenciamentoSeguroValue + emplacamentoValue + custoOportunidadeVista;
+    const vistaCalcTotal = seguroTotal + ipvaTotal + manutencaoTotal + licenciamentoValue + emplacamentoValue + custoOportunidadeVista;
     vistaTotalElement.text(formatCurrency(vistaCalcTotal));
 
     assinaturaTotalElement.text(formatCurrency(assinaturaTotal + custoRentabilidadeAssinatura));
@@ -393,7 +393,7 @@ function onFormChange(){
     console.log(`Valor Financiado: ${valorFinanciado}`);
     console.log(`Parcela Mensal (com juros): ${parcelaMensal}`);
     console.log(`Juros Total: ${jurosTotal}`);
-    console.log(`Licenciamento Seguro: ${licenciamentoSeguroValue}`);
+    console.log(`Licenciamento: ${licenciamentoValue}`);
     console.log(`Emplacamento: ${emplacamentoValue}`);
     console.log(`Custo de Oportunidade Financiada: ${custoOportunidadeFinanciada}`);
     console.log(`Custo de Oportunidade à Vista: ${custoOportunidadeVista}`);
