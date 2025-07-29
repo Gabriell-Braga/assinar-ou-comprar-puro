@@ -346,7 +346,6 @@ function onFormChange(){
     const custoOportunidadeFinanciada = calculateOpportunityCost(entradaTotal, periodo, anbimaData);
     const custoOportunidadeVista = calculateOpportunityCost(preco, periodo, anbimaData);
     const custoRentabilidadeAssinatura = calculateOpportunityCost(assinaturaTotal, periodo, anbimaData);
-    console.log('Custo de Rentabilidade Assinatura:', custoRentabilidadeAssinatura);
 
     periodoTotalElement.text(`${periodo}`);
     seguroTotalElement.text(formatCurrency(seguroTotal));
@@ -398,6 +397,7 @@ function onFormChange(){
     console.log(`Emplacamento: ${emplacamentoValue}`);
     console.log(`Custo de Oportunidade Financiada: ${custoOportunidadeFinanciada}`);
     console.log(`Custo de Oportunidade à Vista: ${custoOportunidadeVista}`);
+    console.log(`Custo Rentabilidade Assinatura: ${custoRentabilidadeAssinatura}`);
     console.log(`Financiada Total (Calculado): ${financiadaCalcTotal}`);
     console.log('Dados ANBIMA carregados:', anbimaData);
     console.log('Dados do Catálogo carregados:', catalogData);
