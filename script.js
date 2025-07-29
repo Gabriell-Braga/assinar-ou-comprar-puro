@@ -341,7 +341,7 @@ function onFormChange(){
     const totalPagoComJuros = parcelaMensal * periodo;
     jurosTotal = totalPagoComJuros - valorFinanciado;
     
-    const assinaturaTotal = parcelas * 12;
+    const assinaturaTotal = parcelas * periodo;
 
     const custoOportunidadeFinanciada = calculateOpportunityCost(entradaTotal, periodo, anbimaData);
     const custoOportunidadeVista = calculateOpportunityCost(preco, periodo, anbimaData);
