@@ -2,8 +2,7 @@ let modeloElement;
 let periodoElement;
 let usoMensalElement;
 let precoElement;
-let parcelasIniciaisElement;
-let parcelasRestantesElement;
+let parcelasElement;
 let seguroElement;
 let ipvaElement;
 let licenciamentoSeguroElement;
@@ -33,10 +32,10 @@ let jurosTotalElement;
 let jurosTaxaElement;
 let entradaTotalElement;
 let custoAssinaturaTotalElement;
-let assinatura1_8TotalElement;
-let assinatura9_12TotalElement;
+let assinatura1_12TotalElement;
 let custoRentabilidadeAssinaturaTotalElement;
 let precoTotalElement;
+let baseCalculoElement; // Nova variável para o elemento de base de cálculo
 
 let financiadaTotalElement;
 let vistaTotalElement;
@@ -67,10 +66,8 @@ function populateModelSelect() {
         $(modeloElement).empty();
         $(modeloElement).append('<option value="">Selecione um modelo</option>');
 
-        // Acessa o item diretamente, já que 'items' agora é o objeto do carro
         const item = catalogData.items; 
         
-        // Verifica se o item é um objeto válido antes de tentar acessar suas propriedades
         if (typeof item === 'object' && item !== null && item.title && item.title.rendered && item.slug) {
             const option = document.createElement('option');
             option.value = item.slug;
@@ -97,8 +94,7 @@ $(document).ready(function() {
     periodoElement = document.getElementById('periodo');
     usoMensalElement = document.getElementById('uso_mensal');
     precoElement = document.getElementById('preco');
-    parcelasIniciaisElement = document.getElementById('parcelas_iniciais');
-    parcelasRestantesElement = document.getElementById('parcelas_restantes');
+    parcelasElement = document.getElementById('parcelas');
     seguroElement = document.getElementById('seguro');
     ipvaElement = document.getElementById('ipva');
     licenciamentoSeguroElement = document.getElementById('licenciamento_seguro');
@@ -121,10 +117,10 @@ $(document).ready(function() {
     jurosTaxaElement = $('[data-total="juros_taxa"]');
     entradaTotalElement = $('[data-total="entrada"]');
     custoAssinaturaTotalElement = $('[data-total="custo_assinatura"]');
-    assinatura1_8TotalElement = $('[data-total="assinatura_1_8"]');
-    assinatura9_12TotalElement = $('[data-total="assinatura_9_12"]');
+    assinatura1_12TotalElement = $('[data-total="assinatura_1_12"]');
     custoRentabilidadeAssinaturaTotalElement = $('[data-total="custo_rentabilidade_assinatura"]');
     precoTotalElement = $('[data-total="preco"]');
+    baseCalculoElement = $('[data-total="base_calculo"]'); // Inicializa o novo elemento
 
     financiadaTotalElement = $('[data-total="financiada"]');
     vistaTotalElement = $('[data-total="vista"]');
@@ -324,8 +320,7 @@ function onFormChange(){
     const taxaAM = parsePercentageToFloat(taxaAMElement.value);
     const licenciamentoSeguroValue = parseCurrencyToFloat(licenciamentoSeguroElement.value);
     const emplacamentoValue = parseCurrencyToFloat(emplacamentoElement.value);
-    const parcelasIniciais = parseCurrencyToFloat(parcelasIniciaisElement.value);
-    const parcelasRestantes = parseCurrencyToFloat(parcelasRestantesElement.value);
+    const parcelas = parseCurrencyToFloat(parcelasElement.value);
 
     seguroTotal = seguroPercentage * preco / 100;
     ipvaTotal = ipvaPercentage * preco / 100;
@@ -346,8 +341,7 @@ function onFormChange(){
     const totalPagoComJuros = parcelaMensal * periodo;
     jurosTotal = totalPagoComJuros - valorFinanciado;
     
-    parcelasTotal = parcelaMensal; 
-    const assinaturaTotal = parcelasIniciais * 8 + parcelasRestantes * 4;
+    const assinaturaTotal = parcelas * 12;
 
     const custoOportunidadeFinanciada = calculateOpportunityCost(entradaTotal, periodo, anbimaData);
     const custoOportunidadeVista = calculateOpportunityCost(preco, periodo, anbimaData);
@@ -367,9 +361,8 @@ function onFormChange(){
     jurosTotalElement.text(formatCurrency(jurosTotal));
     jurosTaxaElement.text(`${taxaAM.toFixed(2).replace('.', ',')}%`);
 
-    custoAssinaturaTotalElement.text(formatCurrency(parcelasIniciais * 8 + parcelasRestantes * 4));
-    assinatura1_8TotalElement.text(formatCurrency(parcelasIniciais));
-    assinatura9_12TotalElement.text(formatCurrency(parcelasRestantes));
+    custoAssinaturaTotalElement.text(formatCurrency(assinaturaTotal));
+    assinatura1_12TotalElement.text(formatCurrency(parcelas));
     precoTotalElement.text(formatCurrency(preco));
 
     custoOportunidadeFinanciadaTotalElement.text(formatCurrency(custoOportunidadeFinanciada));
@@ -383,6 +376,12 @@ function onFormChange(){
     vistaTotalElement.text(formatCurrency(vistaCalcTotal));
 
     assinaturaTotalElement.text(formatCurrency(assinaturaTotal + custoRentabilidadeAssinatura));
+
+    // Atualiza o elemento com os dados da ANBIMA formatados
+    if (anbimaData && Object.keys(anbimaData).length > 0) {
+        const formattedAnbima = `beta1: ${anbimaData.beta1.toFixed(2).replace('.', ',')} | beta2: ${anbimaData.beta2.toFixed(2).replace('.', ',')} | beta3: ${anbimaData.beta3.toFixed(2).replace('.', ',')} | beta4: ${anbimaData.beta4.toFixed(2).replace('.', ',')} | lambda1: ${anbimaData.lambda1.toFixed(2).replace('.', ',')} | lambda2: ${anbimaData.lambda2.toFixed(2).replace('.', ',')}`;
+        baseCalculoElement.text(formattedAnbima);
+    }
 
     console.log('--- Totais Atuais (para depuração) ---');
     console.log(`Preço: ${preco}`);
