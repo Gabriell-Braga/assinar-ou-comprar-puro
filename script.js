@@ -25,7 +25,8 @@ let licenciamentoTotalElement;
 let emplacamentoTotalElement;
 let manutencaoTotalElement;
 let manutencaoAnoTotalElement;
-let depreciacaoTotalElement;
+let depreciacaoTotalElement; // Elemento para depreciação total
+let depreciacaoPrecoElement; // Elemento para preço de venda final
 let custoOportunidadeFinanciadaTotalElement;
 let custoOportunidadeVistaTotalElement;
 let jurosTotalElement;
@@ -33,7 +34,7 @@ let jurosTaxaElement;
 let entradaTotalElement;
 let custoAssinaturaTotalElement;
 let assinatura1_12TotalElement;
-let custoRentabilidadeAssinaturaTotalElement;
+let custoOportunidadeAssinaturaTotalElement;
 let precoTotalElement;
 let baseCalculoElement;
 
@@ -43,6 +44,9 @@ let assinaturaTotalElement;
 
 let anbimaData = {};
 let catalogData = {};
+
+// Taxa de depreciação anual fixa
+const DEPRECIACAO_ANUAL_RATE = 0.15; // 15% ao ano
 
 async function fetchApiData() {
     const apiUrl = 'https://assinaroucomprar.listradigital.com.br/api/calculadora/catalog?period=12&franchise=1000';
@@ -102,7 +106,7 @@ function createJurosCurveTable() {
     const jurosCurve = [];
     if (!anbimaData || Object.keys(anbimaData).length === 0) {
         console.warn('Dados da ANBIMA não carregados para criar a curva de juros.');
-        return;
+        return []; // Retorna um array vazio se os dados não estiverem disponíveis
     }
 
     // Usar os valores completos da ANBIMA sem arredondamento para o cálculo da tabela
@@ -147,8 +151,9 @@ function createJurosCurveTable() {
             "Taxa Líquida ao período": `${(taxaLiquidaAoPeriodo * 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}%`
         });
     }
-    console.log('Curva de Juros (ANBIMA):');
-    console.table(jurosCurve);
+    // console.log('Curva de Juros (ANBIMA):'); // Comentado para evitar log excessivo no console
+    // console.table(jurosCurve); // Comentado para evitar log excessivo no console
+    return jurosCurve; // Retorna o array da curva de juros
 }
 
 
@@ -181,7 +186,8 @@ $(document).ready(function() {
     emplacamentoTotalElement = $('[data-total="emplacamento"]');
     manutencaoTotalElement = $('[data-total="manutencao"]');
     manutencaoAnoTotalElement = $('[data-total="manutencao_ano"]');
-    depreciacaoTotalElement = $('[data-total="depreciacao"]');
+    depreciacaoTotalElement = $('[data-total="depreciacao"]'); // Inicializa o elemento
+    depreciacaoPrecoElement = $('[data-total="depreciacao_preco"]'); // Inicializa o novo elemento
     custoOportunidadeFinanciadaTotalElement = $('[data-total="custo_oportunidade_financiada"]');
     custoOportunidadeVistaTotalElement = $('[data-total="custo_oportunidade_vista"]');
     jurosTotalElement = $('[data-total="juros"]');
@@ -189,7 +195,7 @@ $(document).ready(function() {
     entradaTotalElement = $('[data-total="entrada"]');
     custoAssinaturaTotalElement = $('[data-total="custo_assinatura"]');
     assinatura1_12TotalElement = $('[data-total="assinatura_1_12"]');
-    custoRentabilidadeAssinaturaTotalElement = $('[data-total="custo_rentabilidade_assinatura"]');
+    custoOportunidadeAssinaturaTotalElement = $('[data-total="custo_oportunidade_assinatura"]');
     precoTotalElement = $('[data-total="preco"]');
     baseCalculoElement = $('[data-total="base_calculo"]');
 
@@ -248,39 +254,66 @@ function parsePercentageToFloat(percentageString) {
     return parseFloat(percentageString.replace('%', '').replace(',', '.').trim());
 }
 
-function calculateOpportunityCost(principal, period, anbimaData) {
-    let opportunityCost = 0;
+function calculateOpportunityCost(scenarioType, principalValue, period, anbimaData, allCalculatedValues) {
+    let totalOpportunityCost = 0;
+    const jurosCurve = createJurosCurveTable(); // Pega a curva de juros
 
-    if (anbimaData && Object.keys(anbimaData).length > 0 && period > 0) {
-        // Para o cálculo do custo de oportunidade, os betas e lambdas ainda são arredondados para 2 casas,
-        // conforme a instrução anterior para este cálculo específico.
-        const beta1 = parseFloat(anbimaData.beta1.toFixed(2));
-        const beta2 = parseFloat(anbimaData.beta2.toFixed(2));
-        const beta3 = parseFloat(anbimaData.beta3.toFixed(2));
-        const beta4 = parseFloat(anbimaData.beta4.toFixed(2));
-        const lambda1 = parseFloat(anbimaData.lambda1.toFixed(2));
-        const lambda2 = parseFloat(anbimaData.lambda2.toFixed(2));
-
-        const periodYears = period / 12;
-        let yieldAnnual = 0;
-        if (periodYears > 0) {
-            const term1 = (1 - Math.exp(-lambda1 * periodYears)) / (lambda1 * periodYears);
-            const term2 = term1 - Math.exp(-lambda1 * periodYears);
-            const term3 = (1 - Math.exp(-lambda2 * periodYears)) / (lambda2 * periodYears);
-            const term4 = term3 - Math.exp(-lambda2 * periodYears);
-
-            yieldAnnual = beta1 + beta2 * term1 + beta3 * term2 + beta4 * term4;
-        } else {
-            yieldAnnual = beta1 + beta2 + beta3 + beta4;
-        }
-
-        const yieldMonthly = Math.pow(1 + yieldAnnual, 1/12) - 1;
-
-        opportunityCost = principal * (Math.pow(1 + yieldMonthly, period) - 1);
-    } else {
-        console.warn('Dados da ANBIMA não carregados ou período inválido para calcular Custo de Oportunidade.');
+    if (!anbimaData || Object.keys(anbimaData).length === 0 || period <= 0 || !jurosCurve || jurosCurve.length === 0) {
+        console.warn('Dados insuficientes para calcular Custo de Oportunidade.');
+        return 0;
     }
-    return opportunityCost;
+
+    const { seguroTotal, ipvaTotal, manutencao, licenciamentoValue, emplacamentoValue, parcelaMensal, parcelas, usoMensal } = allCalculatedValues;
+
+    console.group(`Custo de Oportunidade - Cenário: ${scenarioType.toUpperCase()}`);
+    for (let month = 1; month <= period; month++) {
+        let cashOutflowThisMonth = 0;
+
+        // Encontra a Taxa Líquida ao Período para o período restante
+        const remainingPeriod = period - (month - 1); // Ex: Mês 1 -> período total; Mês 2 -> período total - 1
+        const remainingPeriodLiquidRateData = jurosCurve.find(item => item["Mês"] === remainingPeriod);
+        
+        if (!remainingPeriodLiquidRateData) {
+            console.warn(`Taxa Líquida ao período não encontrada para o período restante (${remainingPeriod} meses) no mês ${month}.`);
+            continue;
+        }
+        const remainingPeriodLiquidRate = parsePercentageToFloat(remainingPeriodLiquidRateData["Taxa Líquida ao período"]) / 100;
+
+        if (scenarioType === 'vista') {
+            if (month === 1) {
+                cashOutflowThisMonth += principalValue; // Valor do carro
+                cashOutflowThisMonth += licenciamentoValue;
+                cashOutflowThisMonth += emplacamentoValue;
+                cashOutflowThisMonth += ipvaTotal; // IPVA total pago no primeiro mês
+            }
+            cashOutflowThisMonth += (seguroTotal / period); // Seguro mensal
+            cashOutflowThisMonth += manutencao; // Manutenção mensal (já é mensal)
+            
+        } else if (scenarioType === 'financiada') {
+            if (month === 1) {
+                cashOutflowThisMonth += principalValue; // Entrada
+                cashOutflowThisMonth += licenciamentoValue;
+                cashOutflowThisMonth += emplacamentoValue;
+                cashOutflowThisMonth += ipvaTotal;
+            }
+            cashOutflowThisMonth += parcelaMensal; // Parcela mensal do financiamento
+            cashOutflowThisMonth += (seguroTotal / period);
+            cashOutflowThisMonth += manutencao;
+            
+        } else if (scenarioType === 'assinatura') {
+            cashOutflowThisMonth += parcelas; // Valor da parcela da assinatura
+        }
+        
+        const monthlyOpportunityCost = cashOutflowThisMonth * remainingPeriodLiquidRate;
+        totalOpportunityCost += monthlyOpportunityCost;
+
+        console.log(`Mês ${month}:`);
+        console.log(`  Saída de Caixa (Fluxo): ${formatCurrency(cashOutflowThisMonth)}`);
+        console.log(`  Taxa Líquida ao Período Restante (${remainingPeriod} meses): ${(remainingPeriodLiquidRate * 100).toFixed(4).replace('.', ',')}%`);
+        console.log(`  Custo de Oportunidade Mensal: ${formatCurrency(monthlyOpportunityCost)}`);
+    }
+    console.groupEnd();
+    return totalOpportunityCost;
 }
 
 function updateChartHeights() {
@@ -394,10 +427,15 @@ function onFormChange(){
     const licenciamentoValue = parseCurrencyToFloat(licenciamentoElement.value);
     const emplacamentoValue = parseCurrencyToFloat(emplacamentoElement.value);
     const parcelas = parseCurrencyToFloat(parcelasElement.value);
+    const usoMensal = parseCurrencyToFloat(usoMensalElement.value); // Adicionado usoMensal
+
+    // Cálculo da Depreciação
+    const totalDepreciacao = preco * DEPRECIACAO_ANUAL_RATE * (periodo / 12);
+    const depreciacaoPrecoFinal = preco - totalDepreciacao;
 
     seguroTotal = seguroPercentage * preco / 100;
     ipvaTotal = ipvaPercentage * preco / 100;
-    manutencaoTotal = manutencao;
+    manutencaoTotal = manutencao; // Manutenção já é mensal
     entradaTotal = entradaPercentage * preco / 100;
 
     const valorFinanciado = preco - entradaTotal;
@@ -416,18 +454,31 @@ function onFormChange(){
     
     const assinaturaTotal = parcelas * periodo;
 
-    const custoOportunidadeFinanciada = calculateOpportunityCost(entradaTotal, periodo, anbimaData);
-    const custoOportunidadeVista = calculateOpportunityCost(preco, periodo, anbimaData);
-    const custoRentabilidadeAssinatura = calculateOpportunityCost(assinaturaTotal, periodo, anbimaData);
+    // Objeto com todos os valores calculados para passar para a função de custo de oportunidade
+    const allCalculatedValuesForOpportunityCost = {
+        seguroTotal: seguroTotal,
+        ipvaTotal: ipvaTotal,
+        manutencao: manutencao, // Manutenção mensal
+        licenciamentoValue: licenciamentoValue,
+        emplacamentoValue: emplacamentoValue,
+        parcelaMensal: parcelaMensal,
+        parcelas: parcelas, // Parcela mensal da assinatura
+        usoMensal: usoMensal // Uso mensal
+    };
+
+    const custoOportunidadeFinanciada = calculateOpportunityCost('financiada', entradaTotal, periodo, anbimaData, allCalculatedValuesForOpportunityCost);
+    const custoOportunidadeVista = calculateOpportunityCost('vista', preco, periodo, anbimaData, allCalculatedValuesForOpportunityCost);
+    const custoRentabilidadeAssinatura = calculateOpportunityCost('assinatura', null, periodo, anbimaData, allCalculatedValuesForOpportunityCost);
 
     periodoTotalElement.text(`${periodo}`);
     seguroTotalElement.text(formatCurrency(seguroTotal));
     ipvaTotalElement.text(formatCurrency(ipvaTotal));
     licenciamentoTotalElement.text(formatCurrency(licenciamentoValue));
     emplacamentoTotalElement.text(formatCurrency(emplacamentoValue));
-    manutencaoAnoTotalElement.text(formatCurrency(manutencao));
-    manutencaoTotalElement.text(formatCurrency(manutencaoTotal));
-    depreciacaoTotalElement.text(formatCurrency(0));
+    manutencaoAnoTotalElement.text(formatCurrency(manutencao)); // Exibe a manutenção mensal
+    manutencaoTotalElement.text(formatCurrency(manutencao * periodo)); // Total da manutenção no período
+    depreciacaoTotalElement.text(formatCurrency(totalDepreciacao)); // Exibe depreciação total
+    depreciacaoPrecoElement.text(formatCurrency(depreciacaoPrecoFinal)); // Exibe preço final após depreciação
     entradaTotalElement.text(formatCurrency(entradaTotal));
 
     jurosTotalElement.text(formatCurrency(jurosTotal));
@@ -439,18 +490,20 @@ function onFormChange(){
 
     custoOportunidadeFinanciadaTotalElement.text(formatCurrency(custoOportunidadeFinanciada));
     custoOportunidadeVistaTotalElement.text(formatCurrency(custoOportunidadeVista));
-    custoRentabilidadeAssinaturaTotalElement.text(formatCurrency(custoRentabilidadeAssinatura));
+    custoOportunidadeAssinaturaTotalElement.text(formatCurrency(custoRentabilidadeAssinatura));
 
-    const financiadaCalcTotal = seguroTotal + ipvaTotal + manutencaoTotal + licenciamentoValue + emplacamentoValue + jurosTotal + custoOportunidadeFinanciada;
+    // Adicionando a depreciação ao valor total da compra financiada
+    const financiadaCalcTotal = seguroTotal + ipvaTotal + manutencaoTotal + licenciamentoValue + emplacamentoValue + jurosTotal + custoOportunidadeFinanciada + totalDepreciacao;
     financiadaTotalElement.text(formatCurrency(financiadaCalcTotal));
 
-    const vistaCalcTotal = seguroTotal + ipvaTotal + manutencaoTotal + licenciamentoValue + emplacamentoValue + custoOportunidadeVista;
+    // Adicionando a depreciação ao valor total da compra à vista
+    const vistaCalcTotal = seguroTotal + ipvaTotal + manutencaoTotal + licenciamentoValue + emplacamentoValue + custoOportunidadeVista + totalDepreciacao;
     vistaTotalElement.text(formatCurrency(vistaCalcTotal));
 
     assinaturaTotalElement.text(formatCurrency(assinaturaTotal + custoRentabilidadeAssinatura));
 
     if (anbimaData && Object.keys(anbimaData).length > 0) {
-        const formattedAnbima = `beta1: ${anbimaData.beta1.toFixed(2).replace('.', ',')} | beta2: ${anbimaData.beta2.toFixed(2).replace('.', ',')} | beta3: ${anbimaData.beta3.toFixed(2).replace('.', ',')} | beta4: ${anbimaData.beta4.toFixed(2).replace('.', ',')} | lambda1: ${anbimaData.lambda1.toFixed(2).replace('.', ',')} | lambda2: ${anbimaData.lambda2.toFixed(2).replace('.', ',')}`;
+        const formattedAnbima = `beta1: ${anbimaData.beta1.toFixed(4).replace('.', ',')} | beta2: ${anbimaData.beta2.toFixed(4).replace('.', ',')} | beta3: ${anbimaData.beta3.toFixed(4).replace('.', ',')} | beta4: ${anbimaData.beta4.toFixed(4).replace('.', ',')} | lambda1: ${anbimaData.lambda1.toFixed(4).replace('.', ',')} | lambda2: ${anbimaData.lambda2.toFixed(4).replace('.', ',')}`;
         baseCalculoElement.text(formattedAnbima);
     }
 
@@ -460,6 +513,8 @@ function onFormChange(){
     console.log(`Seguro Total: ${seguroTotal}`);
     console.log(`IPVA Total: ${ipvaTotal}`);
     console.log(`Manutenção Total: ${manutencaoTotal}`);
+    console.log(`Depreciação Total: ${totalDepreciacao}`);
+    console.log(`Preço Final Após Depreciação: ${depreciacaoPrecoFinal}`);
     console.log(`Entrada Total: ${entradaTotal}`);
     console.log(`Taxa A.M.: ${taxaAM}`);
     console.log(`Valor Financiado: ${valorFinanciado}`);
