@@ -231,7 +231,7 @@
                                 </div>
                             </div>
                         </span>
-                        <small class="text-gray-400">Seguro + IPVA + Licenciamento e DPVAT + Emplacamento + Manutenção + Depreciação + Custo oportunidade + Custo juros</small>
+                        <small class="text-gray-400">Seguro + IPVA + Licenciamento + Emplacamento + Manutenção + Depreciação + Custo oportunidade + Custo juros</small>
                     </div>
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
@@ -245,7 +245,7 @@
                                 </div>
                             </div>
                         </span>
-                        <small class="text-gray-400">* <span data-total="seguro"></span> no 1º ano</small>
+                        <small class="text-gray-400">* <span data-total="seguro"></span> ao total nos <span data-total="periodo"></span> meses</small>
                     </div>
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
@@ -259,7 +259,7 @@
                                 </div>
                             </div>
                         </span>
-                        <small class="text-gray-400">* <span data-total="ipva"></span> no 1º ano</small>
+                        <small class="text-gray-400">* <span data-total="ipva"></span> ao total nos <span data-total="periodo"></span> meses</small>
                     </div>
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
@@ -273,7 +273,7 @@
                                 </div>
                             </div>
                         </span>
-                        <small class="text-gray-400">* <span data-total="licenciamento"></span> no 1º ano</small>
+                        <small class="text-gray-400">* <span data-total="licenciamento"></span> ao total nos <span data-total="periodo"></span> meses</small>
                     </div>
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
@@ -313,7 +313,7 @@
                                     Valor de compra do carro: <br>
                                     <span data-total="preco"></span>
                                     <div class="mt-2 w-full"></div>
-                                    Valor de venda após 12 meses: <br>
+                                    Valor de venda após <span data-total="periodo"></span> meses: <br>
                                     <span data-total="depreciacao_preco"></span>
                                     <div class="mt-2 w-full"></div>
                                     Resultado da perda: <br>
@@ -321,7 +321,7 @@
                                 </div>
                             </div>
                         </span>
-                        <small class="text-gray-400">Valor a ser depreciado em 12 meses</small>
+                        <small class="text-gray-400">Valor a ser depreciado em <span data-total="periodo"></span> meses</small>
                     </div>
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
@@ -363,12 +363,11 @@
                                     + <span data-total="emplacamento"></span> Emplacamento <br>
                                     + <span data-total="manutencao"></span> Manutenção <br>
                                     + <span data-total="depreciacao"></span> Depreciação <br>
-                                    + <span data-total="custo_oportunidade_vista"></span> Custo oportunidade <br>
-                                    + <span data-total="juros"></span> Custo juros
+                                    + <span data-total="custo_oportunidade_vista"></span> Custo oportunidade
                                 </div>
                             </div>
                         </span>
-                        <small class="text-gray-400">Seguro + IPVA + Licenciamento e DPVAT + Emplacamento + Manutenção + Depreciação + Custo oportunidade + Custo juros</small>
+                        <small class="text-gray-400">Seguro + IPVA + Licenciamento + Emplacamento + Manutenção + Depreciação + Custo oportunidade + Custo juros</small>
                     </div>
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
@@ -382,7 +381,7 @@
                                 </div>
                             </div>
                         </span>
-                        <small class="text-gray-400">* <span data-total="seguro"></span> no 1º ano</small>
+                        <small class="text-gray-400">* <span data-total="seguro"></span> ao total nos <span data-total="periodo"></span> meses</small>
                     </div>
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
@@ -396,7 +395,7 @@
                                 </div>
                             </div>
                         </span>
-                        <small class="text-gray-400">* <span data-total="ipva"></span> no 1º ano</small>
+                        <small class="text-gray-400">* <span data-total="ipva"></span> ao total nos <span data-total="periodo"></span> meses</small>
                     </div>
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
@@ -410,7 +409,7 @@
                                 </div>
                             </div>
                         </span>
-                        <small class="text-gray-400">* <span data-total="licenciamento"></span> no 1º ano</small>
+                        <small class="text-gray-400">* <span data-total="licenciamento"></span> ao total nos <span data-total="periodo"></span> meses</small>
                     </div>
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">
@@ -450,7 +449,7 @@
                                     Valor de compra do carro: <br>
                                     <span data-total="preco"></span>
                                     <div class="mt-2 w-full"></div>
-                                    Valor de venda após 12 meses: <br>
+                                    Valor de venda após <span data-total="periodo"></span> meses: <br>
                                     <span data-total="depreciacao_preco"></span>
                                     <div class="mt-2 w-full"></div>
                                     Resultado da perda: <br>
@@ -458,7 +457,7 @@
                                 </div>
                             </div>
                         </span>
-                        <small class="text-gray-400">Média anual de todos os valores FIPE do modelo</small>
+                        <small class="text-gray-400">Valor a ser depreciado em <span data-total="periodo"></span> meses</small>
                     </div>
                     <div class="flex flex-col mt-5">
                         <span class="text-lg/120%">

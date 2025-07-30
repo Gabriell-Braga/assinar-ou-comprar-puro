@@ -45,8 +45,9 @@ let assinaturaTotalElement;
 let anbimaData = {};
 let catalogData = {};
 
-// Taxa de depreciação anual fixa
-const DEPRECIACAO_ANUAL_RATE = 0.15; // 15% ao ano
+// Taxa de depreciação anual fixa (valor padrão, será ajustado em onFormChange)
+const DEPRECIACAO_ANUAL_RATE_DEFAULT = 0.15; 
+const DEPRECIACAO_ANUAL_RATE_LONGER_PERIOD = 0.10; // 10% para períodos > 12 meses
 
 async function fetchApiData() {
     const apiUrl = 'https://assinaroucomprar.listradigital.com.br/api/calculadora/catalog?period=12&franchise=1000';
@@ -254,7 +255,7 @@ function parsePercentageToFloat(percentageString) {
     return parseFloat(percentageString.replace('%', '').replace(',', '.').trim());
 }
 
-function calculateOpportunityCost(scenarioType, principalValue, period, anbimaData, allCalculatedValues) {
+function calculateOpportunityCost(scenarioType, principalValue, period, anbimaData, allCalculatedValues, annualFinancialDetails) {
     let totalOpportunityCost = 0;
     const jurosCurve = createJurosCurveTable(); // Pega a curva de juros
 
@@ -263,7 +264,7 @@ function calculateOpportunityCost(scenarioType, principalValue, period, anbimaDa
         return 0;
     }
 
-    const { seguroTotal, ipvaTotal, manutencao, licenciamentoValue, emplacamentoValue, parcelaMensal, parcelas, usoMensal } = allCalculatedValues;
+    const { manutencao, emplacamentoValue, parcelaMensal, parcelas, usoMensal } = allCalculatedValues;
 
     console.group(`Custo de Oportunidade - Cenário: ${scenarioType.toUpperCase()}`);
     for (let month = 1; month <= period; month++) {
@@ -279,29 +280,38 @@ function calculateOpportunityCost(scenarioType, principalValue, period, anbimaDa
         }
         const remainingPeriodLiquidRate = parsePercentageToFloat(remainingPeriodLiquidRateData["Taxa Líquida ao período"]) / 100;
 
+        const currentYearIndex = Math.floor((month - 1) / 12); // 0 for months 1-12, 1 for 13-24, etc.
+        const firstMonthOfYear = (month - 1) % 12 === 0; // True for month 1, 13, 25...
+
         if (scenarioType === 'vista') {
             if (month === 1) {
                 cashOutflowThisMonth += principalValue; // Valor do carro
-                cashOutflowThisMonth += licenciamentoValue;
-                cashOutflowThisMonth += emplacamentoValue;
-                cashOutflowThisMonth += ipvaTotal; // IPVA total pago no primeiro mês
+                cashOutflowThisMonth += emplacamentoValue; // Emplacamento é só no primeiro mês
             }
-            cashOutflowThisMonth += (seguroTotal / period); // Seguro mensal
-            cashOutflowThisMonth += manutencao; // Manutenção mensal (já é mensal)
+            cashOutflowThisMonth += manutencao; // Manutenção mensal
+            
+            if (firstMonthOfYear && annualFinancialDetails[currentYearIndex]) {
+                cashOutflowThisMonth += annualFinancialDetails[currentYearIndex].annualSeguro;
+                cashOutflowThisMonth += annualFinancialDetails[currentYearIndex].annualIpva;
+                cashOutflowThisMonth += annualFinancialDetails[currentYearIndex].annualLicenciamento;
+            }
             
         } else if (scenarioType === 'financiada') {
             if (month === 1) {
                 cashOutflowThisMonth += principalValue; // Entrada
-                cashOutflowThisMonth += licenciamentoValue;
-                cashOutflowThisMonth += emplacamentoValue;
-                cashOutflowThisMonth += ipvaTotal;
+                cashOutflowThisMonth += emplacamentoValue; // Emplacamento é só no primeiro mês
             }
             cashOutflowThisMonth += parcelaMensal; // Parcela mensal do financiamento
-            cashOutflowThisMonth += (seguroTotal / period);
             cashOutflowThisMonth += manutencao;
             
+            if (firstMonthOfYear && annualFinancialDetails[currentYearIndex]) {
+                cashOutflowThisMonth += annualFinancialDetails[currentYearIndex].annualSeguro;
+                cashOutflowThisMonth += annualFinancialDetails[currentYearIndex].annualIpva;
+                cashOutflowThisMonth += annualFinancialDetails[currentYearIndex].annualLicenciamento;
+            }
+            
         } else if (scenarioType === 'assinatura') {
-            cashOutflowThisMonth += parcelas; // Valor da parcela da assinatura
+            cashOutflowThisMonth += parcelas; // Valor da parcela da assinatura (já é mensal)
         }
         
         const monthlyOpportunityCost = cashOutflowThisMonth * remainingPeriodLiquidRate;
@@ -429,13 +439,96 @@ function onFormChange(){
     const parcelas = parseCurrencyToFloat(parcelasElement.value);
     const usoMensal = parseCurrencyToFloat(usoMensalElement.value); // Adicionado usoMensal
 
-    // Cálculo da Depreciação
-    const totalDepreciacao = preco * DEPRECIACAO_ANUAL_RATE * (periodo / 12);
-    const depreciacaoPrecoFinal = preco - totalDepreciacao;
+    // --- Cálculo da Depreciação e Custos Anuais (Seguro, IPVA, Licenciamento) ---
+    let currentCarValueForDepreciation = preco;
+    let totalDepreciacaoCalculated = 0;
+    let totalSeguroPeriodo = 0;
+    let totalIpvaPeriodo = 0;
+    let totalLicenciamentoPeriodo = 0;
+    let annualFinancialDetails = []; // Para armazenar os detalhes financeiros de cada ano
 
-    seguroTotal = seguroPercentage * preco / 100;
-    ipvaTotal = ipvaPercentage * preco / 100;
-    manutencaoTotal = manutencao; // Manutenção já é mensal
+    const fullYearsInPeriod = Math.floor(periodo / 12);
+    const remainingMonthsInPartialYear = periodo % 12;
+
+    console.group('Depreciação Anual e Valor do Carro');
+    console.log(`Valor inicial do carro: ${formatCurrency(preco)}`);
+
+    for (let year = 0; year < fullYearsInPeriod; year++) {
+        // Custos anuais baseados no valor do carro no início do ano
+        const annualSeguroThisYear = seguroPercentage * currentCarValueForDepreciation / 100;
+        const annualIpvaThisYear = ipvaPercentage * currentCarValueForDepreciation / 100;
+        const annualLicenciamentoThisYear = licenciamentoValue; // Licenciamento é um valor anual fixo
+
+        totalSeguroPeriodo += annualSeguroThisYear;
+        totalIpvaPeriodo += annualIpvaThisYear;
+        totalLicenciamentoPeriodo += annualLicenciamentoThisYear;
+
+        // Depreciação para este ano completo
+        const depreciationRateForThisYear = (year === 0) ? DEPRECIACAO_ANUAL_RATE_DEFAULT : DEPRECIACAO_ANUAL_RATE_LONGER_PERIOD;
+        const depreciationAmountThisYear = currentCarValueForDepreciation * depreciationRateForThisYear;
+        
+        totalDepreciacaoCalculated += depreciationAmountThisYear;
+        currentCarValueForDepreciation -= depreciationAmountThisYear;
+
+        // Armazena os detalhes financeiros para este ano
+        annualFinancialDetails.push({
+            year: year + 1,
+            startOfYearCarValue: preco - totalDepreciacaoCalculated, // Valor do carro após depreciação acumulada até o final do ano anterior
+            annualSeguro: annualSeguroThisYear,
+            annualIpva: annualIpvaThisYear,
+            annualLicenciamento: annualLicenciamentoThisYear,
+            depreciationAmount: depreciationAmountThisYear
+        });
+
+        // Log do valor do carro ao final de cada ano
+        console.log(`Fim do Ano ${year + 1}: Valor do carro = ${formatCurrency(currentCarValueForDepreciation)}`);
+    }
+
+    // Lida com o ano parcial restante, se houver
+    if (remainingMonthsInPartialYear > 0) {
+        const monthsFraction = remainingMonthsInPartialYear / 12;
+
+        // Custos para este ano parcial
+        const annualSeguroThisPartialYear = seguroPercentage * currentCarValueForDepreciation / 100;
+        const annualIpvaThisPartialYear = ipvaPercentage * currentCarValueForDepreciation / 100;
+        const annualLicenciamentoThisPartialYear = licenciamentoValue;
+
+        totalSeguroPeriodo += annualSeguroThisPartialYear * monthsFraction;
+        totalIpvaPeriodo += annualIpvaThisPartialYear * monthsFraction;
+        totalLicenciamentoPeriodo += annualLicenciamentoThisPartialYear * monthsFraction;
+
+        // Depreciação para este ano parcial
+        const depreciationRateForPartialYear = (fullYearsInPeriod === 0) ? DEPRECIACAO_ANUAL_RATE_DEFAULT : DEPRECIACAO_ANUAL_RATE_LONGER_PERIOD;
+        const depreciationAmountThisPartialYear = currentCarValueForDepreciation * depreciationRateForPartialYear * monthsFraction;
+        
+        totalDepreciacaoCalculated += depreciationAmountThisPartialYear;
+        currentCarValueForDepreciation -= depreciationAmountThisPartialYear;
+
+        // Armazena os detalhes financeiros para este ano parcial
+        annualFinancialDetails.push({
+            year: fullYearsInPeriod + 1,
+            startOfYearCarValue: preco - totalDepreciacaoCalculated, // Valor do carro após depreciação acumulada até o final do ano anterior
+            annualSeguro: annualSeguroThisPartialYear,
+            annualIpva: annualIpvaThisPartialYear,
+            annualLicenciamento: annualLicenciamentoThisPartialYear,
+            depreciationAmount: depreciationAmountThisPartialYear
+        });
+
+        // Log do valor do carro ao final do período parcial
+        console.log(`Fim do Período (após ${periodo} meses): Valor do carro = ${formatCurrency(currentCarValueForDepreciation)}`);
+    } else if (fullYearsInPeriod === 0 && periodo === 0) {
+        // Caso o período seja 0 meses, o valor final é o inicial
+        console.log(`Fim do Período (após ${periodo} meses): Valor do carro = ${formatCurrency(currentCarValueForDepreciation)}`);
+    }
+    console.groupEnd();
+
+    const depreciacaoPrecoFinal = preco - totalDepreciacaoCalculated;
+
+    // --- Atribui aos totais globais para exibição e outros cálculos ---
+    seguroTotal = totalSeguroPeriodo;
+    ipvaTotal = totalIpvaPeriodo;
+    manutencaoTotal = manutencao * periodo; // Manutenção total ao longo do período (manutencao é mensal)
+    
     entradaTotal = entradaPercentage * preco / 100;
 
     const valorFinanciado = preco - entradaTotal;
@@ -456,28 +549,28 @@ function onFormChange(){
 
     // Objeto com todos os valores calculados para passar para a função de custo de oportunidade
     const allCalculatedValuesForOpportunityCost = {
-        seguroTotal: seguroTotal,
-        ipvaTotal: ipvaTotal,
-        manutencao: manutencao, // Manutenção mensal
-        licenciamentoValue: licenciamentoValue,
-        emplacamentoValue: emplacamentoValue,
+        seguroTotal: seguroTotal, // Total acumulado para o período
+        ipvaTotal: ipvaTotal,     // Total acumulado para o período
+        manutencao: manutencao,   // Manutenção mensal
+        licenciamentoValue: licenciamentoValue, // Valor anual do licenciamento
+        emplacamentoValue: emplacamentoValue, // Valor único do emplacamento
         parcelaMensal: parcelaMensal,
         parcelas: parcelas, // Parcela mensal da assinatura
         usoMensal: usoMensal // Uso mensal
     };
 
-    const custoOportunidadeFinanciada = calculateOpportunityCost('financiada', entradaTotal, periodo, anbimaData, allCalculatedValuesForOpportunityCost);
-    const custoOportunidadeVista = calculateOpportunityCost('vista', preco, periodo, anbimaData, allCalculatedValuesForOpportunityCost);
-    const custoRentabilidadeAssinatura = calculateOpportunityCost('assinatura', null, periodo, anbimaData, allCalculatedValuesForOpportunityCost);
+    const custoOportunidadeFinanciada = calculateOpportunityCost('financiada', entradaTotal, periodo, anbimaData, allCalculatedValuesForOpportunityCost, annualFinancialDetails);
+    const custoOportunidadeVista = calculateOpportunityCost('vista', preco, periodo, anbimaData, allCalculatedValuesForOpportunityCost, annualFinancialDetails);
+    const custoOportunidadeAssinatura = calculateOpportunityCost('assinatura', null, periodo, anbimaData, allCalculatedValuesForOpportunityCost, annualFinancialDetails);
 
     periodoTotalElement.text(`${periodo}`);
     seguroTotalElement.text(formatCurrency(seguroTotal));
     ipvaTotalElement.text(formatCurrency(ipvaTotal));
-    licenciamentoTotalElement.text(formatCurrency(licenciamentoValue));
+    licenciamentoTotalElement.text(formatCurrency(totalLicenciamentoPeriodo)); // Exibe o total de licenciamento no período
     emplacamentoTotalElement.text(formatCurrency(emplacamentoValue));
     manutencaoAnoTotalElement.text(formatCurrency(manutencao)); // Exibe a manutenção mensal
     manutencaoTotalElement.text(formatCurrency(manutencao * periodo)); // Total da manutenção no período
-    depreciacaoTotalElement.text(formatCurrency(totalDepreciacao)); // Exibe depreciação total
+    depreciacaoTotalElement.text(formatCurrency(totalDepreciacaoCalculated)); // Exibe depreciação total
     depreciacaoPrecoElement.text(formatCurrency(depreciacaoPrecoFinal)); // Exibe preço final após depreciação
     entradaTotalElement.text(formatCurrency(entradaTotal));
 
@@ -490,17 +583,17 @@ function onFormChange(){
 
     custoOportunidadeFinanciadaTotalElement.text(formatCurrency(custoOportunidadeFinanciada));
     custoOportunidadeVistaTotalElement.text(formatCurrency(custoOportunidadeVista));
-    custoOportunidadeAssinaturaTotalElement.text(formatCurrency(custoRentabilidadeAssinatura));
+    custoOportunidadeAssinaturaTotalElement.text(formatCurrency(custoOportunidadeAssinatura));
 
     // Adicionando a depreciação ao valor total da compra financiada
-    const financiadaCalcTotal = seguroTotal + ipvaTotal + manutencaoTotal + licenciamentoValue + emplacamentoValue + jurosTotal + custoOportunidadeFinanciada + totalDepreciacao;
+    const financiadaCalcTotal = seguroTotal + ipvaTotal + manutencaoTotal + totalLicenciamentoPeriodo + emplacamentoValue + jurosTotal + custoOportunidadeFinanciada + totalDepreciacaoCalculated;
     financiadaTotalElement.text(formatCurrency(financiadaCalcTotal));
 
     // Adicionando a depreciação ao valor total da compra à vista
-    const vistaCalcTotal = seguroTotal + ipvaTotal + manutencaoTotal + licenciamentoValue + emplacamentoValue + custoOportunidadeVista + totalDepreciacao;
+    const vistaCalcTotal = seguroTotal + ipvaTotal + manutencaoTotal + totalLicenciamentoPeriodo + emplacamentoValue + custoOportunidadeVista + totalDepreciacaoCalculated;
     vistaTotalElement.text(formatCurrency(vistaCalcTotal));
 
-    assinaturaTotalElement.text(formatCurrency(assinaturaTotal + custoRentabilidadeAssinatura));
+    assinaturaTotalElement.text(formatCurrency(assinaturaTotal + custoOportunidadeAssinatura));
 
     if (anbimaData && Object.keys(anbimaData).length > 0) {
         const formattedAnbima = `beta1: ${anbimaData.beta1.toFixed(4).replace('.', ',')} | beta2: ${anbimaData.beta2.toFixed(4).replace('.', ',')} | beta3: ${anbimaData.beta3.toFixed(4).replace('.', ',')} | beta4: ${anbimaData.beta4.toFixed(4).replace('.', ',')} | lambda1: ${anbimaData.lambda1.toFixed(4).replace('.', ',')} | lambda2: ${anbimaData.lambda2.toFixed(4).replace('.', ',')}`;
@@ -510,21 +603,21 @@ function onFormChange(){
     console.log('--- Totais Atuais (para depuração) ---');
     console.log(`Preço: ${preco}`);
     console.log(`Período: ${periodo}`);
-    console.log(`Seguro Total: ${seguroTotal}`);
-    console.log(`IPVA Total: ${ipvaTotal}`);
-    console.log(`Manutenção Total: ${manutencaoTotal}`);
-    console.log(`Depreciação Total: ${totalDepreciacao}`);
+    console.log(`Seguro Total (Período): ${seguroTotal}`);
+    console.log(`IPVA Total (Período): ${ipvaTotal}`);
+    console.log(`Manutenção Total (Período): ${manutencaoTotal}`);
+    console.log(`Depreciação Total: ${totalDepreciacaoCalculated}`);
     console.log(`Preço Final Após Depreciação: ${depreciacaoPrecoFinal}`);
     console.log(`Entrada Total: ${entradaTotal}`);
     console.log(`Taxa A.M.: ${taxaAM}`);
     console.log(`Valor Financiado: ${valorFinanciado}`);
     console.log(`Parcela Mensal (com juros): ${parcelaMensal}`);
     console.log(`Juros Total: ${jurosTotal}`);
-    console.log(`Licenciamento: ${licenciamentoValue}`);
+    console.log(`Licenciamento Total (Período): ${totalLicenciamentoPeriodo}`);
     console.log(`Emplacamento: ${emplacamentoValue}`);
     console.log(`Custo de Oportunidade Financiada: ${custoOportunidadeFinanciada}`);
     console.log(`Custo de Oportunidade à Vista: ${custoOportunidadeVista}`);
-    console.log(`Custo Rentabilidade Assinatura: ${custoRentabilidadeAssinatura}`);
+    console.log(`Custo Rentabilidade Assinatura: ${custoOportunidadeAssinatura}`);
     console.log(`Financiada Total (Calculado): ${financiadaCalcTotal}`);
     console.log('Dados ANBIMA carregados:', anbimaData);
     console.log('Dados do Catálogo carregados:', catalogData);
