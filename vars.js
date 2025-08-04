@@ -19,7 +19,8 @@ window.carros.push(
         "manutencao-24": "",
         "manutencao-36": "",
         "preco-0km": "",
-        "fipe": ""
+        "fipe": "",
+        "ano": ""
     },
     {
         "modelo": "Taos Highline",
@@ -40,7 +41,8 @@ window.carros.push(
         "manutencao-24": "",
         "manutencao-36": "",
         "preco-0km": "",
-        "fipe": ""
+        "fipe": "",
+        "ano": ""
     },
     {
         "modelo": "Virtus Comfortline",
@@ -61,7 +63,8 @@ window.carros.push(
         "manutencao-24": "",
         "manutencao-36": "",
         "preco-0km": "",
-        "fipe": ""
+        "fipe": "",
+        "ano": ""
     },
     {
         "modelo": "T-Cross Highline",
@@ -82,7 +85,8 @@ window.carros.push(
         "manutencao-24": "814",
         "manutencao-36": "876",
         "preco-0km": "179990",
-        "fipe": "005508-5_26"
+        "fipe": "005508-5",
+        "ano": "2025"
     },
     {
         "modelo": "Kicks Play Sense",
@@ -103,7 +107,8 @@ window.carros.push(
         "manutencao-24": "",
         "manutencao-36": "",
         "preco-0km": "",
-        "fipe": ""
+        "fipe": "",
+        "ano": ""
     },
     {
         "modelo": "HB20 Comfort",
@@ -124,7 +129,8 @@ window.carros.push(
         "manutencao-24": "",
         "manutencao-36": "",
         "preco-0km": "",
-        "fipe": ""
+        "fipe": "",
+        "ano": ""
     },
     {
         "modelo": "Nivus Highline",
@@ -145,7 +151,8 @@ window.carros.push(
         "manutencao-24": "",
         "manutencao-36": "",
         "preco-0km": "",
-        "fipe": ""
+        "fipe": "",
+        "ano": ""
     },
     {
         "modelo": "Compass Longitude",
@@ -166,7 +173,8 @@ window.carros.push(
         "manutencao-24": "",
         "manutencao-36": "",
         "preco-0km": "",
-        "fipe": ""
+        "fipe": "",
+        "ano": ""
     },
     {
         "modelo": "Fastback Audace Turbo",
@@ -187,12 +195,14 @@ window.carros.push(
         "manutencao-24": "",
         "manutencao-36": "",
         "preco-0km": "",
-        "fipe": ""
+        "fipe": "",
+        "ano": ""
     }
 );
 
 window.config = window.config || {};
 window.config = {
+    "fipe-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJkNWUwZTJlMi02ZmVjLTQyYWQtYjJjZC02ZDg1NjYwZjMyMGEiLCJlbWFpbCI6Im1vbmV5YnJnaGlraEBnbWFpbC5jb20iLCJpYXQiOjE3NTQzMjI3ODR9.OIgKRMI1RJVy9j15c5GL7S57EfCx0XljjsBJSMC_-hg",
     "taxa-a-m": "1,49",
     "entrada": "40",
     "emplacamento": "530,49",

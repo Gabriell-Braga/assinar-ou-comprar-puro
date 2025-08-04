@@ -29,8 +29,8 @@
             <form id="basic-form" class="w-full md:w-1/3">
                 <div class="form-group mb-5">
                     <label for="modelo" class="block text-lg font-medium text-gray-700">Escolha o modelo do carro</label>
-                    <select onchange="onFormChange(); updateCarData()"required name="modelo" class="" id="modelo">
-                        <option value="">Selecione um modelo</option>
+                    <select onchange="onFormChange(); updateCarPrice()" required name="modelo" class="" id="modelo">
+                        <option value="" disabled>Selecione um modelo</option>
                         <option value="modelo1">Modelo 1</option>
                         <option value="modelo2">Modelo 2</option>
                         <option value="modelo3">Modelo 3</option>
@@ -38,8 +38,8 @@
                 </div>
                 <div class="form-group mb-5">
                     <label for="periodo" class="block text-lg font-medium text-gray-700">Período</label>
-                    <select onchange="onFormChange(); updateCarData()"required name="periodo" class="" id="periodo">
-                        <option value="">Selecione um período</option>
+                    <select onchange="onFormChange(); updateCarData()" required name="periodo" class="" id="periodo">
+                        <option value="" disabled>Selecione um período</option>
                         <option value="12" selected>12 meses</option>
                         <option value="24">24 meses</option>
                         <option value="36">36 meses</option>
@@ -47,8 +47,8 @@
                 </div>
                 <div class="form-group mb-5">
                     <label for="uso_mensal" class="block text-lg font-medium text-gray-700">Uso mensal</label>
-                    <select onchange="onFormChange(); updateCarData()"required name="uso_mensal" class="" id="uso_mensal">
-                        <option value="">Selecione um uso mensal</option>
+                    <select onchange="onFormChange(); updateCarData()" required name="uso_mensal" class="" id="uso_mensal">
+                        <option value="" disabled>Selecione um uso mensal</option>
                         <option value="1000" selected>1000 Km/mês</option>
                         <option value="1500">1500 Km/mês</option>
                         <option value="2000">2000 Km/mês</option>

@@ -38,15 +38,11 @@ let custoOportunidadeAssinaturaTotalElement;
 let precoTotalElement;
 let baseCalculoElement;
 
-let financiadaTotalElement;
-let vistaTotalElement;
-let assinaturaTotalElement;
-
 let anbimaData = {};
 let catalogData = {};
 
 // Taxa de depreciação anual
-const DEPRECIACAO_ANUAL_RATE_DEFAULT = 0.15; 
+let DEPRECIACAO_ANUAL_RATE_DEFAULT = 0.15; 
 const DEPRECIACAO_ANUAL_RATE_LONGER_PERIOD = 0.10;
 
 async function fetchApiData() {
@@ -64,14 +60,43 @@ async function fetchApiData() {
     }
 }
 
+async function fetchFipePrice(fipeCode, year) {
+    const fipeApiUrl = `https://fipe.parallelum.com.br/api/v2/cars/${fipeCode}/years/${year}-5/history`;
+    
+    // Obter o token da variável de configuração global
+    const fipeToken = window.config ? window.config["fipe-token"] : null;
+    const headers = {};
+    if (fipeToken) {
+        headers['X-Subscription-Token'] = fipeToken;
+    }
+
+    try {
+        const response = await fetch(fipeApiUrl, { headers });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log('Dados da FIPE carregados:', data);
+        return data.priceHistory;
+    } catch (error) {
+        console.error('Erro ao buscar dados da FIPE:', error);
+        return [];
+    }
+}
+
 function populateModelSelectFromLocalData() {
     if (modeloElement && window.carros && window.carros.length > 0) {
         $(modeloElement).empty();
-        $(modeloElement).append('<option value="">Selecione um modelo</option>');
+        $(modeloElement).append('<option value="" disabled selected>Selecione um modelo</option>');
         window.carros.forEach(car => {
             const option = document.createElement('option');
             option.value = car.slug;
             option.textContent = car.modelo;
+            // Adicionar os atributos fipe e ano para a nova função
+            if(car.fipe){
+                 option.setAttribute('data-fipe-code', car.fipe);
+                 option.setAttribute('data-year', car.ano);
+            }
             modeloElement.appendChild(option);
         });
         console.log('Select de modelos populado a partir de dados locais.');
@@ -80,8 +105,51 @@ function populateModelSelectFromLocalData() {
     }
 }
 
+async function updateCarPrice() {
+    const selectedOption = modeloElement.options[modeloElement.selectedIndex];
+    const selectedSlug = selectedOption.value;
+    const selectedCar = window.carros.find(car => car.slug === selectedSlug);
+
+    if (selectedCar && selectedCar.fipe) {
+        const fipeCode = selectedOption.getAttribute('data-fipe-code');
+        const year = selectedOption.getAttribute('data-year');
+        const priceHistory = await fetchFipePrice(fipeCode, year);
+        
+        if (priceHistory && priceHistory.length >= 3) {
+            const currentPrice = parseCurrencyToFloat(priceHistory[0].price);
+            const threeMonthsAgoPrice = parseCurrencyToFloat(priceHistory[2].price);
+            
+            // Calcular depreciação do primeiro ano com base na variação dos 3 meses
+            const priceChange = threeMonthsAgoPrice - currentPrice;
+            DEPRECIACAO_ANUAL_RATE_DEFAULT = (priceChange / threeMonthsAgoPrice) * (12/3); // Projeta para um ano
+            
+            if (selectedCar) {
+                selectedCar.fipePrice = currentPrice;
+            }
+            precoElement.value = formatCurrency(currentPrice);
+            console.log(`Nova taxa de depreciação do primeiro ano calculada: ${(DEPRECIACAO_ANUAL_RATE_DEFAULT * 100).toFixed(2)}%`);
+        } else {
+            // Se não houver dados suficientes, usa o valor padrão de 15%
+            DEPRECIACAO_ANUAL_RATE_DEFAULT = 0.15;
+            if (selectedCar) {
+                selectedCar.fipePrice = 0;
+            }
+            precoElement.value = formatCurrency(0);
+            console.warn('Não há dados suficientes da FIPE para calcular a depreciação dinâmica. Usando a taxa padrão de 15%.');
+        }
+    } else {
+        DEPRECIACAO_ANUAL_RATE_DEFAULT = 0.15;
+        precoElement.value = formatCurrency(0);
+    }
+    
+    // Chamar onFormChange para recalcular tudo após o preço ser atualizado
+    onFormChange();
+    console.log(`Preço do carro "${selectedCar?.modelo || 'Nenhum'}" e taxa de depreciação atualizados.`);
+}
+
 function updateCarData() {
-    const selectedSlug = modeloElement.value;
+    const selectedOption = modeloElement.options[modeloElement.selectedIndex];
+    const selectedSlug = selectedOption.value;
     const selectedCar = window.carros.find(car => car.slug === selectedSlug);
 
     const period = periodoElement.value;
@@ -89,6 +157,13 @@ function updateCarData() {
     
     const key = `${period}x${usoMensal}`;
     const keyManutencao = `manutencao-${period}`;
+    
+    // Usar o preço FIPE já armazenado
+    if (selectedCar && selectedCar.fipePrice) {
+        precoElement.value = formatCurrency(selectedCar.fipePrice);
+    } else {
+        precoElement.value = formatCurrency(0);
+    }
 
     if (selectedCar && selectedCar[key]) {
         parcelasElement.value = formatCurrency(selectedCar[key]);
@@ -101,15 +176,10 @@ function updateCarData() {
     } else {
         manutencaoElement.value = formatCurrency(0);
     }
-
-    if (selectedCar && selectedCar["preco-0km"]) {
-        precoElement.value = formatCurrency(selectedCar["preco-0km"]);
-    } else {
-        precoElement.value = formatCurrency(0);
-    }
-
-    console.log(`Dados do carro "${selectedCar?.modelo || 'Nenhum'}" atualizados.`);
+    
+    // Chamar onFormChange para recalcular tudo sem chamar a API
     onFormChange();
+    console.log(`Dados do carro "${selectedCar?.modelo || 'Nenhum'}" atualizados sem nova requisição FIPE.`);
 }
 
 const irAliquots = [
@@ -170,11 +240,10 @@ function createJurosCurveTable() {
 
 $(document).ready(function() {
     console.log('Script carregado com sucesso!');
-
     fetchApiData().then(() => {
         populateModelSelectFromLocalData();
         createJurosCurveTable();
-        onFormChange();
+        applyDefaultConfig();
     });
 
     modeloElement = document.getElementById('modelo');
@@ -214,15 +283,6 @@ $(document).ready(function() {
     vistaTotalElement = $('[data-total="vista"]');
     assinaturaTotalElement = $('[data-total="assinatura"]');
     
-    $(modeloElement).on('change', function() {
-        updateCarData();
-        onFormChange();
-    });
-    $(usoMensalElement).on('input', function() {
-        updateCarData();
-        onFormChange();
-    });
-
     $('#basic-form').on('submit', function(event) {
         event.preventDefault();
         if (this.checkValidity()) {
@@ -241,7 +301,6 @@ $(document).ready(function() {
             console.log('Formulário inválido!');
         }
     });
-
     $('#complementary-form').on('submit', function(event) {
         event.preventDefault();
         if (this.checkValidity()) {
@@ -256,14 +315,11 @@ $(document).ready(function() {
     });
 
     setupInputFormatting();
-    applyDefaultConfig(); // Chamar a nova função de configuração
 });
 
 function applyDefaultConfig() {
     if (window.config) {
         const config = window.config;
-        
-        // Aplica os valores aos inputs
         if (config["taxa-a-m"]) {
             taxaAMElement.value = config["taxa-a-m"];
         }
@@ -282,10 +338,7 @@ function applyDefaultConfig() {
         if (config.seguro) {
             seguroElement.value = config.seguro;
         }
-
-        // Força a formatação dos inputs
         setupInputFormatting();
-        // Recalcula os valores para refletir a nova configuração
         onFormChange();
     }
 }
@@ -299,10 +352,12 @@ function formatPercentage(value) {
 }
 
 function parseCurrencyToFloat(currencyString) {
+    if (!currencyString) return 0;
     return parseFloat(currencyString.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
 }
 
 function parsePercentageToFloat(percentageString) {
+    if (!percentageString) return 0;
     return parseFloat(percentageString.replace('%', '').replace(',', '.').trim());
 }
 
@@ -314,7 +369,7 @@ function calculateOpportunityCost(scenarioType, principalValue, period, anbimaDa
         return 0;
     }
     const { manutencao, emplacamentoValue, parcelaMensal, parcelas, usoMensal } = allCalculatedValues;
-    console.group(`Custo de Oportunidade - Cenário: ${scenarioType.toUpperCase()}`);
+    // console.group(`Custo de Oportunidade - Cenário: ${scenarioType.toUpperCase()}`);
     for (let month = 1; month <= period; month++) {
         let cashOutflowThisMonth = 0;
         const remainingPeriod = period - (month - 1);
@@ -356,11 +411,10 @@ function calculateOpportunityCost(scenarioType, principalValue, period, anbimaDa
         }
         const monthlyOpportunityCost = cashOutflowThisMonth * remainingPeriodLiquidRate;
         totalOpportunityCost += monthlyOpportunityCost;
-
-        console.log(`Mês ${month}:`);
-        console.log(`  Saída de Caixa (Fluxo): ${formatCurrency(cashOutflowThisMonth)}`);
-        console.log(`  Taxa Líquida ao Período Restante (${remainingPeriod} meses): ${(remainingPeriodLiquidRate * 100).toFixed(4).replace('.', ',')}%`);
-        console.log(`  Custo de Oportunidade Mensal: ${formatCurrency(monthlyOpportunityCost)}`);
+        // console.log(`Mês ${month}:`);
+        // console.log(`  Saída de Caixa (Fluxo): ${formatCurrency(cashOutflowThisMonth)}`);
+        // console.log(`  Taxa Líquida ao Período Restante (${remainingPeriod} meses): ${(remainingPeriodLiquidRate * 100).toFixed(4).replace('.', ',')}%`);
+        // console.log(`  Custo de Oportunidade Mensal: ${formatCurrency(monthlyOpportunityCost)}`);
     }
     console.groupEnd();
     return totalOpportunityCost;
@@ -370,7 +424,6 @@ function updateChartHeights() {
     const financiadaValue = parseCurrencyToFloat(financiadaTotalElement.text());
     const vistaValue = parseCurrencyToFloat(vistaTotalElement.text());
     const assinaturaValue = parseCurrencyToFloat(assinaturaTotalElement.text());
-
     const maxValue = Math.max(financiadaValue, vistaValue, assinaturaValue);
     if (maxValue === 0) {
         $('#chart-financiada').css('height', '0%');
@@ -381,11 +434,9 @@ function updateChartHeights() {
     const financiadaHeight = (financiadaValue / maxValue) * 100;
     const vistaHeight = (vistaValue / maxValue) * 100;
     const assinaturaHeight = (assinaturaValue / maxValue) * 100;
-
     $('#chart-financiada').css('height', `${financiadaHeight}%`);
     $('#chart-vista').css('height', `${vistaHeight}%`);
     $('#chart-assinatura').css('height', `${assinaturaHeight}%`);
-
     console.log('Alturas dos gráficos atualizadas:', {
         financiada: `${financiadaHeight}%`,
         vista: `${vistaHeight}%`,
@@ -495,7 +546,6 @@ function onFormChange(){
             annualLicenciamento: annualLicenciamentoThisYear,
             depreciationAmount: depreciationAmountThisYear
         });
-
         console.log(`Fim do Ano ${year + 1}: Valor do carro = ${formatCurrency(currentCarValueForDepreciation)}`);
     }
 
@@ -514,7 +564,6 @@ function onFormChange(){
         
         totalDepreciacaoCalculated += depreciationAmountThisPartialYear;
         currentCarValueForDepreciation -= depreciationAmountThisPartialYear;
-
         annualFinancialDetails.push({
             year: fullYearsInPeriod + 1,
             startOfYearCarValue: preco - totalDepreciacaoCalculated,
@@ -530,7 +579,6 @@ function onFormChange(){
     console.groupEnd();
 
     const depreciacaoPrecoFinal = preco - totalDepreciacaoCalculated;
-
     seguroTotal = totalSeguroPeriodo;
     ipvaTotal = totalIpvaPeriodo;
     manutencaoTotal = manutencao * periodo;
@@ -545,11 +593,9 @@ function onFormChange(){
     } else {
         parcelaMensal = valorFinanciado / periodo;
     }
-
     const totalPagoComJuros = parcelaMensal * periodo;
     jurosTotal = totalPagoComJuros - valorFinanciado;
     const assinaturaTotal = parcelas * periodo;
-
     const allCalculatedValuesForOpportunityCost = {
         seguroTotal: seguroTotal,
         ipvaTotal: ipvaTotal,
