@@ -18,7 +18,6 @@ window.carros.push(
         "manutencao-12": "",
         "manutencao-24": "",
         "manutencao-36": "",
-        "preco-0km": "",
         "fipe": "",
         "ano": ""
     },
@@ -40,7 +39,6 @@ window.carros.push(
         "manutencao-12": "",
         "manutencao-24": "",
         "manutencao-36": "",
-        "preco-0km": "",
         "fipe": "",
         "ano": ""
     },
@@ -62,7 +60,6 @@ window.carros.push(
         "manutencao-12": "",
         "manutencao-24": "",
         "manutencao-36": "",
-        "preco-0km": "",
         "fipe": "",
         "ano": ""
     },
@@ -106,7 +103,6 @@ window.carros.push(
         "manutencao-12": "",
         "manutencao-24": "",
         "manutencao-36": "",
-        "preco-0km": "",
         "fipe": "",
         "ano": ""
     },
@@ -128,7 +124,6 @@ window.carros.push(
         "manutencao-12": "",
         "manutencao-24": "",
         "manutencao-36": "",
-        "preco-0km": "",
         "fipe": "",
         "ano": ""
     },
@@ -150,7 +145,6 @@ window.carros.push(
         "manutencao-12": "",
         "manutencao-24": "",
         "manutencao-36": "",
-        "preco-0km": "",
         "fipe": "",
         "ano": ""
     },
@@ -172,7 +166,6 @@ window.carros.push(
         "manutencao-12": "",
         "manutencao-24": "",
         "manutencao-36": "",
-        "preco-0km": "",
         "fipe": "",
         "ano": ""
     },
@@ -194,7 +187,6 @@ window.carros.push(
         "manutencao-12": "",
         "manutencao-24": "",
         "manutencao-36": "",
-        "preco-0km": "",
         "fipe": "",
         "ano": ""
     }
