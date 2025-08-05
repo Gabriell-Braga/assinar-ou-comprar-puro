@@ -1,7 +1,7 @@
 window.carros = window.carros || [];
 window.carros.push(
     {
-        "modelo": "Polo Highline",
+        "modelo": "Polo Highline 1.0 170 TSI ",
         "slug": "volkswagen-polo",
         "12x1000": "",
         "12x1500": "",
@@ -22,49 +22,49 @@ window.carros.push(
         "ano": ""
     },
     {
-        "modelo": "Taos Highline",
+        "modelo": "Taos Highline 200 TSI 1,4 2025",
         "slug": "volkswagen-taos",
-        "12x1000": "",
-        "12x1500": "",
-        "12x2000": "",
-        "12x2500": "",
-        "24x1000": "",
-        "24x1500": "",
-        "24x2000": "",
-        "24x2500": "",
-        "36x1000": "",
-        "36x1500": "",
-        "36x2000": "",
-        "36x2500": "",
-        "manutencao-12": "",
-        "manutencao-24": "",
-        "manutencao-36": "",
-        "fipe": "",
-        "ano": ""
+        "12x1000": "5087.99",
+        "12x1500": "5087.99",
+        "12x2000": "5545.99",
+        "12x2500": "5851.99",
+        "24x1000": "4960.99",
+        "24x1500": "5087.99",
+        "24x2000": "5342.99",
+        "24x2500": "5647.99",
+        "36x1000": "4935.99",
+        "36x1500": "5062.99",
+        "36x2000": "5316.99",
+        "36x2500": "5622.99",
+        "manutencao-12": "0",
+        "manutencao-24": "0",
+        "manutencao-36": "0",
+        "fipe": "005528-0",
+        "ano": "2025"
     },
     {
-        "modelo": "Virtus Comfortline",
+        "modelo": "Virtus Comfortline 1.0 200 TSI 2026",
         "slug": "volkswagen-virtus",
-        "12x1000": "",
-        "12x1500": "",
-        "12x2000": "",
-        "12x2500": "",
-        "24x1000": "",
-        "24x1500": "",
-        "24x2000": "",
-        "24x2500": "",
-        "36x1000": "",
-        "36x1500": "",
-        "36x2000": "",
-        "36x2500": "",
-        "manutencao-12": "",
-        "manutencao-24": "",
-        "manutencao-36": "",
-        "fipe": "",
-        "ano": ""
+        "12x1000": "3294.99",
+        "12x1500": "3294.99",
+        "12x2000": "3591.99",
+        "12x2500": "3789.99",
+        "24x1000": "3212.99",
+        "24x1500": "3294.99",
+        "24x2000": "3459.99",
+        "24x2500": "3657.99",
+        "36x1000": "3130.99",
+        "36x1500": "3196.99",
+        "36x2000": "3360.99",
+        "36x2500": "3558.99",
+        "manutencao-12": "0",
+        "manutencao-24": "0",
+        "manutencao-36": "0",
+        "fipe": "005485-2",
+        "ano": "2026"
     },
     {
-        "modelo": "T-Cross Highline",
+        "modelo": "T-Cross Highline TSI 16v 2026",
         "slug": "volkswagen-t-cross",
         "12x1000": "3975.99",
         "12x1500": "3975.99",
@@ -81,12 +81,11 @@ window.carros.push(
         "manutencao-12": "771.46",
         "manutencao-24": "814",
         "manutencao-36": "876",
-        "preco-0km": "179990",
         "fipe": "005508-5",
-        "ano": "2025"
+        "ano": "2026"
     },
     {
-        "modelo": "Kicks Play Sense",
+        "modelo": "Kicks Play Sense 1.6 CVT ",
         "slug": "nissan-kicks-play-sense",
         "12x1000": "",
         "12x1500": "",
@@ -107,7 +106,7 @@ window.carros.push(
         "ano": ""
     },
     {
-        "modelo": "HB20 Comfort",
+        "modelo": "HB20 Comfort Plus 1.0 MT ",
         "slug": "hyundai-hb20",
         "12x1000": "",
         "12x1500": "",
@@ -128,7 +127,7 @@ window.carros.push(
         "ano": ""
     },
     {
-        "modelo": "Nivus Highline",
+        "modelo": "Nivus Highline 1.0 200 TSI ",
         "slug": "volkswagen-nivus",
         "12x1000": "",
         "12x1500": "",
@@ -149,7 +148,7 @@ window.carros.push(
         "ano": ""
     },
     {
-        "modelo": "Compass Longitude",
+        "modelo": "Compass Longitude T270 1.3 TB 4x2 ",
         "slug": "jeep-compass",
         "12x1000": "",
         "12x1500": "",
@@ -170,7 +169,7 @@ window.carros.push(
         "ano": ""
     },
     {
-        "modelo": "Fastback Audace Turbo",
+        "modelo": "Fastback Audace Turbo 1.0 Híbrido ",
         "slug": "fiat-fastback",
         "12x1000": "",
         "12x1500": "",
