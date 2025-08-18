@@ -29,7 +29,7 @@
             <form id="basic-form" class="w-full md:w-1/3">
                 <div class="form-group mb-5">
                     <label for="modelo" class="block text-lg font-medium text-gray-700">Escolha o modelo do carro</label>
-                    <select onchange="onFormChange(); updateCarPrice(); updateCarData()" required name="modelo" class="" id="modelo">
+                    <select onchange="onFormChange();" required name="modelo" class="" id="modelo">
                         <option value="" disabled>Selecione um modelo</option>
                         <option value="modelo1">Modelo 1</option>
                         <option value="modelo2">Modelo 2</option>
@@ -38,7 +38,7 @@
                 </div>
                 <div class="form-group mb-5">
                     <label for="periodo" class="block text-lg font-medium text-gray-700">Período</label>
-                    <select onchange="onFormChange(); updateCarData()" required name="periodo" class="" id="periodo">
+                    <select onchange="onFormChange();" required name="periodo" class="" id="periodo">
                         <option value="" disabled>Selecione um período</option>
                         <option value="12" selected>12 meses</option>
                         <option value="24">24 meses</option>
@@ -47,7 +47,7 @@
                 </div>
                 <div class="form-group mb-5">
                     <label for="uso_mensal" class="block text-lg font-medium text-gray-700">Uso mensal</label>
-                    <select onchange="onFormChange(); updateCarData()" required name="uso_mensal" class="" id="uso_mensal">
+                    <select onchange="onFormChange();" required name="uso_mensal" class="" id="uso_mensal">
                         <option value="" disabled>Selecione um uso mensal</option>
                         <option value="1000" selected>1000 Km/mês</option>
                         <option value="1500">1500 Km/mês</option>
