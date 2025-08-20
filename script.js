@@ -39,7 +39,7 @@ let precoTotalElement;
 let baseCalculoElement;
 
 let financiadaTotalElement; // Added for chart update
-let vistaTotalElement;     // Added for chart update
+let vistaTotalElement;     // Added for chart update
 let assinaturaTotalElement; // Added for chart update
 
 let anbimaData = {};
@@ -84,8 +84,8 @@ function populateModelSelectFromLocalData() {
             option.textContent = car.modelo;
             // Removed FIPE attributes as per new requirements
             // if(car.fipe){
-            //     option.setAttribute('data-fipe-code', car.fipe);
-            //     option.setAttribute('data-year', car.ano);
+            //     option.setAttribute('data-fipe-code', car.fipe);
+            //     option.setAttribute('data-year', car.ano);
             // }
             modeloElement.appendChild(option);
         });
@@ -218,7 +218,7 @@ $(document).ready(function() {
     $(ipvaElement).on('input', onFormChange);
     $(licenciamentoElement).on('input', onFormChange);
     $(emplacamentoElement).on('input', onFormChange);
-    $(manutencaoElement).on('input', onFormChange);
+    $(manutencaoElement).on('input', onFormChange); // This input will now be updated by the script, but user can still type
     $(entradaElement).on('input', onFormChange);
     $(taxaAMElement).on('input', onFormChange);
 
@@ -278,6 +278,7 @@ function applyDefaultConfig() {
         if (config.seguro) {
             seguroElement.value = config.seguro;
         }
+        // Do not set manutencaoElement here, it's dynamic based on car model
         setupInputFormatting(); // Reapply formatting after setting values
         onFormChange(); // Trigger recalculation after applying defaults
     }
@@ -357,8 +358,8 @@ function calculateOpportunityCost(scenarioType, principalValue, period, anbimaDa
                 cashOutflowThisMonth += principalValue;
                 cashOutflowThisMonth += emplacamentoValue;
             }
-            console.log(cashOutflowThisMonth);
-            cashOutflowThisMonth += manutencao;
+            // `manutencao` here is the monthly average of the cumulative total
+            cashOutflowThisMonth += manutencao; 
             if (firstMonthOfYear && annualFinancialDetails[currentYearIndex]) {
                 cashOutflowThisMonth += annualFinancialDetails[currentYearIndex].annualSeguro;
                 cashOutflowThisMonth += annualFinancialDetails[currentYearIndex].annualIpva;
@@ -369,7 +370,8 @@ function calculateOpportunityCost(scenarioType, principalValue, period, anbimaDa
                 cashOutflowThisMonth += principalValue; // This is the down payment (entrada)
                 cashOutflowThisMonth += emplacamentoValue;
             }
-            cashOutflowThisMonth += manutencao;
+            // `manutencao` here is the monthly average of the cumulative total
+            cashOutflowThisMonth += manutencao; 
             if (firstMonthOfYear && annualFinancialDetails[currentYearIndex]) {
                 cashOutflowThisMonth += annualFinancialDetails[currentYearIndex].annualSeguro;
                 cashOutflowThisMonth += annualFinancialDetails[currentYearIndex].annualIpva;
@@ -379,14 +381,8 @@ function calculateOpportunityCost(scenarioType, principalValue, period, anbimaDa
             cashOutflowThisMonth += parcelas;
         }
         const monthlyOpportunityCost = cashOutflowThisMonth * remainingPeriodLiquidRate;
-        console.log(monthlyOpportunityCost, cashOutflowThisMonth, remainingPeriodLiquidRate);
         totalOpportunityCost += monthlyOpportunityCost;
-        // console.log(`Mês ${month}:`);
-        // console.log(`   Saída de Caixa (Fluxo): ${formatCurrency(cashOutflowThisMonth)}`);
-        // console.log(`   Taxa Líquida ao Período Restante (${remainingPeriod} meses): ${(remainingPeriodLiquidRate * 100).toFixed(4).replace('.', ',')}%`);
-        // console.log(`   Custo de Oportunidade Mensal: ${formatCurrency(monthlyOpportunityCost)}`);
     }
-    console.log(totalOpportunityCost);
     console.groupEnd();
     return totalOpportunityCost;
 }
@@ -507,7 +503,6 @@ function onFormChange(){
     const periodo = parseFloat(periodoElement.value);
     const seguroPercentage = parsePercentageToFloat(seguroElement.value);
     const ipvaPercentage = parsePercentageToFloat(ipvaElement.value);
-    const manutencao = parseCurrencyToFloat(manutencaoElement.value);
     const entradaPercentage = parsePercentageToFloat(entradaElement.value);
     const taxaAM = parsePercentageToFloat(taxaAMElement.value);
     const licenciamentoValue = parseCurrencyToFloat(licenciamentoElement.value);
@@ -519,10 +514,6 @@ function onFormChange(){
     if (selectedCar) {
         const subscriptionKey = `${periodo}x${usoMensalElement.value}`; // e.g., "12x1000"
         parcelas = selectedCar[subscriptionKey] || 0;
-        // Assuming usoMensal is also part of the key or another field in selectedCar
-        // For simplicity, if usoMensal is a fixed input, we use it directly.
-        // If it comes from window.carros based on the key, it needs to be adapted.
-        // For now, it seems usage is from input, keeping it as is.
         usoMensal = parseCurrencyToFloat(usoMensalElement.value);
     }
 
@@ -530,15 +521,45 @@ function onFormChange(){
     if (selectedCar) {
         precoElement.value = formatCurrency(preco0km);
         parcelasElement.value = formatCurrency(parcelas);
-        // Update maintenance if it's dynamic based on the car
-        // Assuming manutencaoElement is manually input, if it's from car data, uncomment:
-        const keyManutencao = `manutencao-${periodo}`; // Example key for dynamic maintenance
-        manutencaoElement.value = formatCurrency(selectedCar[keyManutencao] / 12 || 0); // Assuming annual maintenance
+
+        // --- INÍCIO DA LÓGICA DE CÁLCULO DE MANUTENÇÃO ATUALIZADA ---
+        let manutencao12_car = selectedCar?.['manutencao-12']*1 || 0;
+        let manutencao24_car_incremental = selectedCar?.['manutencao-24']*1 || 0; // Custo incremental do ano 2
+        let manutencao36_car_incremental = selectedCar?.['manutencao-36']*1 || 0; // Custo incremental do ano 3
+
+        let totalManutencaoCumulative = 0;
+        if (periodo <= 12) {
+            totalManutencaoCumulative = manutencao12_car;
+        } else if (periodo <= 24) {
+            // Manutenção de 24 meses soma a de 12 meses
+            totalManutencaoCumulative = manutencao12_car + manutencao24_car_incremental;
+        } else if (periodo <= 36) {
+            // Manutenção de 36 meses soma a de 12 e 24 meses (o 24 aqui é o incremental original do ano 2)
+            totalManutencaoCumulative = manutencao12_car + manutencao24_car_incremental + manutencao36_car_incremental;
+        } else {
+            // Para períodos acima de 36 meses, consideramos o total acumulado até 36 meses
+            totalManutencaoCumulative = manutencao12_car + manutencao24_car_incremental + manutencao36_car_incremental;
+        }
+
+        // Calcula a média mensal da manutenção com base no total acumulado
+        const manutencaoMonthlyAverage = (periodo > 0) ? totalManutencaoCumulative / periodo : 0;
+
+        // Atualiza o campo de input de manutenção com a média mensal
+        manutencaoElement.value = formatCurrency(manutencaoMonthlyAverage);
+
+        // Atualiza a variável global manutencaoTotal com o valor acumulado
+        manutencaoTotal = totalManutencaoCumulative;
+        // --- FIM DA LÓGICA DE CÁLCULO DE MANUTENÇÃO ATUALIZADA ---
+
     } else {
         precoElement.value = formatCurrency(0);
         parcelasElement.value = formatCurrency(0);
         manutencaoElement.value = formatCurrency(0);
+        manutencaoTotal = 0; // Reset total if no car selected
     }
+
+    // A variável 'manutencao' será populada aqui com o valor atualizado do input
+    const manutencao = parseCurrencyToFloat(manutencaoElement.value);
 
     let totalDepreciacaoCalculated = 0;
     // Calculate total depreciation based on the selected period and car data
@@ -579,17 +600,12 @@ function onFormChange(){
         totalIpvaPeriodo += annualIpvaThisYear;
         totalLicenciamentoPeriodo += annualLicenciamentoThisYear;
 
-        // For annual expenses, car value should reflect initial value or previous year's value
-        // if depreciation affects it for subsequent years' calculation.
-        // Assuming here it applies to the current year's car value.
-        // If depreciation affects the *base* for insurance/IPVA, then update currentCarValueForAnnualCalc
-        // This depreciation for annual expenses is distinct from the totalDepreciacaoCalculated for final car value.
-        // The original code uses `currentCarValueForDepreciation` which decreases.
-        // Let's keep this calculation consistent with the original logic of applying rates to a depreciating value.
-
         // The original code's annual depreciation logic is no longer needed since totalDepreciacaoCalculated is fixed.
         // However, for calculating annual costs like insurance and IPVA, the "base value" of the car changes annually.
         // So, we need to manually depreciate this `currentCarValueForAnnualCalc` for this specific purpose.
+        // The original code uses `currentCarValueForDepreciation` which decreases.
+        // Let's keep this calculation consistent with the original logic of applying rates to a depreciating value.
+
         const depreciationRateForThisYear = (year === 0) ? (selectedCar?.['depreciacao-12'] / preco0km) || 0.15 : (selectedCar?.['depreciacao-24'] - selectedCar?.['depreciacao-12']) / (preco0km - selectedCar?.['depreciacao-12']) || 0.10; // Simplified
         if (year === 0 && selectedCar?.['depreciacao-12']) {
              currentCarValueForAnnualCalc = preco0km - selectedCar['depreciacao-12'];
@@ -639,7 +655,7 @@ function onFormChange(){
 
     seguroTotal = totalSeguroPeriodo;
     ipvaTotal = totalIpvaPeriodo;
-    manutencaoTotal = manutencao * periodo;
+    // manutencaoTotal já está definida acima com o valor acumulado
     entradaTotal = entradaPercentage * preco0km / 100;
     const valorFinanciado = preco0km - entradaTotal;
     
@@ -657,7 +673,7 @@ function onFormChange(){
     const allCalculatedValuesForOpportunityCost = {
         seguroTotal: seguroTotal,
         ipvaTotal: ipvaTotal,
-        manutencao: manutencao, // Monthly maintenance
+        manutencao: manutencao, // Monthly maintenance (average of cumulative total)
         licenciamentoValue: licenciamentoValue,
         emplacamentoValue: emplacamentoValue,
         parcelaMensal: parcelaMensal, // Monthly financing installment
@@ -675,8 +691,8 @@ function onFormChange(){
     ipvaTotalElement.text(formatCurrency(ipvaTotal));
     licenciamentoTotalElement.text(formatCurrency(totalLicenciamentoPeriodo));
     emplacamentoTotalElement.text(formatCurrency(emplacamentoValue));
-    manutencaoAnoTotalElement.text(formatCurrency(manutencao)); // Display monthly maintenance
-    manutencaoTotalElement.text(formatCurrency(manutencaoTotal)); // Display total maintenance over period
+    manutencaoAnoTotalElement.text(formatCurrency(manutencao * 12)); // Display annual average maintenance
+    manutencaoTotalElement.text(formatCurrency(manutencaoTotal)); // Display total cumulative maintenance over period
     depreciacaoTotalElement.text(formatCurrency(totalDepreciacaoCalculated));
     depreciacaoPrecoElement.text(formatCurrency(depreciacaoPrecoFinal));
     entradaTotalElement.text(formatCurrency(entradaTotal));
@@ -705,7 +721,7 @@ function onFormChange(){
     console.log(`Período: ${periodo}`);
     console.log(`Seguro Total (Período): ${seguroTotal}`);
     console.log(`IPVA Total (Período): ${ipvaTotal}`);
-    console.log(`Manutenção Total (Período): ${manutencaoTotal}`);
+    console.log(`Manutenção Total (Período - CUMULATIVA): ${manutencaoTotal}`);
     console.log(`Depreciação Total Calculada: ${totalDepreciacaoCalculated}`);
     console.log(`Preço Final Após Depreciação: ${depreciacaoPrecoFinal}`);
     console.log(`Entrada Total: ${entradaTotal}`);
