@@ -812,3 +812,13 @@ window.config = {
     "ipva": "4",
     "seguro": "6,6"
 }
+
+window.anbima = window.anbima || {};
+window.anbima = {
+    "beta1": 0.0687,
+    "beta2": 0.0865,
+    "beta3": -0.0675,
+    "beta4": 0.0231,
+    "lambda1": 1.5396,
+    "lambda2": 0.3942
+}

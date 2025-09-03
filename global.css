@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+  font-family: 'Noto Sans', sans-serif;
+}
+
 .tooltip-container {
     position: relative;
     display: inline-block;
@@ -8,11 +14,11 @@
 .tooltip-content {
     visibility: hidden;
     opacity: 0;
-    background-color: #333;
-    color: #fff;
+    background-color: #FEFEFE;
+    color: #212A3C;
     text-align: start;
     border-radius: 6px;
-    padding: 8px 12px;
+    padding: 8px;
     position: absolute;
     z-index: 1;
     bottom: 125%;
@@ -23,7 +29,7 @@
     max-width: 300px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-    font-size: 0.85rem;
+    font-size: 12px;
     line-height: 1.4;
 }
 
@@ -36,7 +42,7 @@
     margin-left: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: #333 transparent transparent transparent;
+    border-color: #FEFEFE transparent transparent transparent;
 }
 
 /* Show the tooltip on hover */

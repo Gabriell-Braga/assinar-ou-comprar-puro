@@ -47,25 +47,6 @@ let anbimaData = {};
 let catalogData = {}; 
 
 /**
- * Fetches ANBIMA API data. This data is used for calculating opportunity cost.
- * Removed FIPE API call as per requirements.
- */
-async function fetchApiData() {
-    const apiUrl = 'https://assinaroucomprar.listradigital.com.br/api/calculadora/catalog?period=12&franchise=1000';
-    try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        anbimaData = data.anbima;
-        console.log('Dados da ANBIMA carregados.');
-    } catch (error) {
-        console.error('Erro ao carregar dados da API ANBIMA:', error);
-    }
-}
-
-/**
  * Populates the car model select dropdown using local data from window.carros.
  * Removed FIPE specific attributes as they are no longer needed.
  */
@@ -152,11 +133,6 @@ function createJurosCurveTable() {
 
 $(document).ready(function() {
     console.log('Script carregado com sucesso!');
-    fetchApiData().then(() => {
-        populateModelSelectFromLocalData();
-        createJurosCurveTable();
-        applyDefaultConfig();
-    });
 
     // Get references to input elements
     modeloElement = document.getElementById('modelo');
@@ -209,34 +185,10 @@ $(document).ready(function() {
     $(entradaElement).on('input', onFormChange);
     $(taxaAMElement).on('input', onFormChange);
 
-
-    // Form submission handlers
-    $('#basic-form').on('submit', function(event) {
-        event.preventDefault();
-        if (this.checkValidity()) {
-            // onFormChange is already called by individual input changes.
-            // This just handles the UI transition for steps.
-            $('#step-2').removeClass('hidden');
-            $('html, body').animate({
-                scrollTop: $('#step-2').offset().top
-            }, 1000);
-        } else {
-            console.log('Formulário inválido!');
-        }
-    });
-    $('#complementary-form').on('submit', function(event) {
-        event.preventDefault();
-        if (this.checkValidity()) {
-            $('#result').removeClass('hidden');
-            // onFormChange is already called by individual input changes.
-            // This just handles the UI transition for results.
-            $('html, body').animate({
-                scrollTop: $('#result').offset().top
-            }, 1000);
-        } else {
-            console.log('Formulário complementar inválido!');
-        }
-    });
+    anbimaData = window.anbima || {};
+    populateModelSelectFromLocalData();
+    createJurosCurveTable();
+    applyDefaultConfig();
 
     setupInputFormatting();
 });
@@ -385,33 +337,6 @@ function calculateOpportunityCost(scenarioType, principalValue, period, anbimaDa
     }
     console.groupEnd();
     return totalOpportunityCost;
-}
-
-/**
- * Updates the heights of the comparison charts based on calculated total costs.
- */
-function updateChartHeights() {
-    const financiadaValue = parseCurrencyToFloat(financiadaTotalElement.text());
-    const vistaValue = parseCurrencyToFloat(vistaTotalElement.text());
-    const assinaturaValue = parseCurrencyToFloat(assinaturaTotalElement.text());
-    const maxValue = Math.max(financiadaValue, vistaValue, assinaturaValue);
-    if (maxValue === 0) {
-        $('#chart-financiada').css('height', '0%');
-        $('#chart-vista').css('height', '0%');
-        $('#chart-assinatura').css('height', '0%');
-        return;
-    }
-    const financiadaHeight = (financiadaValue / maxValue) * 100;
-    const vistaHeight = (vistaValue / maxValue) * 100;
-    const assinaturaHeight = (assinaturaValue / maxValue) * 100;
-    $('#chart-financiada').css('height', `${financiadaHeight}%`);
-    $('#chart-vista').css('height', `${vistaHeight}%`);
-    $('#chart-assinatura').css('height', `${assinaturaHeight}%`);
-    console.log('Alturas dos gráficos atualizadas:', {
-        financiada: `${financiadaHeight}%`,
-        vista: `${vistaHeight}%`,
-        assinatura: `${assinaturaHeight}%`
-    });
 }
 
 /**
@@ -793,5 +718,4 @@ function onFormChange(){
     console.log(`Assinatura Total (Calculado): ${assinaturaTotal + custoOportunidadeAssinatura}`);
     console.log('Dados ANBIMA carregados:', anbimaData);
     console.log('Dados do Catálogo carregados:', catalogData);
-    updateChartHeights();
 }
