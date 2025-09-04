@@ -38,9 +38,12 @@ let custoOportunidadeAssinaturaTotalElement;
 let precoTotalElement;
 let baseCalculoElement;
 
-let financiadaTotalElement; // Added for chart update
-let vistaTotalElement;     // Added for chart update
-let assinaturaTotalElement; // Added for chart update
+let financiadaDiferencaElement;
+let vistaDiferencaElement;
+
+let financiadaTotalElement;
+let vistaTotalElement;
+let assinaturaTotalElement;
 
 let anbimaData = {};
 // catalogData is no longer used for fetching car details, keeping for potential future use or if it's populated elsewhere.
@@ -168,6 +171,9 @@ $(document).ready(function() {
     custoOportunidadeAssinaturaTotalElement = $('[data-total="custo_oportunidade_assinatura"]');
     precoTotalElement = $('[data-total="preco"]');
     baseCalculoElement = $('[data-total="base_calculo"]');
+
+    financiadaDiferencaElement = $('[data-total="diferenca_financiada"]');
+    vistaDiferencaElement = $('[data-total="diferenca_vista"]');
 
     financiadaTotalElement = $('[data-total="financiada"]');
     vistaTotalElement = $('[data-total="vista"]');
@@ -690,6 +696,9 @@ function onFormChange(){
     const vistaCalcTotal = seguroTotal + ipvaTotal + manutencaoTotal + totalLicenciamentoPeriodo + emplacamentoValue*1 + custoOportunidadeVista*1 + totalDepreciacaoCalculated;
     vistaTotalElement.text(formatCurrency(vistaCalcTotal));
     assinaturaTotalElement.text(formatCurrency(assinaturaTotal + custoOportunidadeAssinatura)); // Ensure usage cost is added to total subscription cost
+
+    financiadaDiferencaElement.text(formatCurrency(financiadaCalcTotal - (assinaturaTotal + custoOportunidadeAssinatura)));
+    vistaDiferencaElement.text(formatCurrency(vistaCalcTotal - (assinaturaTotal + custoOportunidadeAssinatura)));
 
     if (anbimaData && Object.keys(anbimaData).length > 0) {
         const formattedAnbima = `beta1: ${anbimaData.beta1.toFixed(4).replace('.', ',')} | beta2: ${anbimaData.beta2.toFixed(4).replace('.', ',')} | beta3: ${anbimaData.beta3.toFixed(4).replace('.', ',')} | beta4: ${anbimaData.beta4.toFixed(4).replace('.', ',')} | lambda1: ${anbimaData.lambda1.toFixed(4).replace('.', ',')} | lambda2: ${anbimaData.lambda2.toFixed(4).replace('.', ',')}`;

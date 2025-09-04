@@ -57,4 +57,19 @@ $(document).ready(function() {
             goToStep('#step-2', '#menu-step-2');
         }
     });
+
+
+
+    // Switch between simple and detailed calculation
+    $('.switch-buttons').on('click', function() {
+        $('.switch-buttons').removeClass('active');
+        $(this).addClass('active');
+        if($(this).attr('id') === 'simple-calculation-button'){
+            $('#detailed-calculation').addClass('hidden');
+            $('#simple-calculation').removeClass('hidden');
+        }else{
+            $('#detailed-calculation').removeClass('hidden');
+            $('#simple-calculation').addClass('hidden');
+        }
+    });
 });
