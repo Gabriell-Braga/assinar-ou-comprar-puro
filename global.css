@@ -50,3 +50,19 @@
     visibility: visible;
     opacity: 1;
 }
+
+.step{
+    transition-property: opacity;
+    transition-duration: 500ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.op-0{
+    opacity: 0;
+    pointer-events: none;
+}
+
+.abs{
+    position: absolute;
+    inset: 0;
+}

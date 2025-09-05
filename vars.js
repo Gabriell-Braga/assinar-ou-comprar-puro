@@ -23,7 +23,8 @@ window.carros.push(
         "ano": "2026",
         "depreciacao-12": "4.3",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc3603c43fa7c1f1195a_Hfu9jlc5jh9XPoNyOKdXrBbDcQAGCWe-rUCHtlnVPyY.avif"
     },
     {
         "modelo": "Nissan Kicks Sense 1.0 220T DCT 5P",
@@ -48,7 +49,8 @@ window.carros.push(
         "ano": "2026",
         "depreciacao-12": "6.62",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc303ff3389fd11f0198_FnIV_w6FuWOmOOr2vq1IHQLruv5cPOsntsRaIcWwYOQ.avif"
     },
     {
         "modelo": "Nissan Kicks Exclusive 1.0 220T DCT 5P",
@@ -73,7 +75,8 @@ window.carros.push(
         "ano": "2026",
         "depreciacao-12": "4.52",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc243ff3389fd11efa0e_PfEAodLSKd5epPSOMDKj9Z_-ZYfDqPHbJxiZZmiE7dk.avif"
     },
     {
         "modelo": "Jeep Renegade Longitude 1.3 T270 TURBO FLEX AT6",
@@ -98,7 +101,8 @@ window.carros.push(
         "ano": "2026",
         "depreciacao-12": "9.06",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc21065170c1c3b11cc9_yCvJ5ZpPC8D__LqYWJdNwFi8e9-JhSoCvDSghwyv5ew.avif"
     },
     {
         "modelo": "Honda HR-V 1.5 EXL CVT 5P",
@@ -123,7 +127,8 @@ window.carros.push(
         "ano": "2026",
         "depreciacao-12": "5.78",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc22424d1db8e95a9f2f_ZANknYcf8sfPxWrjF8NJvf-NNsudM1AhHfybnLHrTTs.avif"
     },
     {
         "modelo": "Chevrolet Tracker Premier 1.2 Turbo Auto ",
@@ -148,7 +153,8 @@ window.carros.push(
         "ano": "2025",
         "depreciacao-12": "23.95",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc2b0e0d696f0bf0bf20_ocfi18XvKTf38I-e7cIw92j6VjdoxRb_LFMlQMib1nM.avif"
     },
     {
         "modelo": "Chevrolet Tracker LT 1.0 Turbo Auto",
@@ -173,7 +179,8 @@ window.carros.push(
         "ano": "2025",
         "depreciacao-12": "23.3",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc35f20db22389b6d990_YcpKOMADaNUegS5bQltp2eER1RsashwKI4DC2IHDZV0.avif"
     },
     {
         "modelo": "Fiat Pulse Audace 1.0 T200 Mhev Cvt AT 5P Flex",
@@ -198,7 +205,8 @@ window.carros.push(
         "ano": "2026",
         "depreciacao-12": "5.46",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc209af92bd93078b2a1_DuCnbg4OesRzA4UAdpDX7NoVF2t6YFylUm_nOR8XVvM.avif"
     },
     {
         "modelo": "Chevrolet Onix 1.0 R7A Manual",
@@ -219,11 +227,12 @@ window.carros.push(
         "manutencao-24": "1020",
         "manutencao-36": "732",
         "fipe": "004519-5",
-        "preco-0km": "102990",
+        "preco-0km": "99990",
         "ano": "2025",
-        "depreciacao-12": "23.99",
+        "depreciacao-12": "21.71",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc3a12deed5e31e285ec_QOF3xpH_DTuv1FQ54fyNtjJ5mH9h5rylW_PlYs8m2NY.avif"
     },
     {
         "modelo": "Chevrolet Onix LT 1.0 Turbo MT/RGJ",
@@ -248,7 +257,8 @@ window.carros.push(
         "ano": "2025",
         "depreciacao-12": "25.2",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc3303c43fa7c1f11834_OpxYKT57g7EzT-9h9eRYlLFhQ5IWlPZscdEJ9azxRjc.avif"
     },
     {
         "modelo": "Renault Kwid Zen 1.0 MT",
@@ -273,7 +283,8 @@ window.carros.push(
         "ano": "2026",
         "depreciacao-12": "20.92",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc1ee97ddbb6b45af60a_LlJPaUINODg6hAGN_Clhj3vp4QEwoUFBvKLGRq2WYWM.avif"
     },
     {
         "modelo": "Volkswagen Tera High 1.0 TSI Auto 5P Flex",
@@ -298,7 +309,8 @@ window.carros.push(
         "ano": "2026",
         "depreciacao-12": "9.05",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc1156ac4ca489697f67_8aIz2FWMMd5V_d70ym2t_co0m8zsELRmVvu-qmFfQ_c.avif"
     },
     {
         "modelo": "Volkswagen Tera Comfort 1.0 TSI Auto 5P Flex",
@@ -323,7 +335,8 @@ window.carros.push(
         "ano": "2026",
         "depreciacao-12": "8.43",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc139d2804d409be4d45_zYru2HVr_SSxCQ7GKlY8szuVz1K3gkzV3vzLUHlTBAQ.avif"
     },
     {
         "modelo": "Volkswagen Polo Track 1.0 Manual 5P Flex",
@@ -348,7 +361,8 @@ window.carros.push(
         "ano": "2026",
         "depreciacao-12": "9.36",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc1c3ff3389fd11ef558_tNaZmEnXIixTQsHGNSYF2qRvbYaUtsJcOpU13wKD9i0.avif"
     },
     {
         "modelo": "Volkswagen Polo Sense 1.0 170 TSI Auto 5P Flex",
@@ -373,7 +387,8 @@ window.carros.push(
         "ano": "2026",
         "depreciacao-12": "8.31",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc1c3ff3389fd11ef558_tNaZmEnXIixTQsHGNSYF2qRvbYaUtsJcOpU13wKD9i0.avif"
     },
     {
         "modelo": "Volkswagen Polo Highline 1.0 170 TSI Auto",
@@ -398,7 +413,8 @@ window.carros.push(
         "ano": "2026",
         "depreciacao-12": "13.02",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc156a94caf39dabf951_fhrcR78WWRkdbQ7xq7YUWAH4MIWywcFjBLxktI5JDFg.avif"
     },
     {
         "modelo": "Volkswagen Virtus Comfortline 200 TSI 1.0",
@@ -423,7 +439,8 @@ window.carros.push(
         "ano": "2026",
         "depreciacao-12": "14.24",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc0f56ac4ca489697e9d_ImCNJzYDgZmrbhWaNegj0ACCU6i8KUJT-sEktdHodPQ.avif"
     },
     {
         "modelo": "Volkswagen T-Cross Highline 1.4 TSI Flex 16V 5P Auto",
@@ -448,7 +465,8 @@ window.carros.push(
         "ano": "2026",
         "depreciacao-12": "9.89",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc17bf2ab83e5bcc5d28_GFRAzDm9QFWc3YBr45neCE62AzhUa96sWanMhWrxvZM.avif"
     },
     {
         "modelo": "Volkswagen T-Cross Comfortline 200 TSI AT 1.0 4P",
@@ -473,7 +491,8 @@ window.carros.push(
         "ano": "2026",
         "depreciacao-12": "13.53",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc189af92bd93078ae6c_UODZb0W2nAtHC5BN7avLdu3L92Sv6D4HI-_fM9IQbzg.avif"
     },
     {
         "modelo": "Volkswagen T-Cross 200 TSI AT 1.0 4P",
@@ -498,7 +517,8 @@ window.carros.push(
         "ano": "2026",
         "depreciacao-12": "12.64",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc17bf2ab83e5bcc5d28_GFRAzDm9QFWc3YBr45neCE62AzhUa96sWanMhWrxvZM.avif"
     },
     {
         "modelo": "Volkswagen Taos Highline 1.4 TSI Flex Auto",
@@ -523,7 +543,8 @@ window.carros.push(
         "ano": "2025",
         "depreciacao-12": "18.29",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc2876e089df08abc548_LJd2QsIyHeC7SuPdn1SDdoLE3Xb23B3Gzmqn30SW7XQ.avif"
     },
     {
         "modelo": "Renault Kwid E-Tech BEV 27kWh Elétrico",
@@ -548,7 +569,8 @@ window.carros.push(
         "ano": "2024",
         "depreciacao-12": "30.59",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68ade82002e0814477a74b6a_sV18ytxWecZnqR9xFvyn9EJWDVR0X87NnkY4hJoB0iw.png"
     },
     {
         "modelo": "Volkswagen Nivus Highline 200 TSI",
@@ -573,7 +595,8 @@ window.carros.push(
         "ano": "2026",
         "depreciacao-12": "13.64",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc0fe0016174c35e3b92_2-7Z6vwtqhopj2zwrLR_QM6gXQzD200rkVIkmIoMB-s.avif"
     },
     {
         "modelo": "Jeep Compass Longitude 1.3 T270 TB 4x2 Flex Auto",
@@ -598,7 +621,8 @@ window.carros.push(
         "ano": "2025",
         "depreciacao-12": "23.87",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68ade863f57031d5d984c4f5_-jD6FIKzbXt5WcZRXTQTE9Y8XjJvi9N003t97ROST50.png"
     },
     {
         "modelo": "Fiat Mobi Like 1.0 MT",
@@ -623,7 +647,8 @@ window.carros.push(
         "ano": "2025",
         "depreciacao-12": "19.7",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc28bab38c2a9b0cde1a_IVO1JEh2vDPLInLrci8spP20EreeB-NElgTNWTJhxTE.avif"
     },
     {
         "modelo": "Fiat Fastback Audace 1.0 T200 MHEV CVT",
@@ -648,7 +673,8 @@ window.carros.push(
         "ano": "2026",
         "depreciacao-12": "9.85",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc14238d14170ac7fe3f_Je6Ywh60d1rmvHspL6CmBAp_sH0DuPwjBCaN6R5SfTk.avif"
     },
     {
         "modelo": "Fiat Cronos Drive 1.3 CVT Automático 4P Flex",
@@ -673,7 +699,8 @@ window.carros.push(
         "ano": "2026",
         "depreciacao-12": "11.84",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc184a13be906bffbc97_Phvz5JxLO_SysWTo7lam6GaDYY1FwWt5zAXvvVsTNBY.avif"
     },
     {
         "modelo": "Fiat Argo Drive 1.3 CVT Automático 5P Flex",
@@ -698,7 +725,8 @@ window.carros.push(
         "ano": "2026",
         "depreciacao-12": "10.75",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc0bc14ab55a31d224ce_on6x_qDQXbPHS3fPfh1eYI3uiwgEepwlFJZ4hvfWv1Y.avif"
     },
     {
         "modelo": "Citroën Basalt Shine 1.0 T200 Auto 5P Flex",
@@ -723,7 +751,8 @@ window.carros.push(
         "ano": "2025",
         "depreciacao-12": "18.96",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc30e97ddbb6b45b037a_h0-ikWYAlI7zLBSoBbCEPrdk4xUmgyLnzW8RKsgVtq8.avif"
     },
     {
         "modelo": "Citroën Basalt Feel 1.0 Manual 5P Flex",
@@ -748,7 +777,8 @@ window.carros.push(
         "ano": "2025",
         "depreciacao-12": "16.87",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68ade46356ac4ca489711cae_nH4QMCzshIp5pfM5O-sGe67jhobkAwZDraD6JmZBWz0.avif"
     },
     {
         "modelo": "Chevrolet Tracker LTZ 1.0 Turbo Auto",
@@ -773,7 +803,8 @@ window.carros.push(
         "ano": "2025",
         "depreciacao-12": "22.89",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc2b0e0d696f0bf0bf20_ocfi18XvKTf38I-e7cIw92j6VjdoxRb_LFMlQMib1nM.avif"
     },
     {
         "modelo": "Fiat Argo Drive 1.0 6V Flex Manual",
@@ -798,7 +829,8 @@ window.carros.push(
         "ano": "2026",
         "depreciacao-12": "11.01",
         "depreciacao-24": "10",
-        "depreciacao-36": "10"
+        "depreciacao-36": "10",
+        "imagem": "https://cdn.prod.website-files.com/683ee7152a0bd4bb13eba43c/68adcc0bc14ab55a31d224ce_on6x_qDQXbPHS3fPfh1eYI3uiwgEepwlFJZ4hvfWv1Y.avif"
     }
 );
 
@@ -815,10 +847,10 @@ window.config = {
 
 window.anbima = window.anbima || {};
 window.anbima = {
-    "beta1": 0.0687,
-    "beta2": 0.0865,
-    "beta3": -0.0675,
-    "beta4": 0.0231,
-    "lambda1": 1.5396,
-    "lambda2": 0.3942
+    "beta1": 0.0697,
+    "beta2": 0.0889,
+    "beta3": -0.0607,
+    "beta4": 0.0182,
+    "lambda1": 1.7575,
+    "lambda2": 0.3944
 }

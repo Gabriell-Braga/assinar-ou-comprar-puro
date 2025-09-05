@@ -19,6 +19,9 @@ let entradaTotal = 0;
 let parcelasTotal = 0;
 
 let periodoTotalElement;
+let usoMensalTotalElement;
+let imagemTotalElement;
+let modeloTotalElement;
 let seguroTotalElement;
 let ipvaTotalElement;
 let licenciamentoTotalElement;
@@ -158,6 +161,9 @@ $(document).ready(function() {
     licenciamentoTotalElement = $('[data-total="licenciamento"]');
     emplacamentoTotalElement = $('[data-total="emplacamento"]');
     manutencaoTotalElement = $('[data-total="manutencao"]');
+    usoMensalTotalElement = $('[data-total="uso_mensal"]');
+    modeloTotalElement = $('[data-total="modelo_carro"]');
+    imagemTotalElement = $('[data-total="imagem_carro"]');
     manutencaoAnoTotalElement = $('[data-total="manutencao_ano"]');
     depreciacaoTotalElement = $('[data-total="depreciacao"]');
     depreciacaoPrecoElement = $('[data-total="depreciacao_preco"]');
@@ -670,6 +676,9 @@ function onFormChange(){
 
     // Update display elements
     periodoTotalElement.text(`${periodo}`);
+    usoMensalTotalElement.text(usoMensalElement.value ? `${parseCurrencyToFloat(usoMensalElement.value)} KM` : '0 KM');
+    imagemTotalElement.attr("src", selectedCar?.imagem);
+    modeloTotalElement.text(selectedCar?.modelo);
     seguroTotalElement.text(formatCurrency(seguroTotal));
     ipvaTotalElement.text(formatCurrency(ipvaTotal));
     licenciamentoTotalElement.text(formatCurrency(totalLicenciamentoPeriodo));
