@@ -1,4 +1,30 @@
 $(document).ready(function() {
+    $('#compare-button').on('click', function() {
+        $('#banner').addClass('op-0');
+        setTimeout(() => {
+            $('#banner').addClass('abs');
+            $('#calculator').removeClass('abs');
+        }, 500);
+
+        setTimeout(() => {
+            $('#calculator').removeClass('op-0');
+        }, 10);
+    });
+
+    $('#back-banner').on('click', function() {
+        $('#calculator').addClass('op-0');
+        setTimeout(() => {
+            $('#calculator').addClass('abs');
+            $('#banner').removeClass('abs');
+        }, 500);
+
+        setTimeout(() => {
+            $('#banner').removeClass('op-0');
+        }, 10);
+    });
+
+    // Function to handle step transitions
+    
     function goToStep(stepId, menuStep) {
         const currentStep = $('.step:not(.op-0)');
         const nextStep = $(stepId);
@@ -32,6 +58,7 @@ $(document).ready(function() {
             $('.menu-step:not(#menu-step-1)').addClass('bg-white border border-[#616E84] text-[#616E84]');
             $('.back-to-step-1:has(#menu-step-1)').removeClass('cursor-pointer');
             
+            $('#car-info').removeClass('my-3');
             $('#car-info').addClass('op-0 h-0');
             $('#anbima').addClass('op-0 h-0');
         }else if(menuStep == '#menu-step-2'){
@@ -43,7 +70,8 @@ $(document).ready(function() {
             $('.back-to-step-2:has(#menu-step-2)').removeClass('cursor-pointer');
             $('.menu-step:not(#menu-step-2):not(#menu-step-1)').removeClass('bg-[#0066C2] text-white bg-white border border-[#616E84] text-[#616E84]');
             $('.menu-step:not(#menu-step-2):not(#menu-step-1)').addClass('bg-white border border-[#616E84] text-[#616E84]');
-            
+
+            $('#car-info').removeClass('my-3');
             $('#car-info').addClass('op-0 h-0');
             $('#anbima').addClass('op-0 h-0');
         }else if(menuStep == '#menu-step-3'){
@@ -52,6 +80,7 @@ $(document).ready(function() {
             $('#menu-step-2').addClass('bg-[#4DCB7B] text-white');
             $('#menu-step-2').html('<i class="fas fa-check"></i>');
 
+            $('#car-info').addClass('my-3');
             $('#car-info').removeClass('op-0 h-0');
             $('#anbima').removeClass('op-0 h-0');
         }
