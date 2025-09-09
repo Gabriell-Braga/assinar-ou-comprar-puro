@@ -847,10 +847,10 @@ window.config = {
 
 window.anbima = window.anbima || {};
 window.anbima = {
-    "beta1": 0.0697,
-    "beta2": 0.0889,
-    "beta3": -0.0607,
-    "beta4": 0.0182,
-    "lambda1": 1.7575,
-    "lambda2": 0.3944
+    "beta1": 0.0685,
+    "beta2": 0.0877,
+    "beta3": -0.0663,
+    "beta4": 0.0221,
+    "lambda1": 1.6347,
+    "lambda2": 0.3799
 }
