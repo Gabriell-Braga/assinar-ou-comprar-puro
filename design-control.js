@@ -146,7 +146,7 @@ $(document).ready(function() {
         }
     });
 
-    $('#share').on('click', async function() {
+    $('.share-button').on('click', async function() {
         const url = window.location.href;
 
         try {
