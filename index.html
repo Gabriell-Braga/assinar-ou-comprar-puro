@@ -6,7 +6,7 @@
         <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
         <style type="text/tailwindcss">
             .size-control{
-                @apply 2xl:min-w-[1300px] 2xl:w-[1300px] 2xl:p-0 px-5 w-full min-w-full;
+                @apply 2xl:min-w-[1300px] 2xl:w-[1300px] 2xl:px-0 px-5 w-full min-w-full;
             }
 
             .form-group input, .form-group select {
@@ -85,7 +85,7 @@
                         </a>
                     </div>
                     <div class="w-full lg:w-3/5 flex flex-col items-start justify-between px-6 py-12 bg-gradient-to-b from-[#2FB4FF] to-[#0066C2] pt-16 sm:pt-12">
-                        <h1 class="font-semibold text-[32px] lg:text-[40px] text-[#F5F6F7]">Assinar ou comprar, o que vale mais a pena?</h1>
+                        <h1 class="font-semibold text-[32px] lg:text-[40px] text-[#F5F6F7] leading-[115%]">Assinar ou comprar, o que vale mais a pena?</h1>
                         <span class="text-[16px] text-white mt-2">Descubra a melhor opção para o seu perfil. Nossa calculadora vai além do preço e considera custos reais como oportunidade, operacionais e a depreciação do veículo.</span>
                         <div class="flex flex-row sm:grid sm:grid-cols-4 max-w-full md:w-full my-8 gap-2 overflow-x-auto no-scrollbar">
                             <div class="rounded-2xl flex flex-col items-start gap-2 transition ease-in-out duration-300 p-4 hover:bg-[#0066C2] min-w-[278px] sm:min-w-auto">
@@ -117,7 +117,7 @@
 
         <!-- CALCULADORA -->
         <div class="relative">
-            <div class="w-full flex flex-col items-center justify-start bg-white bg-gradient-to-t from-[#EDF6FF] to-[#FEFEFE] min-h-[700px] op-0 abs trans" id="calculator">
+            <div class="w-full flex flex-col items-center justify-start bg-white bg-gradient-to-t lg:bg-gradient-to-t from-[#EDF6FF] to-[#FEFEFE] min-h-[700px] op-0 abs trans" id="calculator">
                 <div class="flex flex-col lg:grid lg:grid-cols-[1fr_4fr] !py-12 px-10 gap-8 size-control">
 
                     <!-- MENU LATERAL -->
@@ -978,19 +978,57 @@
             </div>
         </div>
 
-        <div class="size-control flex flex-row">
-            <div>
-                <iframe width="315" height="560"
-                    src="https://www.youtube.com/embed/2EZDs4mvTGE"
-                    title="YouTube video player"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowfullscreen>
-                </iframe>
-
-            </div>
-            <div>
-
+        <!-- VIDEO SECTION -->
+        <div class="w-full flex justify-center items-center op-0 h-0" id="video-section">
+            <div class="size-control flex flex-row py-12">
+                <div class="flex items-center justify-center w-2/5">
+                    <div class="w-[282px] h-[486px] rounded-3xl overflow-hidden">
+                        <iframe width="100%" height="100%"
+                            src="https://www.youtube.com/embed/2EZDs4mvTGE"
+                            title="YouTube video player"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
+                <div class="w-3/5 flex flex-col justify-center items-center">
+                    <h2 class="text-[32px] leading-[115%] font-semibold text-[#3A4A65]">Vale a pena assinar um carro mesmo sem o valor de revenda?</h2>
+                    <span class="text-[16px] mt-2">Se você investir o valor da compra do carro, ao fim de XX meses o rendimento pode superar, e muito, o valor da revenda de um carro depreciado, veja:</span>
+                    <div class="grid grid-cols-3 my-8 gap-6">
+                        <div class="flex flex-col items-start justify-center gap-2">
+                            <span class="text-[14px] font-semibold text-[#3A4A65]">Saldo Inicial</span>
+                            <span class="text-[14px] text-[#212A3C]">Valor do carro a carro à vista, ou para investir.</span>
+                            <span class="text-[20px] text-[#212A3C] font-medium" data-total="preco">R$ XX.XXX</span>
+                        </div>
+                        <div class="flex flex-col items-start justify-center gap-2">
+                            <span class="text-[14px] font-semibold text-[#3A4A65]">Desvalorização</span>
+                            <span class="text-[14px] text-[#212A3C]">Estimativa baseada nos valores da tabela FIPE.</span>
+                            <span class="text-[20px] text-[#FF5A60] font-medium">- <span data-total="depreciacao">R$ XX.XXX</span></span>
+                        </div>
+                        <div class="flex flex-col items-start justify-center gap-2">
+                            <span class="text-[14px] font-semibold text-[#3A4A65]">Juros compostos</span>
+                            <span class="text-[14px] text-[#212A3C]">Considera-se o CDI atual do ano vigente a 0.9% a.m.</span>
+                            <span class="text-[20px] text-[#4DCB7B] font-medium" data-total="preco">R$ XX.XXX</span>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-6 w-full">
+                        <div class="bg-[#F5F6F7] rounded-xl p-4 flex flex-col items-center justify-center gap-2 leading-[115%]">
+                            <i class="far fa-times-circle text-[#FF5A60] text-[22px]"></i>
+                            <span class="text-[20px] font-medium text-[#212A3C]">Comprar</span>
+                            <span class="text-[24px] font-semibold text-[#212A3C]" data-total="depreciacao_preco">R$ XX.XXX</span>
+                            <span class="text-[14px] text-[#212A3C]">Saldo com a venda do carro próprio</span>
+                            <small class="text-[10px] text-[#212A3C]">Valor de compra do carro menos a desvalorização.</small>
+                        </div>
+                        <div class="bg-[#EDF6FF] rounded-xl p-4 flex flex-col items-center justify-center gap-2 leading-[115%]">
+                            <i class="fas fa-check-circle text-[#4DCB7B] text-[22px]"></i>
+                            <span class="text-[20px] font-medium text-[#0066C2]">Comprar</span>
+                            <span class="text-[24px] font-semibold text-[#0066C2]" data-total="depreciacao_preco">R$ XX.XXX</span>
+                            <span class="text-[14px] text-[#212A3C]">Saldo ao investir o valor do carro</span>
+                            <small class="text-[10px] text-[#212A3C]">Valor do carro 0KM investido em CDI com 0.9% a.m..</small>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         

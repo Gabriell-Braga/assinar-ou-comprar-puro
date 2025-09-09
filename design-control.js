@@ -1,26 +1,14 @@
 $(document).ready(function() {
     $('#compare-button').on('click', function() {
-        $('#banner').addClass('op-0');
-        setTimeout(() => {
-            $('#banner').addClass('abs');
-            $('#calculator').removeClass('abs');
-        }, 500);
-
-        setTimeout(() => {
-            $('#calculator').removeClass('op-0');
-        }, 10);
+        scrollTo(0, 0);
+        $('#banner').addClass('op-0 abs');
+        $('#calculator').removeClass('op-0 abs');
     });
 
     $('#back-banner').on('click', function() {
-        $('#calculator').addClass('op-0');
-        setTimeout(() => {
-            $('#calculator').addClass('abs');
-            $('#banner').removeClass('abs');
-        }, 500);
-
-        setTimeout(() => {
-            $('#banner').removeClass('op-0');
-        }, 10);
+        scrollTo(0, 0);
+        $('#calculator').addClass('op-0 abs');
+        $('#banner').removeClass('op-0 abs');
     });
 
     // Function to handle step transitions
@@ -59,6 +47,7 @@ $(document).ready(function() {
             $('#car-info').removeClass('my-3');
             $('#car-info').addClass('op-0 h-0');
             $('#anbima').addClass('op-0 h-0');
+            $('#video-section').addClass('op-0 h-0');
 
             $('#calculator').addClass('bg-gradient-to-t');
         }else if(menuStep == '#menu-step-2'){
@@ -74,6 +63,7 @@ $(document).ready(function() {
             $('#car-info').removeClass('my-3');
             $('#car-info').addClass('op-0 h-0');
             $('#anbima').addClass('op-0 h-0');
+            $('#video-section').addClass('op-0 h-0');
 
             $('#calculator').addClass('bg-gradient-to-t');
         }else if(menuStep == '#menu-step-3'){
@@ -85,6 +75,7 @@ $(document).ready(function() {
             $('#car-info').addClass('my-3');
             $('#car-info').removeClass('op-0 h-0');
             $('#anbima').removeClass('op-0 h-0');
+            $('#video-section').removeClass('op-0 h-0');
 
             $('#calculator').removeClass('bg-gradient-to-t');
         }
