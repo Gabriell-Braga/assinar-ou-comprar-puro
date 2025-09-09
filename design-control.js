@@ -61,6 +61,8 @@ $(document).ready(function() {
             $('#car-info').removeClass('my-3');
             $('#car-info').addClass('op-0 h-0');
             $('#anbima').addClass('op-0 h-0');
+
+            $('#calculator').addClass('bg-gradient-to-t');
         }else if(menuStep == '#menu-step-2'){
             $('#menu-step-1').removeClass('bg-[#0066C2] text-white bg-white border border-[#616E84] text-[#616E84]');
             $('#menu-step-1').addClass('bg-[#4DCB7B] text-white');
@@ -74,6 +76,8 @@ $(document).ready(function() {
             $('#car-info').removeClass('my-3');
             $('#car-info').addClass('op-0 h-0');
             $('#anbima').addClass('op-0 h-0');
+
+            $('#calculator').addClass('bg-gradient-to-t');
         }else if(menuStep == '#menu-step-3'){
             $('.back-to-step-2:has(#menu-step-2)').addClass('cursor-pointer');
             $('#menu-step-2').removeClass('bg-[#0066C2] text-white bg-white border border-[#616E84] text-[#616E84]');
@@ -83,6 +87,8 @@ $(document).ready(function() {
             $('#car-info').addClass('my-3');
             $('#car-info').removeClass('op-0 h-0');
             $('#anbima').removeClass('op-0 h-0');
+
+            $('#calculator').removeClass('bg-gradient-to-t');
         }
         $(menuStep).removeClass('bg-[#0066C2] text-white bg-white border border-[#616E84] text-[#616E84]');
         $(menuStep).addClass('bg-[#0066C2] text-white');
@@ -114,6 +120,17 @@ $(document).ready(function() {
         }
     });
 
+
+    $('.calculo-select').on('change', function() {
+        $('.calculo-select').val($(this).val());
+        if($(this).val() === 'financiada'){
+            $('.financiada-items').addClass('!flex');
+            $('.vista-items').removeClass('!flex');
+        }else if($(this).val() === 'vista'){
+            $('.vista-items').addClass('!flex');
+            $('.financiada-items').removeClass('!flex');
+        }
+    });
 
 
     // Switch between simple and detailed calculation

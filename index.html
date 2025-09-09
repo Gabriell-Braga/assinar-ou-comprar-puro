@@ -117,6 +117,8 @@
             <!-- CALCULADORA -->
             <div class="w-full flex flex-col items-center justify-start bg-white bg-gradient-to-t from-[#EDF6FF] to-[#FEFEFE] min-h-[700px] op-0 abs trans" id="calculator">
                 <div class="flex flex-col lg:grid lg:grid-cols-[1fr_4fr] !py-12 px-10 gap-8 size-control">
+
+                    <!-- MENU LATERAL -->
                     <div class="h-full relative w-full">
                         <div class="flex lg:flex-col items-center justify-center gap-14 lg:gap-4 py-4 px-2 sticky top-0">
                             <div class="back-to-step-1 flex flex-row items-center justify-center lg:justify-start gap-3 text-[14px] lg:w-full relative z-5">
@@ -318,11 +320,17 @@
                                 <!-- CALCULO SIMPLES -->
                                 <div class="w-full gap-6 lg:gap-0 grid grid-cols-2 lg:grid-cols-3 transition-opacity ease-in-out duration-500" id="simple-calculation">
                                     <!-- CABEÇALHO -->
-                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#0F1B67] text-[20px] order-2 lg:order-none financiada-items !flex">
+                                    <div class="lg:flex flex-col justify-center items-center p-4 font-medium text-[#0F1B67] text-[20px] hidden">
                                         Compra financiada
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#0F1B67] text-[20px] order-2 lg:order-none vista-items">
+                                    <div class="lg:flex flex-col justify-center items-center p-4 font-medium text-[#0F1B67] text-[20px] hidden">
                                         Compra à vista
+                                    </div>
+                                    <div class="form-group order-2 lg:hidden flex justify-center items-center">
+                                        <select required name="calculo" class="calculo-select" id="calculo">
+                                            <option value="financiada" selected>Financiada</option>
+                                            <option value="vista">À vista</option>
+                                        </select>
                                     </div>
                                     <div class="flex flex-col justify-center items-center p-4 order-1 lg:order-none">
                                         <img src="https://cdn.prod.website-files.com/683dab11b7dbaad472719c0d/684189d1fc780f658227c372_Group.svg" alt="Unidas Livre Logo">
@@ -466,41 +474,49 @@
                                 </div>
 
                                 <!-- CALCULO DETALHADO -->
-                                <div class="w-full grid grid-cols-4 op-0 abs transition-opacity ease-in-out duration-500" id="detailed-calculation">
+                                <div class="w-full grid grid-cols-2 lg:grid-cols-4 op-0 abs transition-opacity ease-in-out duration-500" id="detailed-calculation">
                                     <!-- CABEÇALHO -->
-                                    <div class="flex flex-col justify-center items-start p-4 font-semibold text-[#3A4A65] text-[14px]">
+                                    <div class="lg:flex flex-col justify-center items-start p-4 font-semibold text-[#3A4A65] text-[14px] hidden">
                                         Itens
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#0F1B67] text-[20px]">
+                                    <div class="lg:flex flex-col justify-center items-center p-4 font-medium text-[#0F1B67] text-[20px] hidden">
                                         Compra financiada
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#0F1B67] text-[20px]">
+                                    <div class="lg:flex flex-col justify-center items-center p-4 font-medium text-[#0F1B67] text-[20px] hidden">
                                         Compra à vista
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 border-x border-t border-[#63D6FF] rounded-t-2xl">
+                                    <div class="form-group order-2 lg:hidden flex justify-center items-center">
+                                        <select required name="calculo" class="calculo-select" id="calculo">
+                                            <option value="financiada" selected>Financiada</option>
+                                            <option value="vista">À vista</option>
+                                        </select>
+                                    </div>
+                                    <div class="flex flex-col justify-center items-center p-4 lg:border-x lg:border-t border-[#63D6FF] rounded-t-2xl order-1 lg:order-none">
                                         <img src="https://cdn.prod.website-files.com/683dab11b7dbaad472719c0d/684189d1fc780f658227c372_Group.svg" alt="Unidas Livre Logo">
                                     </div>
 
                                     <!-- ASSINATURA -->
-                                    <div class="flex flex-col justify-center items-start p-4 font-semibold text-[#212A3C] text-[14px] border-b border-b-[#D8DBE0]">
+                                    <div class="lg:hidden bg-[#F5F6F7] text-[#616E84] text-[12px] col-span-2 text-center p-0.5 order-3">Assinatura:</div>
+                                    <div class="lg:flex flex-col justify-center items-start p-4 font-semibold text-[#212A3C] text-[14px] lg:border-b border-b-[#D8DBE0] hidden">
                                         Assinatura:
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0]">
+                                    <div class="!flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] financiada-items order-5 lg:order-none">
                                         R$ 0,00
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0]">
+                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] vista-items order-5 lg:order-none">
                                         R$ 0,00
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-semibold text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0] border-x border-[#63D6FF]">
+                                    <div class="flex flex-col justify-center items-center p-4 font-semibold text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] lg:border-x border-[#63D6FF] order-4 lg:order-none">
                                         <span data-total="custo_assinatura" class="text-[#0066C2]"></span>
                                         <span class="text-[12px] font-normal text-center"><span data-total="assinatura_1_12"></span> mês</span>
                                     </div>
 
                                     <!-- EMPLACAMENTO -->
-                                    <div class="flex flex-col justify-center items-start p-4 font-semibold text-[#212A3C] text-[14px] border-b border-b-[#D8DBE0]">
+                                    <div class="lg:hidden bg-[#F5F6F7] text-[#616E84] text-[12px] col-span-2 text-center p-0.5 order-6">Emplacamento:</div>
+                                    <div class="lg:flex flex-col justify-center items-start p-4 font-semibold text-[#212A3C] text-[14px] lg:border-b border-b-[#D8DBE0] hidden">
                                         Emplacamento:
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0]">
+                                    <div class="!flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] financiada-items order-8 lg:order-none">
                                         <div class="flex items-center justify-center gap-3">
                                             <span data-total="emplacamento"></span>
                                             <div class="tooltip-container ml-2">
@@ -514,7 +530,7 @@
                                         
                                         <span class="text-[12px] font-normal text-center">Apenas no primeiro mês</span>
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0]">
+                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] vista-items order-8 lg:order-none">
                                         <div class="flex items-center justify-center gap-3">
                                             <span data-total="emplacamento"></span>
                                             <div class="tooltip-container ml-2">
@@ -527,16 +543,17 @@
                                         </div>
                                         <span class="text-[12px] font-normal text-center">Apenas no primeiro mês</span>
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-semibold text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0] border-x border-[#63D6FF]">
+                                    <div class="flex flex-col justify-center items-center p-4 font-semibold text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] lg:border-x border-[#63D6FF] order-7 lg:order-none">
                                         <span class="text-[#0066C2]">R$ 0,00</span>
                                         <span class="text-[12px] font-normal text-center">Incluso na mensalidade</span>
                                     </div>
 
                                     <!-- LICENCIAMENTO -->
-                                    <div class="flex flex-col justify-center items-start p-4 font-semibold text-[#212A3C] text-[14px] border-b border-b-[#D8DBE0]">
+                                    <div class="lg:hidden bg-[#F5F6F7] text-[#616E84] text-[12px] col-span-2 text-center p-0.5 order-9">Licenciamento:</div>
+                                    <div class="lg:flex flex-col justify-center items-start p-4 font-semibold text-[#212A3C] text-[14px] lg:border-b border-b-[#D8DBE0] hidden">
                                         Licenciamento:
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0]">
+                                    <div class="!flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] financiada-items order-11 lg:order-none">
                                         <div class="flex items-center justify-center gap-3">
                                             <span data-total="licenciamento"></span>
                                             <div class="tooltip-container ml-2">
@@ -549,7 +566,7 @@
                                         </div>
                                         <span class="text-[12px] font-normal text-center"><span data-total="licenciamento"></span> ao total nos <span data-total="periodo"></span> meses</span>
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0]">
+                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] vista-items order-11 lg:order-none">
                                         <div class="flex items-center justify-center gap-3">
                                             <span data-total="licenciamento"></span>
                                             <div class="tooltip-container ml-2">
@@ -562,16 +579,17 @@
                                         </div>
                                         <span class="text-[12px] font-normal text-center"><span data-total="licenciamento"></span> ao total nos <span data-total="periodo"></span> meses</span>
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-semibold text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0] border-x border-[#63D6FF]">
+                                    <div class="flex flex-col justify-center items-center p-4 font-semibold text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] lg:border-x border-[#63D6FF] order-10 lg:order-none">
                                         <span class="text-[#0066C2]">R$ 0,00</span>
                                         <span class="text-[12px] font-normal text-center">Incluso na mensalidade</span>
                                     </div>
 
                                     <!-- IPVA -->
-                                    <div class="flex flex-col justify-center items-start p-4 font-semibold text-[#212A3C] text-[14px] border-b border-b-[#D8DBE0]">
+                                    <div class="lg:hidden bg-[#F5F6F7] text-[#616E84] text-[12px] col-span-2 text-center p-0.5 order-12">IPVA:</div>
+                                    <div class="lg:flex flex-col justify-center items-start p-4 font-semibold text-[#212A3C] text-[14px] lg:border-b border-b-[#D8DBE0] hidden">
                                         IPVA:
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0]">
+                                    <div class="!flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] financiada-items order-14 lg:order-none">
                                         <div class="flex items-center justify-center gap-3">
                                             <span data-total="ipva"></span>
                                             <div class="tooltip-container ml-2">
@@ -584,7 +602,7 @@
                                         </div>
                                         <span class="text-[12px] font-normal text-center"><span data-total="licenciamento"></span> ao total nos <span data-total="periodo"></span> meses</span>
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0]">
+                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] vista-items order-14 lg:order-none">
                                         <div class="flex items-center justify-center gap-3">
                                             <span data-total="ipva"></span>
                                             <div class="tooltip-container ml-2">
@@ -597,16 +615,17 @@
                                         </div>
                                         <span class="text-[12px] font-normal text-center"><span data-total="ipva"></span> ao total nos <span data-total="periodo"></span> meses</span>
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-semibold text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0] border-x border-[#63D6FF]">
+                                    <div class="flex flex-col justify-center items-center p-4 font-semibold text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] lg:border-x border-[#63D6FF] order-13 lg:order-none">
                                         <span class="text-[#0066C2]">R$ 0,00</span>
                                         <span class="text-[12px] font-normal text-center">Incluso na mensalidade</span>
                                     </div>
 
                                     <!-- SEGURO -->
-                                    <div class="flex flex-col justify-center items-start p-4 font-semibold text-[#212A3C] text-[14px] border-b border-b-[#D8DBE0]">
+                                    <div class="lg:hidden bg-[#F5F6F7] text-[#616E84] text-[12px] col-span-2 text-center p-0.5 order-15">Seguro:</div>
+                                    <div class="lg:flex flex-col justify-center items-start p-4 font-semibold text-[#212A3C] text-[14px] lg:border-b border-b-[#D8DBE0] hidden">
                                         Seguro:
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0]">
+                                    <div class="!flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] financiada-items order-17 lg:order-none">
                                         <div class="flex items-center justify-center gap-3">
                                             <span data-total="seguro"></span>
                                             <div class="tooltip-container ml-2">
@@ -619,7 +638,7 @@
                                         </div>
                                         <span class="text-[12px] font-normal text-center"><span data-total="seguro"></span> ao total nos <span data-total="periodo"></span> meses</span>
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0]">
+                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] vista-items order-17 lg:order-none">
                                         <div class="flex items-center justify-center gap-3">
                                             <span data-total="seguro"></span>
                                             <div class="tooltip-container ml-2">
@@ -632,16 +651,17 @@
                                         </div>
                                         <span class="text-[12px] font-normal text-center"><span data-total="seguro"></span> ao total nos <span data-total="periodo"></span> meses</span>
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-semibold text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0] border-x border-[#63D6FF]">
+                                    <div class="flex flex-col justify-center items-center p-4 font-semibold text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] lg:border-x border-[#63D6FF] order-16 lg:order-none">
                                         <span class="text-[#0066C2]">R$ 0,00</span>
                                         <span class="text-[12px] font-normal text-center">Incluso na mensalidade</span>
                                     </div>
 
                                     <!-- MANUTENÇÃO -->
-                                    <div class="flex flex-col justify-center items-start p-4 font-semibold text-[#212A3C] text-[14px] border-b border-b-[#D8DBE0]">
+                                    <div class="lg:hidden bg-[#F5F6F7] text-[#616E84] text-[12px] col-span-2 text-center p-0.5 order-18">Manutenção:</div>
+                                    <div class="lg:flex flex-col justify-center items-start p-4 font-semibold text-[#212A3C] text-[14px] lg:border-b border-b-[#D8DBE0] hidden">
                                         Manutenção:
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0]">
+                                    <div class="!flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] financiada-items order-20 lg:order-none">
                                         <div class="flex items-center justify-center gap-3">
                                             <span data-total="manutencao"></span>
                                             <div class="tooltip-container ml-2">
@@ -654,7 +674,7 @@
                                         </div>
                                         <span class="text-[12px] font-normal text-center"><span data-total="manutencao"></span> ao total nos <span data-total="periodo"></span> meses</span>
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0]">
+                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] vista-items order-20 lg:order-none">
                                         <div class="flex items-center justify-center gap-3">
                                             <span data-total="manutencao"></span>
                                             <div class="tooltip-container ml-2">
@@ -667,16 +687,17 @@
                                         </div>
                                         <span class="text-[12px] font-normal text-center"><span data-total="manutencao"></span> ao total nos <span data-total="periodo"></span> meses</span>
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-semibold text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0] border-x border-[#63D6FF]">
+                                    <div class="flex flex-col justify-center items-center p-4 font-semibold text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] lg:border-x border-[#63D6FF] order-19 lg:order-none">
                                         <span class="text-[#0066C2]">R$ 0,00</span>
                                         <span class="text-[12px] font-normal text-center">Incluso na mensalidade</span>
                                     </div>
 
                                     <!-- DEPRECIAÇÃO -->
-                                    <div class="flex flex-col justify-center items-start p-4 font-semibold text-[#212A3C] text-[14px] border-b border-b-[#D8DBE0]">
+                                    <div class="lg:hidden bg-[#F5F6F7] text-[#616E84] text-[12px] col-span-2 text-center p-0.5 order-21">Depreciação:</div>
+                                    <div class="lg:flex flex-col justify-center items-start p-4 font-semibold text-[#212A3C] text-[14px] lg:border-b border-b-[#D8DBE0] hidden">
                                         Depreciação:
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0]">
+                                    <div class="!flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] financiada-items order-23 lg:order-none">
                                         <div class="flex items-center justify-center gap-3">
                                             <span data-total="depreciacao"></span>
                                             <div class="tooltip-container ml-2">
@@ -695,7 +716,7 @@
                                         </div>
                                         <span class="text-[12px] font-normal text-center">Valor a ser depreciado em <span data-total="periodo"></span> meses</span>
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0]">
+                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] vista-items order-23 lg:order-none">
                                         <div class="flex items-center justify-center gap-3">
                                             <span data-total="depreciacao"></span>
                                             <div class="tooltip-container ml-2">
@@ -714,16 +735,17 @@
                                         </div>
                                         <span class="text-[12px] font-normal text-center">Valor a ser depreciado em <span data-total="periodo"></span> meses</span>
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-semibold text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0] border-x border-[#63D6FF]">
+                                    <div class="flex flex-col justify-center items-center p-4 font-semibold text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] lg:border-x border-[#63D6FF] order-22 lg:order-none">
                                         <span class="text-[#0066C2]">R$ 0,00</span>
                                         <span class="text-[12px] font-normal text-center">Incluso na mensalidade</span>
                                     </div>
 
                                     <!-- CUSTO DE OPORTUNIDADE -->
-                                    <div class="flex flex-col justify-center items-start p-4 font-semibold text-[#212A3C] text-[14px] border-b border-b-[#D8DBE0]">
+                                    <div class="lg:hidden bg-[#F5F6F7] text-[#616E84] text-[12px] col-span-2 text-center p-0.5 order-24">Custo de oportunidade:</div>
+                                    <div class="lg:flex flex-col justify-center items-start p-4 font-semibold text-[#212A3C] text-[14px] lg:border-b border-b-[#D8DBE0] hidden">
                                         Custo de oportunidade:
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0]">
+                                    <div class="!flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] financiada-items order-26 lg:order-none">
                                         <div class="flex items-center justify-center gap-3">
                                             <span data-total="custo_oportunidade_financiada"></span>
                                             <div class="tooltip-container ml-2">
@@ -734,7 +756,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0]">
+                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] vista-items order-26 lg:order-none">
                                         <div class="flex items-center justify-center gap-3">
                                             <span data-total="custo_oportunidade_vista"></span>
                                             <div class="tooltip-container ml-2">
@@ -745,7 +767,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-semibold text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0] border-x border-[#63D6FF]">
+                                    <div class="flex flex-col justify-center items-center p-4 font-semibold text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] lg:border-x border-[#63D6FF] order-25 lg:order-none">
                                         <div class="flex items-center justify-center gap-3">
                                             <span data-total="custo_oportunidade_assinatura" class="text-[#0066C2]"></span>
                                             <div class="tooltip-container ml-2">
@@ -758,10 +780,11 @@
                                     </div>
 
                                     <!-- CUSTO DE JUROS -->
-                                    <div class="flex flex-col justify-center items-start p-4 font-semibold text-[#212A3C] text-[14px] border-b border-b-[#D8DBE0]">
+                                    <div class="lg:hidden bg-[#F5F6F7] text-[#616E84] text-[12px] col-span-2 text-center p-0.5 order-27">Custo de juros:</div>
+                                    <div class="lg:flex flex-col justify-center items-start p-4 font-semibold text-[#212A3C] text-[14px] lg:border-b border-b-[#D8DBE0] hidden">
                                         Custo de juros:
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0]">
+                                    <div class="!flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] financiada-items order-29 lg:order-none">
                                         <div class="flex items-center justify-center gap-3">
                                             <span data-total="juros"></span>
                                             <div class="tooltip-container ml-2">
@@ -774,21 +797,22 @@
                                         </div>
                                         <span class="text-[12px] font-normal text-center">Juros de <span data-total="juros_taxa"></span> por <span data-total="periodo"></span> meses</span>
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0]">
+                                    <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] vista-items order-29 lg:order-none">
                                         <div class="flex items-center justify-center gap-3">
                                             R$ 0,00
                                         </div>
                                     </div>
-                                    <div class="flex flex-col justify-center items-center p-4 font-semibold text-[#212A3C] text-[16px] border-b border-b-[#D8DBE0] border-x border-[#63D6FF]">
+                                    <div class="flex flex-col justify-center items-center p-4 font-semibold text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] lg:border-x border-[#63D6FF] order-28 lg:order-none">
                                         <span class="text-[#0066C2]">R$ 0,00</span>
                                         <span class="text-[12px] font-normal text-center">Não tem!</span>
                                     </div>
 
                                     <!-- TOTAL -->
-                                    <div class="flex flex-col justify-start items-start p-4 font-semibold text-[#212A3C] text-[14px]">
+                                    <div class="lg:hidden bg-[#EDF6FF] text-[#212A3C] text-[12px] col-span-2 text-center p-0.5 order-30">Total:</div>
+                                    <div class="lg:flex flex-col justify-start items-start p-4 font-semibold text-[#212A3C] text-[14px] hidden">
                                         Total:
                                     </div>
-                                    <div class="flex flex-col justify-start items-center gap-1 p-4 font-semibold text-[#212A3C] text-[16px] lg:text-[24px]">
+                                    <div class="!flex flex-col justify-start items-center gap-1 p-4 font-semibold text-[#212A3C] text-[16px] lg:text-[24px] financiada-items order-32 lg:order-none">
                                         <div class="flex items-center justify-center gap-3">
                                             <span data-total="financiada"></span>
                                             <div class="tooltip-container ml-2 text-[16px]">
@@ -811,7 +835,7 @@
                                             <span data-total="diferenca_financiada"></span>
                                         </div>
                                     </div>
-                                    <div class="flex flex-col justify-start items-center gap-1 p-4 font-semibold text-[#212A3C] text-[16px] lg:text-[24px]">
+                                    <div class="flex flex-col justify-start items-center gap-1 p-4 font-semibold text-[#212A3C] text-[16px] lg:text-[24px] vista-items order-32 lg:order-none">
                                         <div class="flex items-center justify-center gap-3">
                                             <span data-total="vista"></span>
                                             <div class="tooltip-container ml-2 text-[16px]">
@@ -833,7 +857,7 @@
                                             <span data-total="diferenca_vista"></span>
                                         </div>
                                     </div>
-                                    <div class="flex flex-col justify-center items-center gap-1 pt-4 p-2 font-semibold text-[#212A3C] text-[16px] lg:text-[24px] border-x border-b border-[#63D6FF] rounded-b-2xl">
+                                    <div class="flex flex-col justify-center items-center gap-1 p-4 font-semibold text-[#212A3C] text-[16px] lg:text-[24px] lg:border-x border-[#63D6FF] order-31 lg:order-none">
                                         <div class="flex items-center justify-center gap-3">
                                             <span data-total="assinatura" class="text-[#0066C2]"></span>
                                             <div class="tooltip-container ml-2">
@@ -848,15 +872,17 @@
                                             <i class="fal fa-thumbs-up text-[14px]"></i>
                                             <span class="font-semibold">Melhor opção</span>
                                         </div>
-                                        <div class="mt-10 w-full flex flex-col items-center justify-center gap-4">
-                                            <button class="cursor-pointer bg-[#0066C2] hover:bg-[#005bb5] text-white font-semibold py-2.5 rounded-xl transition duration-300 w-full text-center text-[14px]">
-                                                Quero assinar
-                                            </button>
-                                            <button class="cursor-pointer bg-white hover:bg-gray-100 text-[#0066C2] font-semibold py-2.5 rounded-xl transition duration-300 w-full text-center text-[14px] border-2 border-[#0066C2] flex items-center justify-center gap-2">
-                                                <i class="far fa-paper-plane"></i>
-                                                Receber por e-mail
-                                            </button>
-                                        </div>
+                                    </div>
+
+                                    <!-- BOTÕES -->
+                                    <div class="col-span-2 lg:col-span-1 lg:col-start-4 w-full flex flex-col items-center justify-center gap-4 order-33 lg:order-none lg:border-x lg:border-b border-[#63D6FF] rounded-b-2xl pt-4 p-2">
+                                        <button class="cursor-pointer bg-[#0066C2] hover:bg-[#005bb5] text-white font-semibold py-2.5 rounded-xl transition duration-300 w-full text-center text-[14px]">
+                                            Quero assinar
+                                        </button>
+                                        <button class="cursor-pointer bg-white hover:bg-gray-100 text-[#0066C2] font-semibold py-2.5 rounded-xl transition duration-300 w-full text-center text-[14px] border-2 border-[#0066C2] flex items-center justify-center gap-2">
+                                            <i class="fas fa-paper-plane"></i>
+                                            Receber por e-mail
+                                        </button>
                                     </div>
                                 </div>
 
