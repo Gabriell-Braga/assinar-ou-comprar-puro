@@ -85,7 +85,7 @@
                         </a>
                     </div>
                     <div class="w-full lg:w-3/5 flex flex-col items-start justify-between px-6 py-12 bg-gradient-to-b from-[#2FB4FF] to-[#0066C2] pt-16 sm:pt-12">
-                        <h1 class="font-semibold text-[40px] text-[#F5F6F7]">Assinar ou comprar, o que vale mais a pena?</h1>
+                        <h1 class="font-semibold text-[32px] lg:text-[40px] text-[#F5F6F7]">Assinar ou comprar, o que vale mais a pena?</h1>
                         <span class="text-[16px] text-white mt-2">Descubra a melhor opção para o seu perfil. Nossa calculadora vai além do preço e considera custos reais como oportunidade, operacionais e a depreciação do veículo.</span>
                         <div class="flex flex-row sm:grid sm:grid-cols-4 max-w-full md:w-full my-8 gap-2 overflow-x-auto no-scrollbar">
                             <div class="rounded-2xl flex flex-col items-start gap-2 transition ease-in-out duration-300 p-4 hover:bg-[#0066C2] min-w-[278px] sm:min-w-auto">
@@ -196,7 +196,7 @@
                                     </div>
                                     <div class="flex flex-col-reverse lg:flex-row justify-between items-center w-full mt-6 gap-4">
                                         <a id="back-banner" class="text-[#0066C2] cursor-pointer"><i class="fas fa-chevron-left text-xs mr-2"></i> <span class="underline">Voltar</span></a>
-                                        <button id="next-button-1" class="px-4 py-1.5 bg-[#0066C2] text-white font-semibold cursor-pointer transition-all duration-300 ease-in-out text-[14px] rounded-lg w-full lg:w-auto">Próximo</button>
+                                        <button id="next-button-1" class="px-4 py-2.5 bg-[#0066C2] text-white font-semibold cursor-pointer transition-all duration-300 ease-in-out text-[14px] rounded-lg w-full lg:w-auto">Próximo</button>
                                     </div>
                                 </form>
                             </div>
@@ -292,7 +292,7 @@
 
                                     <div class="flex flex-col-reverse lg:flex-row justify-between items-center w-full mt-6 gap-4">
                                         <a class="text-[#0066C2] cursor-pointer back-to-step-1"><i class="fas fa-chevron-left text-xs mr-2"></i> <span class="underline">Voltar</span></a>
-                                        <button id="next-button-2" class="px-4 py-1.5 bg-[#0066C2] text-white font-semibold cursor-pointer transition-all duration-300 ease-in-out text-[14px] rounded-lg w-full lg:w-auto">Próximo</button>
+                                        <button id="next-button-2" class="px-4 py-2.5 bg-[#0066C2] text-white font-semibold cursor-pointer transition-all duration-300 ease-in-out text-[14px] rounded-lg w-full lg:w-auto">Próximo</button>
                                     </div>
                                 </form>
                             </div>                   
@@ -328,7 +328,7 @@
                                         Compra à vista
                                     </div>
                                     <div class="form-group order-2 lg:hidden flex justify-center items-center">
-                                        <select required name="calculo" class="calculo-select" id="calculo">
+                                        <select required name="calculo" class="calculo-select">
                                             <option value="financiada" selected>Financiada</option>
                                             <option value="vista">À vista</option>
                                         </select>
@@ -487,7 +487,7 @@
                                         Compra à vista
                                     </div>
                                     <div class="form-group order-2 lg:hidden flex justify-center items-center">
-                                        <select required name="calculo" class="calculo-select" id="calculo">
+                                        <select required name="calculo" class="calculo-select">
                                             <option value="financiada" selected>Financiada</option>
                                             <option value="vista">À vista</option>
                                         </select>
@@ -601,7 +601,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <span class="text-[12px] font-normal text-center"><span data-total="licenciamento"></span> ao total nos <span data-total="periodo"></span> meses</span>
+                                        <span class="text-[12px] font-normal text-center"><span data-total="ipva"></span> ao total nos <span data-total="periodo"></span> meses</span>
                                     </div>
                                     <div class="flex flex-col justify-center items-center p-4 font-medium text-[#212A3C] text-[16px] lg:border-b border-b-[#D8DBE0] vista-items order-14 lg:order-none">
                                         <div class="flex items-center justify-center gap-3">
@@ -877,12 +877,79 @@
 
                                     <!-- BOTÕES -->
                                     <div class="col-span-2 lg:col-span-1 lg:col-start-4 w-full flex flex-col items-center justify-center gap-4 order-33 lg:order-none lg:border-x lg:border-b border-[#63D6FF] rounded-b-2xl pt-4 p-2">
-                                        <button class="cursor-pointer bg-[#0066C2] hover:bg-[#005bb5] text-white font-semibold py-2.5 rounded-xl transition duration-300 w-full text-center text-[14px]">
+                                        <button id="total-detalhado" class="cursor-pointer bg-[#0066C2] hover:bg-[#005bb5] text-white font-semibold py-2.5 rounded-xl transition duration-300 w-full text-center text-[14px]">
                                             Quero assinar
                                         </button>
                                         <button class="cursor-pointer bg-white hover:bg-gray-100 text-[#0066C2] font-semibold py-2.5 rounded-xl transition duration-300 w-full text-center text-[14px] border-2 border-[#0066C2] flex items-center justify-center gap-2">
                                             <i class="fas fa-paper-plane"></i>
                                             Receber por e-mail
+                                        </button>
+                                    </div>
+
+                                    <div id="total-fixed" class="fixed bg-white grid grid-cols-2 shadow-[0px_-6px_12px_0px_#212A3C3D] lg:hidden bottom-0 left-0 w-full z-50 p-4 transition ease-in-out duration-300">
+                                        <div class="flex flex-col justify-center items-center gap-1 p-4 font-semibold text-[#212A3C] text-[16px] lg:text-[24px] lg:border-x border-[#63D6FF]">
+                                            <div class="flex items-center justify-center gap-3">
+                                                <span data-total="assinatura" class="text-[#0066C2]"></span>
+                                                <div class="tooltip-container ml-2">
+                                                    <i class="fal fa-info-circle text-[#616E84] text-[15px] font-normal text-[16px]"></i>
+                                                    <div class="tooltip-content">
+                                                        + <span data-total="custo_assinatura"></span> Custo assinatura <br>
+                                                        + <span data-total="custo_oportunidade_assinatura"></span> Custo oportunidade
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="bg-[#EAF9EF] rounded-full py-1 px-2 flex items-center justify-center text-[#4DCB7B] text-[12px] gap-1">
+                                                <i class="fal fa-thumbs-up text-[14px]"></i>
+                                                <span class="font-semibold">Melhor opção</span>
+                                            </div>
+                                        </div>
+                                        <div class="!flex flex-col justify-start items-center gap-1 p-4 font-semibold text-[#212A3C] text-[16px] lg:text-[24px] financiada-items">
+                                            <div class="flex items-center justify-center gap-3">
+                                                <span data-total="financiada"></span>
+                                                <div class="tooltip-container ml-2 text-[16px]">
+                                                    <i class="fal fa-info-circle text-[#616E84] text-[15px] font-normal"></i>
+                                                    <div class="tooltip-content">
+                                                        + <span data-total="seguro"></span> Seguro <br>
+                                                        + <span data-total="ipva"></span> IPVA <br>
+                                                        + <span data-total="licenciamento"></span> Licenciamento <br>
+                                                        + <span data-total="emplacamento"></span> Emplacamento <br>
+                                                        + <span data-total="manutencao"></span> Manutenção <br>
+                                                        + <span data-total="depreciacao"></span> Depreciação <br>
+                                                        + <span data-total="custo_oportunidade_financiada"></span> Custo oportunidade <br>
+                                                        + <span data-total="juros"></span> Custo juros
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="bg-[#FFF2F2] rounded-full py-1 px-2 flex items-center justify-center text-[#FF5A60] text-[12px] gap-1 font-semibold">
+                                                <i class="fal fa-thumbs-up text-[14px] rotate-180"></i>
+                                                +
+                                                <span data-total="diferenca_financiada"></span>
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-col justify-start items-center gap-1 p-4 font-semibold text-[#212A3C] text-[16px] lg:text-[24px] vista-items ">
+                                            <div class="flex items-center justify-center gap-3">
+                                                <span data-total="vista"></span>
+                                                <div class="tooltip-container ml-2 text-[16px]">
+                                                    <i class="fal fa-info-circle text-[#616E84] text-[15px] font-normal"></i>
+                                                    <div class="tooltip-content">
+                                                        + <span data-total="seguro"></span> Seguro <br>
+                                                        + <span data-total="ipva"></span> IPVA <br>
+                                                        + <span data-total="licenciamento"></span> Licenciamento <br>
+                                                        + <span data-total="emplacamento"></span> Emplacamento <br>
+                                                        + <span data-total="manutencao"></span> Manutenção <br>
+                                                        + <span data-total="depreciacao"></span> Depreciação <br>
+                                                        + <span data-total="custo_oportunidade_vista"></span> Custo oportunidade <br>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="bg-[#FFF2F2] rounded-full py-1 px-2 flex items-center justify-center text-[#FF5A60] text-[12px] gap-1 font-semibold">
+                                                <i class="fal fa-thumbs-up text-[14px] rotate-180"></i>
+                                                +
+                                                <span data-total="diferenca_vista"></span>
+                                            </div>
+                                        </div>
+                                        <button class="col-span-2 cursor-pointer bg-[#0066C2] hover:bg-[#005bb5] text-white font-semibold py-2.5 rounded-xl transition duration-300 w-full text-center text-[14px]">
+                                            Quero assinar
                                         </button>
                                     </div>
                                 </div>

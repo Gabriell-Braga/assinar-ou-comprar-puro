@@ -29,9 +29,7 @@ $(document).ready(function() {
         const currentStep = $('.step:not(.op-0)');
         const nextStep = $(stepId);
 
-        console.log('Current Step:', currentStep.attr('id'));
-        console.log('Next Step:', nextStep.attr('id'));
-        console.log(currentStep.is(nextStep) ? 'Same step' : 'Different step');
+        scrollTo(0, 0);
 
         // Se o passo atual for o mesmo que o próximo, não faz nada
         if (currentStep.is(nextStep)) {
@@ -189,5 +187,56 @@ $(document).ready(function() {
             console.error('Falha ao copiar o link:', error);
             alert('Falha ao copiar o link. Tente novamente.');
         }
+    });
+
+    // TOTAL FIXADO MOBILE
+    const totalDetalhado = $('#total-detalhado');
+    const totalFixed = $('#total-fixed');
+
+    if (totalDetalhado.length && totalFixed.length) {
+        $(window).on('scroll', function() {
+            const windowScrollBottom = $(window).scrollTop() + $(window).height()
+            const totalDetalhadoTop = totalDetalhado.offset().top;
+
+            if (windowScrollBottom >= totalDetalhadoTop) {
+                totalFixed.addClass('opacity-0 pointer-events-none');
+            } else {
+                totalFixed.removeClass('opacity-0 pointer-events-none');
+            }
+        });
+    }
+});
+
+
+
+// TOOLTIP CONTROL
+document.addEventListener('DOMContentLoaded', () => {
+    // Seleciona todos os elementos com a classe .tooltip-container
+    const tooltips = document.querySelectorAll('.tooltip-container');
+
+    tooltips.forEach(container => {
+        const tooltip = container.querySelector('.tooltip-content');
+
+        // Adiciona um evento de mouseover para cada container
+        container.addEventListener('mouseover', () => {
+            // Obtém as dimensões do container e do tooltip
+            const containerRect = container.getBoundingClientRect();
+            const tooltipRect = tooltip.getBoundingClientRect();
+
+            // Calcula a posição do lado direito do tooltip
+            const tooltipRight = containerRect.left + (containerRect.width / 2) + (tooltipRect.width / 2);
+
+            // Calcula a largura da janela de visualização
+            const viewportWidth = window.innerWidth;
+
+            // Verifica se o tooltip irá para fora da tela (se a borda direita ultrapassa a largura da janela)
+            if (tooltipRight > viewportWidth) {
+                // Adiciona a classe 'left-aligned' para reposicionar o tooltip
+                tooltip.classList.add('left-aligned');
+            } else {
+                // Remove a classe 'left-aligned' se o tooltip estiver dentro da tela
+                tooltip.classList.remove('left-aligned');
+            }
+        });
     });
 });

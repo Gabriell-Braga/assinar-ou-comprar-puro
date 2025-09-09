@@ -21,7 +21,7 @@
     padding: 8px;
     position: absolute;
     z-index: 1;
-    bottom: 125%;
+    bottom: 100%;
     left: 50%;
     transform: translateX(-50%);
     white-space: normal;
@@ -49,6 +49,20 @@
 .tooltip-container:hover .tooltip-content {
     visibility: visible;
     opacity: 1;
+}
+
+.tooltip-content.left-aligned {
+    /* Reposiciona o tooltip para a borda direita do container */
+    left: auto;
+    right: -5px;
+    /* Remove a transformação horizontal para evitar deslocamento */
+    transform: none;
+}
+
+/* Modifica a seta para que ela se alinhe à direita do tooltip */
+.tooltip-content.left-aligned::after {
+    left: auto;
+    right: 8px;
 }
 
 .step, .trans{
