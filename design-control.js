@@ -117,6 +117,10 @@ $(document).ready(function() {
 
     $('.calculo-select').on('change', function() {
         $('.calculo-select').val($(this).val());
+        const allSelects = document.querySelectorAll('select');
+        allSelects.forEach(select => {
+            createCustomSelect(select);
+        });
         if($(this).val() === 'financiada'){
             $('.financiada-items').addClass('!flex');
             $('.vista-items').removeClass('!flex');

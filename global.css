@@ -81,7 +81,7 @@
     inset: 0;
 }
 
-ul.active{
+div.active{
     display: block;
 }
 
@@ -89,4 +89,27 @@ ul.active{
   color: #a0a0a0; /* Cor cinza para o texto */
   background-color: #f0f0f0; /* Fundo mais claro */
   cursor: not-allowed; /* Altera o cursor para indicar que não é clicável */
+}
+
+/* Customiza a barra de rolagem para navegadores baseados em WebKit */
+.custom-options-list::-webkit-scrollbar {
+    width: 8px; /* Largura da barra de rolagem */
+    border-radius: 4px; /* Raio da borda da barra de rolagem */
+}
+
+/* Estiliza o "caminho" da barra de rolagem */
+.custom-options-list::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Cor de fundo da trilha */
+    border-radius: 4px;
+}
+
+/* Estiliza o "polegar" (thumb) da barra de rolagem */
+.custom-options-list::-webkit-scrollbar-thumb {
+    background-color: #0066C2; /* A cor azul da seta */
+    border-radius: 4px;
+}
+
+/* Estiliza o thumb ao passar o mouse */
+.custom-options-list::-webkit-scrollbar-thumb:hover {
+    background-color: #005299; /* Um tom um pouco mais escuro para o hover */
 }

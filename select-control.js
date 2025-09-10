@@ -1,12 +1,10 @@
 function createCustomSelect(selectElement) {
   const $originalSelect = $(selectElement);
   
-  // 1. Verifica se já existe um select customizado para este elemento
+  // 1. Verifica e remove qualquer select customizado existente
   const existingCustomSelect = $originalSelect.prev('.custom-select-container');
   if (existingCustomSelect.length) {
-    // Se existir, remove-o
     existingCustomSelect.remove();
-    // Torna o select original visível novamente antes de escondê-lo de novo
     $originalSelect.show(); 
   }
   
@@ -31,21 +29,25 @@ function createCustomSelect(selectElement) {
   });
   $customSelectTrigger.append($arrow);
 
-  // Cria a lista de opções
+  // **Cria o wrapper para o scrollbar**
+  const $customOptionsWrapper = $('<div/>', {
+    class: 'absolute w-full rounded-md shadow-xl bg-white z-10 hidden mt-1 max-h-48 p-2'
+  });
+  
+  // Cria a lista de opções (agora sem o overflow)
   const $customOptionsList = $('<ul/>', {
-    class: 'custom-options-list absolute w-full rounded-md shadow-xl bg-white z-10 hidden mt-1 max-h-48 overflow-y-auto'
+    class: 'custom-options-list max-h-44 overflow-y-auto'
   });
 
   // Preenche a lista com base nas opções do select original
   $originalSelect.find('option').each(function() {
     const $option = $(this);
     const $listItem = $('<li/>', {
-      class: 'text-gray-700 block px-4 py-2 text-sm cursor-pointer border-b border-[#D8DBE0]',
+      class: 'text-gray-700 block pl-2 py-2 text-sm cursor-pointer border-b border-[#D8DBE0] mr-2',
       text: $option.text(),
       'data-value': $option.val()
     });
 
-    // **Verifica se a opção está desabilitada**
     if ($option.is(':disabled')) {
       $listItem.addClass('disabled-option');
       $listItem.removeClass('hover:bg-gray-100 cursor-pointer');
@@ -55,9 +57,12 @@ function createCustomSelect(selectElement) {
 
     $customOptionsList.append($listItem);
   });
+  
+  // Adiciona a lista de opções ao wrapper
+  $customOptionsWrapper.append($customOptionsList);
 
-  // Adiciona os elementos ao container
-  $customSelectContainer.append($customSelectTrigger, $customOptionsList);
+  // Adiciona os elementos ao contêiner
+  $customSelectContainer.append($customSelectTrigger, $customOptionsWrapper);
 
   // Insere o novo select personalizado no DOM
   $originalSelect.before($customSelectContainer);
@@ -68,8 +73,8 @@ function createCustomSelect(selectElement) {
   $customSelectTrigger.on('click', function(e) {
     e.stopPropagation();
     // Fecha outros selects abertos
-    $('.custom-options-list.active').not($customOptionsList).removeClass('active');
-    $customOptionsList.toggleClass('active');
+    $('.custom-options-list.active').not($customOptionsWrapper).removeClass('active');
+    $customOptionsWrapper.toggleClass('active');
   });
 
   // 2. Lida com a seleção de uma opção na lista
@@ -78,21 +83,17 @@ function createCustomSelect(selectElement) {
     const selectedValue = $selectedListItem.data('value');
     const selectedText = $selectedListItem.text();
 
-    // Atualiza o texto do botão e o valor do select original escondido
     $customSelectTrigger.text(selectedText).append($arrow);
-    $originalSelect.val(selectedValue);
-    
-    // **Gatilho 'change'** no select original para que outros scripts possam reagir
-    $originalSelect.trigger('change'); 
+    $originalSelect.val(selectedValue).trigger('change'); 
 
     // Fecha o dropdown
-    $customOptionsList.removeClass('active');
+    $customOptionsWrapper.removeClass('active');
   });
 
-  // 3. Fecha o dropdown se o usuário clicar fora do container
+  // 3. Fecha o dropdown se o usuário clicar fora do contêiner
   $(document).on('click', function(e) {
     if (!$customSelectContainer.is(e.target) && $customSelectContainer.has(e.target).length === 0) {
-      $customOptionsList.removeClass('active');
+      $customOptionsWrapper.removeClass('active');
     }
   });
 }
