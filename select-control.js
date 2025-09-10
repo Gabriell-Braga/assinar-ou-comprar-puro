@@ -71,7 +71,7 @@ function createCustomSelect(selectElement) {
   
   // 1. Alterna a visibilidade da lista de opções ao clicar no botão
   $customSelectTrigger.on('click', function(e) {
-    e.stopPropagation();
+    // e.stopPropagation();
     // Fecha outros selects abertos
     $('.custom-options-list.active').not($customOptionsWrapper).removeClass('active');
     $customOptionsWrapper.toggleClass('active');
