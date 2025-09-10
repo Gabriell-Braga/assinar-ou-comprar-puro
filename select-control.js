@@ -18,25 +18,25 @@ function createCustomSelect(selectElement) {
   // Cria o botão que exibe o valor selecionado
   const $customSelectTrigger = $('<button/>', {
     type: 'button',
-    class: 'bg-white block w-full text-[14px] text-[#212A3C] text-nowrap py-3 px-4 pr-8 border border-gray-300 rounded-md focus:ring-[#0066C2] focus:border-[#0066C2] transition duration-300 ease-in-out !outline-none text-left relative overflow-x-hidden',
+    class: 'bg-white block w-full text-[14px] text-[#212A3C] text-nowrap py-3 px-4 pr-8 !border !border-gray-300 rounded-md focus:ring-[#0066C2] focus:border-[#0066C2] transition duration-300 ease-in-out !outline-none text-left relative !overflow-x-hidden',
     text: $originalSelect.find('option:selected').text()
   });
 
   // Adiciona a seta ao trigger
   const $arrow = $('<span/>', {
-    class: 'absolute right-0 top-1/2 -translate-y-1/2 text-sm text-gray-400 bg-white pl-2 pr-4',
-    html: '<i class="fas fa-chevron-down text-[#0066C2]"></i>'
+    class: 'select-arrow absolute right-0 top-1/2 -translate-y-1/2 text-sm text-gray-400 bg-white pl-2 pr-4',
+    html: '<i class="fas fa-chevron-down text-[#0066C2] transition ease-in-out duration-300"></i>'
   });
   $customSelectTrigger.append($arrow);
 
   // **Cria o wrapper para o scrollbar**
   const $customOptionsWrapper = $('<div/>', {
-    class: 'absolute w-full rounded-md shadow-xl bg-white z-10 hidden mt-1 max-h-48 p-2'
+    class: 'select-wrapper absolute w-full rounded-md shadow-xl bg-white z-10 hidden mt-1 max-h-48 p-2'
   });
   
   // Cria a lista de opções (agora sem o overflow)
   const $customOptionsList = $('<ul/>', {
-    class: 'custom-options-list max-h-44 overflow-y-auto'
+    class: 'custom-options-list max-h-44 overflow-y-auto !m-0 !p-0'
   });
 
   // Preenche a lista com base nas opções do select original
@@ -73,8 +73,8 @@ function createCustomSelect(selectElement) {
   $customSelectTrigger.on('click', function(e) {
     // e.stopPropagation();
     // Fecha outros selects abertos
-    $('.custom-options-list.active').not($customOptionsWrapper).removeClass('active');
-    $customOptionsWrapper.toggleClass('active');
+    $arrow.find('i').toggleClass('rotate-180');
+    $customOptionsWrapper.slideToggle(200);
   });
 
   // 2. Lida com a seleção de uma opção na lista
@@ -87,13 +87,15 @@ function createCustomSelect(selectElement) {
     $originalSelect.val(selectedValue).trigger('change'); 
 
     // Fecha o dropdown
-    $customOptionsWrapper.removeClass('active');
+    $customOptionsWrapper.slideUp(200);
+    $arrow.find('i').removeClass('rotate-180');
   });
 
   // 3. Fecha o dropdown se o usuário clicar fora do contêiner
   $(document).on('click', function(e) {
     if (!$customSelectContainer.is(e.target) && $customSelectContainer.has(e.target).length === 0) {
-      $customOptionsWrapper.removeClass('active');
+        $customOptionsWrapper.slideUp(200);
+        $arrow.find('i').removeClass('rotate-180');
     }
   });
 }

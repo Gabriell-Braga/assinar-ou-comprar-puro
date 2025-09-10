@@ -1,28 +1,34 @@
 $(document).ready(function() {
     $('#compare-button').on('click', function() {
-        scrollTo(0, 0);
+        window.scrollTo(0, 0);
         $('#banner').addClass('op-0 abs');
         $('#calculator').removeClass('op-0 abs');
     });
 
     $('#back-banner').on('click', function() {
-        scrollTo(0, 0);
+        window.scrollTo(0, 0);
         $('#calculator').addClass('op-0 abs');
         $('#banner').removeClass('op-0 abs');
     });
 
     // Function to handle step transitions
-    
+    let url = '';
     function goToStep(stepId, menuStep) {
-        if (stepId === '#result') {
-            const url = createShareUrl(); // Reutiliza a função de compartilhamento
+        if(menuStep === '#menu-step-1'){
+            url = `${window.location.origin}${window.location.pathname}?carro=true`;
+            window.history.pushState({ path: url }, '', url);
+        }else if(menuStep === '#menu-step-2'){
+            url = `${window.location.origin}${window.location.pathname}?valores=true`;
+            window.history.pushState({ path: url }, '', url);
+        }else if (stepId === '#result') {
+            url = createShareUrl();
             window.history.pushState({ path: url }, '', url);
         }
 
         const currentStep = $('.step:not(.op-0)');
         const nextStep = $(stepId);
 
-        scrollTo(0, 0);
+        window.scrollTo(0, 0);
 
         // Se o passo atual for o mesmo que o próximo, não faz nada
         if (currentStep.is(nextStep)) {
@@ -195,7 +201,7 @@ $(document).ready(function() {
 
     if (totalDetalhado.length && totalFixed.length) {
         $(window).on('scroll', function() {
-            const windowScrollBottom = $(window).scrollTop() + $(window).height()
+            const windowScrollBottom = $(window).scrollTop() + $(window).height();
             const totalDetalhadoTop = totalDetalhado.offset().top;
 
             if (windowScrollBottom >= totalDetalhadoTop) {
@@ -236,6 +242,10 @@ function createShareUrl() {
     if (!isNaN(entrada)) params.set('entrada', entrada);
     if (!isNaN(taxaAM)) params.set('taxa_am', taxaAM);
     params.set('pular', 'true');
+
+    console.log(window.location.origin);
+    console.log(window.location.pathname);
+    console.log(params.toString());
 
     // Retorna a URL completa
     return `${window.location.origin}${window.location.pathname}?${params.toString()}`;
