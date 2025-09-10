@@ -43,7 +43,7 @@ function createCustomSelect(selectElement) {
   $originalSelect.find('option').each(function() {
     const $option = $(this);
     const $listItem = $('<li/>', {
-      class: 'text-gray-700 block pl-2 py-2 text-sm cursor-pointer border-b border-[#D8DBE0] mr-2',
+      class: 'text-gray-700 block pl-2 py-2 text-sm cursor-pointer border-b last:border-0 border-[#D8DBE0] mr-2',
       text: $option.text(),
       'data-value': $option.val()
     });
