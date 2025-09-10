@@ -80,3 +80,13 @@
     position: absolute;
     inset: 0;
 }
+
+ul.active{
+    display: block;
+}
+
+.disabled-option {
+  color: #a0a0a0; /* Cor cinza para o texto */
+  background-color: #f0f0f0; /* Fundo mais claro */
+  cursor: not-allowed; /* Altera o cursor para indicar que não é clicável */
+}

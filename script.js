@@ -49,13 +49,8 @@ let vistaTotalElement;
 let assinaturaTotalElement;
 
 let anbimaData = {};
-// catalogData is no longer used for fetching car details, keeping for potential future use or if it's populated elsewhere.
-let catalogData = {}; 
+let catalogData = {};
 
-/**
- * Populates the car model select dropdown using local data from window.carros.
- * Removed FIPE specific attributes as they are no longer needed.
- */
 function populateModelSelectFromLocalData() {
     if (modeloElement && window.carros && window.carros.length > 0) {
         $(modeloElement).empty();
@@ -66,6 +61,11 @@ function populateModelSelectFromLocalData() {
             option.textContent = car.modelo;
             modeloElement.appendChild(option);
         });
+
+        const allSelects = document.querySelectorAll('select');
+        allSelects.forEach(select => {
+            createCustomSelect(select);
+        });
         console.log('Select de modelos populado a partir de dados locais.');
     } else {
         console.warn('Elemento modelo ou dados de carros locais não disponíveis para popular o select.');
@@ -137,10 +137,100 @@ function createJurosCurveTable() {
     return jurosCurve;
 }
 
+function convertToBrazilianDecimal(value) {
+    if (typeof value === 'string' || typeof value === 'number') {
+        const stringValue = String(value);
+        return stringValue.replace('.', ',');
+    }
+    return value;
+}
+
+/**
+ * Reads URL parameters and fills form fields and triggers a calculation.
+ */
+function readUrlParameters() {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    const modeloSlug = urlParams.get('modelo');
+    const periodo = urlParams.get('periodo');
+    const usoMensal = urlParams.get('uso_mensal');
+    const seguro = urlParams.get('seguro');
+    const ipva = urlParams.get('ipva');
+    const licenciamento = urlParams.get('licenciamento');
+    const emplacamento = urlParams.get('emplacamento');
+    const manutencao = urlParams.get('manutencao');
+    const entrada = urlParams.get('entrada');
+    const taxaAM = urlParams.get('taxa_am');
+    const pular = urlParams.get('pular'); // Novo parâmetro para pular para o resultado
+
+    let hasParams = false;
+
+    if (modeloSlug && modeloElement) {
+        $(modeloElement).val(modeloSlug).trigger('change');
+        hasParams = true;
+    }
+    if (periodo && periodoElement) {
+        $(periodoElement).val(periodo).trigger('change');
+        hasParams = true;
+    }
+    if (usoMensal && usoMensalElement) {
+        $(usoMensalElement).val(usoMensal).trigger('change');
+        hasParams = true;
+    }
+    
+    if (seguro && seguroElement) {
+        seguroElement.value = convertToBrazilianDecimal(seguro);
+        hasParams = true;
+    }
+
+    if (ipva && ipvaElement) {
+        ipvaElement.value = convertToBrazilianDecimal(ipva);
+        hasParams = true;
+    }
+
+    if (licenciamento && licenciamentoElement) {
+        licenciamentoElement.value = convertToBrazilianDecimal(licenciamento);
+        hasParams = true;
+    }
+
+    if (emplacamento && emplacamentoElement) {
+        emplacamentoElement.value = convertToBrazilianDecimal(emplacamento);
+        hasParams = true;
+    }
+
+    if (manutencao && manutencaoElement) {
+        manutencaoElement.value = convertToBrazilianDecimal(manutencao);
+        hasParams = true;
+    }
+
+    if (entrada && entradaElement) {
+        entradaElement.value = convertToBrazilianDecimal(entrada);
+        hasParams = true;
+    }
+
+    if (taxaAM && taxaAMElement) {
+        taxaAMElement.value = convertToBrazilianDecimal(taxaAM);
+        hasParams = true;
+    }
+
+    if (hasParams) {
+        // Se houver parâmetros, acione a atualização do formulário.
+        onFormChange();
+        const allSelects = document.querySelectorAll('select');
+        allSelects.forEach(select => {
+            createCustomSelect(select);
+        });
+    }
+
+    setupInputFormatting();
+    
+    // Retorna se o parâmetro "pular" está presente e se os parâmetros essenciais estão preenchidos
+    return hasParams && pular === 'true';
+}
+
 $(document).ready(function() {
     console.log('Script carregado com sucesso!');
 
-    // Get references to input elements
     modeloElement = document.getElementById('modelo');
     periodoElement = document.getElementById('periodo');
     usoMensalElement = document.getElementById('uso_mensal');
@@ -154,7 +244,6 @@ $(document).ready(function() {
     entradaElement = document.getElementById('entrada');
     taxaAMElement = document.getElementById('taxa_am');
 
-    // Get references to display elements (for totals)
     periodoTotalElement = $('[data-total="periodo"]');
     seguroTotalElement = $('[data-total="seguro"]');
     ipvaTotalElement = $('[data-total="ipva"]');
@@ -180,12 +269,12 @@ $(document).ready(function() {
 
     financiadaDiferencaElement = $('[data-total="diferenca_financiada"]');
     vistaDiferencaElement = $('[data-total="diferenca_vista"]');
+    assinaturaDiferencaElement = $('[data-total="diferenca_assinatura"]');
 
     financiadaTotalElement = $('[data-total="financiada"]');
     vistaTotalElement = $('[data-total="vista"]');
     assinaturaTotalElement = $('[data-total="assinatura"]');
     
-    // Attach change listeners to relevant input fields to trigger recalculations
     $(modeloElement).on('change', onFormChange);
     $(periodoElement).on('change', onFormChange);
     $(usoMensalElement).on('change', onFormChange);
@@ -193,7 +282,7 @@ $(document).ready(function() {
     $(ipvaElement).on('input', onFormChange);
     $(licenciamentoElement).on('input', onFormChange);
     $(emplacamentoElement).on('input', onFormChange);
-    $(manutencaoElement).on('input', onFormChange); // This input will now be updated by the script, but user can still type
+    $(manutencaoElement).on('input', onFormChange);
     $(entradaElement).on('input', onFormChange);
     $(taxaAMElement).on('input', onFormChange);
 
@@ -201,13 +290,24 @@ $(document).ready(function() {
     populateModelSelectFromLocalData();
     createJurosCurveTable();
     applyDefaultConfig();
-
     setupInputFormatting();
+
+    // Lê os parâmetros da URL no carregamento
+    const shouldGoToResult = readUrlParameters();
+    
+    // Se o parâmetro 'pular' estiver presente, avança para a tela de resultado
+    if (shouldGoToResult) {
+        // Encontra o clique do botão 'next' para avançar
+        // Isso simula o clique do usuário para manter o fluxo do design-control.js
+        $('#next-button-1').trigger('click');
+        $('#compare-button').trigger('click');
+
+        setTimeout(() => {
+            $('#next-button-2').trigger('click');
+        }, 10);
+    }
 });
 
-/**
- * Applies default configuration values from window.config to the form fields.
- */
 function applyDefaultConfig() {
     if (window.config) {
         const config = window.config;
@@ -229,9 +329,8 @@ function applyDefaultConfig() {
         if (config.seguro) {
             seguroElement.value = config.seguro;
         }
-        // Do not set manutencaoElement here, it's dynamic based on car model
-        setupInputFormatting(); // Reapply formatting after setting values
-        onFormChange(); // Trigger recalculation after applying defaults
+        setupInputFormatting();
+        onFormChange();
     }
 }
 
@@ -260,7 +359,6 @@ function formatPercentage(value) {
 */
 function parseCurrencyToFloat(currencyString) {
     if (!currencyString) return 0;
-    // Handle cases where the string might be just "R$ " or empty
     const cleanedString = currencyString.replace('R$', '').replace(/\./g, '').replace(',', '.').trim();
     if (cleanedString === '') return 0;
     return parseFloat(cleanedString);
@@ -314,7 +412,6 @@ function calculateOpportunityCost(scenarioType, principalValue, period, anbimaDa
                 cashOutflowThisMonth += principalValue;
                 cashOutflowThisMonth += emplacamentoValue;
             }
-            // `manutencao` here is the monthly average of the cumulative total
             cashOutflowThisMonth += manutencao; 
             cashOutflowThisMonth += annualFinancialDetails[currentYearIndex].annualSeguro/12;
             if (firstMonthOfYear && annualFinancialDetails[currentYearIndex]) {
@@ -323,22 +420,20 @@ function calculateOpportunityCost(scenarioType, principalValue, period, anbimaDa
             }
         } else if (scenarioType === 'financiada') {
             if (month === 1) {
-                cashOutflowThisMonth += principalValue; // This is the down payment (entrada)
+                cashOutflowThisMonth += principalValue;
                 cashOutflowThisMonth += emplacamentoValue;
             }
-            // `manutencao` here is the monthly average of the cumulative total
             cashOutflowThisMonth += manutencao; 
             cashOutflowThisMonth += annualFinancialDetails[currentYearIndex].annualSeguro/12;
             if (firstMonthOfYear && annualFinancialDetails[currentYearIndex]) {
                 cashOutflowThisMonth += annualFinancialDetails[currentYearIndex].annualIpva;
                 cashOutflowThisMonth += annualFinancialDetails[currentYearIndex].annualLicenciamento;
             }
-            // Add monthly installment if within the financing period
-            if (month <= parcelasElement.value) { // Assuming parcelasElement.value holds the number of installments
+            if (month <= parcelasElement.value) {
                 cashOutflowThisMonth += parcelaMensal;
             }
         } else if (scenarioType === 'assinatura') {
-            cashOutflowThisMonth += parcelas; // Monthly subscription cost
+            cashOutflowThisMonth += parcelas;
         }
         const monthlyOpportunityCost = cashOutflowThisMonth * remainingPeriodLiquidRate;
         totalOpportunityCost += monthlyOpportunityCost;
@@ -351,20 +446,15 @@ function calculateOpportunityCost(scenarioType, principalValue, period, anbimaDa
     return totalOpportunityCost;
 }
 
-/**
- * Sets up input formatting for currency and percentage fields.
- */
 function setupInputFormatting() {
-    // Currency formatting
     $('[data-type="currency"]').each(function() {
         const $input = $(this);
-        // Set initial value to formatted currency if it exists
         if ($input.val()) {
             $input.val(formatCurrency(parseCurrencyToFloat($input.val())));
         }
-        $input.off('input.currency').on('input.currency', function() { // Use namespace to prevent duplicate bindings
+        $input.off('input.currency').on('input.currency', function() {
             let value = $input.val();
-            value = value.replace(/\D/g, ''); // Remove all non-digits
+            value = value.replace(/\D/g, '');
             if (value.length === 0) {
                 $input.val('');
                 return;
@@ -373,30 +463,28 @@ function setupInputFormatting() {
             let floatValue = numericValue / 100;
             $input.val(formatCurrency(floatValue));
         });
-        $input.off('blur.currency').on('blur.currency', function() { // Use namespace
+        $input.off('blur.currency').on('blur.currency', function() {
             const rawValue = $input.val();
             if (!rawValue || parseCurrencyToFloat(rawValue) === 0) {
                 $input.val(formatCurrency(0));
             } else {
                 $input.val(formatCurrency(parseCurrencyToFloat(rawValue)));
             }
-            onFormChange(); // Trigger recalculation on blur to ensure final value is used
+            onFormChange();
         });
     });
 
     // Percentage formatting
     $('[data-type="percentage"]').each(function() {
         const $input = $(this);
-        // Set initial value to formatted percentage if it exists
         if ($input.val()) {
             $input.val(formatPercentage(parsePercentageToFloat($input.val())));
         }
-        $input.off('input.percentage').on('input.percentage', function() { // Use namespace
+        $input.off('input.percentage').on('input.percentage', function() {
             let value = $input.val();
-            value = value.replace(/[^\d,]/g, ''); // Allow digits and comma
-            value = value.replace(',', '.'); // Replace comma with dot for float parsing
+            value = value.replace(/[^\d,]/g, '');
+            value = value.replace(',', '.');
 
-            // Ensure only one dot for decimals
             const parts = value.split('.');
             if (parts.length > 2) {
                 value = parts[0] + '.' + parts.slice(1).join('');
@@ -404,34 +492,29 @@ function setupInputFormatting() {
 
             let floatValue = parseFloat(value);
             if (isNaN(floatValue)) {
-                $input.val(''); // Clear if not a valid number
+                $input.val('');
                 return;
             }
             $input.val(formatPercentage(floatValue));
         });
-        $input.off('blur.percentage').on('blur.percentage', function() { // Use namespace
+        $input.off('blur.percentage').on('blur.percentage', function() {
             const rawValue = $input.val();
             if (!rawValue || parsePercentageToFloat(rawValue) === 0) {
                 $input.val(formatPercentage(0));
             } else {
                 $input.val(formatPercentage(parsePercentageToFloat(rawValue)));
             }
-            onFormChange(); // Trigger recalculation on blur
+            onFormChange();
         });
     });
 }
 
-/**
- * Main function to calculate and update all financial details based on form inputs.
- * This function is triggered whenever a relevant form input changes.
- */
 function onFormChange(){
     const selectedOption = modeloElement.options[modeloElement.selectedIndex];
     const selectedSlug = selectedOption ? selectedOption.value : null;
     const selectedCar = selectedSlug ? window.carros.find(car => car.slug === selectedSlug) : null;
 
-    // Retrieve values from form elements
-    const preco0km = selectedCar ? selectedCar['preco-0km'] : 0; // Get 0km price from selected car
+    const preco0km = selectedCar ? selectedCar['preco-0km'] : 0;
     const periodo = parseFloat(periodoElement.value);
     const seguroPercentage = parsePercentageToFloat(seguroElement.value);
     const ipvaPercentage = parsePercentageToFloat(ipvaElement.value);
@@ -440,65 +523,50 @@ function onFormChange(){
     const licenciamentoValue = parseCurrencyToFloat(licenciamentoElement.value);
     const emplacamentoValue = parseCurrencyToFloat(emplacamentoElement.value);
     
-    // Get subscription parcelas and monthly usage from selected car, based on period and usage
     let parcelas = 0;
     let usoMensal = 0;
     if (selectedCar) {
-        const subscriptionKey = `${periodo}x${usoMensalElement.value}`; // e.g., "12x1000"
+        const subscriptionKey = `${periodo}x${usoMensalElement.value}`;
         parcelas = selectedCar[subscriptionKey] || 0;
         usoMensal = parseCurrencyToFloat(usoMensalElement.value);
     }
 
-    // Set precoElement value to the 0km price of the selected car
     if (selectedCar) {
         precoElement.value = formatCurrency(preco0km);
         parcelasElement.value = formatCurrency(parcelas);
 
-        // --- INÍCIO DA LÓGICA DE CÁLCULO DE MANUTENÇÃO ATUALIZADA ---
         let manutencao12_car = selectedCar?.['manutencao-12']*1 || 0;
-        let manutencao24_car_incremental = selectedCar?.['manutencao-24']*1 || 0; // Custo incremental do ano 2
-        let manutencao36_car_incremental = selectedCar?.['manutencao-36']*1 || 0; // Custo incremental do ano 3
+        let manutencao24_car_incremental = selectedCar?.['manutencao-24']*1 || 0;
+        let manutencao36_car_incremental = selectedCar?.['manutencao-36']*1 || 0;
 
         let totalManutencaoCumulative = 0;
         if (periodo <= 12) {
             totalManutencaoCumulative = manutencao12_car;
         } else if (periodo <= 24) {
-            // Manutenção de 24 meses soma a de 12 meses
             totalManutencaoCumulative = manutencao12_car + manutencao24_car_incremental;
         } else if (periodo <= 36) {
-            // Manutenção de 36 meses soma a de 12 e 24 meses (o 24 aqui é o incremental original do ano 2)
             totalManutencaoCumulative = manutencao12_car + manutencao24_car_incremental + manutencao36_car_incremental;
         } else {
-            // Para períodos acima de 36 meses, consideramos o total acumulado até 36 meses
-            // A taxa de 10% é um placeholder, idealmente seria fornecido mais dados para além de 36 meses
             totalManutencaoCumulative = manutencao12_car + manutencao24_car_incremental + manutencao36_car_incremental;
-            // Se houver necessidade de calcular manutenção para períodos > 36 meses, uma lógica adicional seria necessária.
-            // Por enquanto, mantém o total acumulado até 36 meses como teto.
         }
 
-        // Calcula a média mensal da manutenção com base no total acumulado
         const manutencaoMonthlyAverage = (periodo > 0) ? totalManutencaoCumulative / periodo : 0;
 
-        // Atualiza o campo de input de manutenção com a média mensal
         manutencaoElement.value = formatCurrency(manutencaoMonthlyAverage);
 
-        // Atualiza a variável global manutencaoTotal com o valor acumulado
         manutencaoTotal = totalManutencaoCumulative;
-        // --- FIM DA LÓGICA DE CÁLCULO DE MANUTENÇÃO ATUALIZADA ---
 
     } else {
         precoElement.value = formatCurrency(0);
         parcelasElement.value = formatCurrency(0);
         manutencaoElement.value = formatCurrency(0);
-        manutencaoTotal = 0; // Reset total if no car selected
+        manutencaoTotal = 0;
     }
 
-    // A variável 'manutencao' será populada aqui com o valor atualizado do input
     const manutencao = parseCurrencyToFloat(manutencaoElement.value);
 
-    // --- INÍCIO: CÁLCULO DE DEPRECIAÇÃO ATUALIZADO (ANO POR ANO) ---
     let totalDepreciacaoCalculated = 0; 
-    let depreciacaoPrecoFinal = preco0km; // Inicializa com o preço 0km, será o valor final do carro
+    let depreciacaoPrecoFinal = preco0km;
 
     if (selectedCar && preco0km > 0) {
         const numFullYearsInPeriod = periodo / 12;
@@ -506,7 +574,6 @@ function onFormChange(){
 
         console.group('Depreciação Ano a Ano');
 
-        // `currentCarValueAfterDepreciation` é o valor do carro após a depreciação dos anos anteriores
         let currentCarValueAfterDepreciation = preco0km; 
 
         for (let year = 1; year <= numFullYearsInPeriod; year++) {
@@ -518,14 +585,12 @@ function onFormChange(){
             console.log(`Ano ${year} (12 meses): Taxa de depreciação anual = ${formatPercentage(selectedCar['depreciacao-'+(year*12)])}, Valor depreciado neste ano = ${formatCurrency(depreciationAmountThisYear)}`);
         }
 
-        // Trata o ano parcial restante, se houver
         if (remainingMonths > 0) {
             let annualDepreciationRateForPartialYear = 0;
-            const currentYearNum = numFullYearsInPeriod + 1; // Este é o número do ano parcial
+            const currentYearNum = numFullYearsInPeriod + 1;
 
             console.log(`Ano ${currentYearNum} (início - parcial): Valor do carro para depreciação = ${formatCurrency(currentCarValueAfterDepreciation)}`);
 
-            // Determina a taxa para o ano parcial com base na sua posição
             if (currentYearNum === 1) {
                 annualDepreciationRateForPartialYear = (selectedCar['depreciacao-12'] || 0);
             } else if (currentYearNum === 2) {
@@ -554,19 +619,13 @@ function onFormChange(){
         }
         console.groupEnd();
 
-        // Arredonda o valor final do carro para 2 casas decimais para evitar imprecisões de ponto flutuante
         depreciacaoPrecoFinal = parseFloat(currentCarValueAfterDepreciation.toFixed(2));
-        // Calcula a depreciação total como a diferença exata entre o preço 0km e o preço final arredondado
         totalDepreciacaoCalculated = preco0km - depreciacaoPrecoFinal;
     } else {
-        // Se nenhum carro selecionado ou preço 0km for zero, não há depreciação
         totalDepreciacaoCalculated = 0;
         depreciacaoPrecoFinal = preco0km; 
     }
-    // --- FIM: CÁLCULO DE DEPRECIAÇÃO ATUALIZADO (ANO POR ANO) ---
-
-    // Recalculate financial totals based on new data
-    let currentCarValueForAnnualCalc = preco0km; // Value used as base for Seguro/IPVA calculation
+    let currentCarValueForAnnualCalc = preco0km;
     let totalSeguroPeriodo = 0;
     let totalIpvaPeriodo = 0;
     let totalLicenciamentoPeriodo = 0;
@@ -579,7 +638,6 @@ function onFormChange(){
     console.log(`Valor inicial do carro para cálculo de despesas anuais: ${formatCurrency(preco0km)}`);
 
     for (let year = 0; year < fullYearsInPeriod; year++) {
-        // Determine the car's value for this year's calculation based on cumulative depreciation percentages
         let valueForThisYear = preco0km;
         if (year === 0) {
             valueForThisYear = preco0km;
@@ -589,7 +647,7 @@ function onFormChange(){
             valueForThisYear = preco0km * (1- (selectedCar['depreciacao-24'] / 100));
         }
         
-        currentCarValueForAnnualCalc = valueForThisYear; // Update the base for the current year
+        currentCarValueForAnnualCalc = valueForThisYear;
 
         console.log("VALOR ANO "+ year+1 + " " + currentCarValueForAnnualCalc);
 
@@ -612,9 +670,6 @@ function onFormChange(){
 
     if (remainingMonthsInPartialYear > 0) {
         const monthsFraction = remainingMonthsInPartialYear / 12;
-        // For partial year, use the car value as determined at the start of that partial year's full year.
-        // If it's the first year and less than 12 months, this would be preco0km.
-        // Otherwise, it's the value after full years' depreciation.
         const annualSeguroThisPartialYear = seguroPercentage * currentCarValueForAnnualCalc / 100;
         const annualIpvaThisPartialYear = ipvaPercentage * currentCarValueForAnnualCalc / 100;
         const annualLicenciamentoThisPartialYear = licenciamentoValue;
@@ -637,37 +692,35 @@ function onFormChange(){
 
     seguroTotal = totalSeguroPeriodo;
     ipvaTotal = totalIpvaPeriodo;
-    // manutencaoTotal já está definida acima com o valor acumulado
     entradaTotal = entradaPercentage * preco0km / 100;
     const valorFinanciado = preco0km - entradaTotal;
     
     const taxaMensalDecimal = taxaAM / 100;
     let parcelaMensal = 0;
 
-    if (taxaMensalDecimal > 0 && periodo > 0) { // Ensure period is greater than 0 to avoid division by zero
+    if (taxaMensalDecimal > 0 && periodo > 0) {
         parcelaMensal = valorFinanciado * (taxaMensalDecimal * Math.pow((1 + taxaMensalDecimal), periodo)) / (Math.pow((1 + taxaMensalDecimal), periodo) - 1);
-    } else if (periodo > 0) { // If no interest, simple division
+    } else if (periodo > 0) {
         parcelaMensal = valorFinanciado / periodo; 
     } else {
-        parcelaMensal = 0; // If period is 0, no monthly installment
+        parcelaMensal = 0;
     }
 
     const totalPagoComJuros = parcelaMensal * periodo;
     jurosTotal = totalPagoComJuros - valorFinanciado;
-    // If valorFinanciado is 0 or negative (e.g., very high down payment), jurosTotal should be 0.
     if (valorFinanciado <= 0) {
         jurosTotal = 0;
     }
-    const assinaturaTotal = parcelas * periodo; // Total cost of subscription installments
+    const assinaturaTotal = parcelas * periodo;
     const allCalculatedValuesForOpportunityCost = {
         seguroTotal: seguroTotal,
         ipvaTotal: ipvaTotal,
-        manutencao: manutencao, // Monthly maintenance (average of cumulative total)
+        manutencao: manutencao,
         licenciamentoValue: licenciamentoValue,
         emplacamentoValue: emplacamentoValue,
-        parcelaMensal: parcelaMensal, // Monthly financing installment
-        parcelas: parcelas, // Monthly subscription installment
-        usoMensal: usoMensal // Monthly usage cost for subscription
+        parcelaMensal: parcelaMensal,
+        parcelas: parcelas,
+        usoMensal: usoMensal
     };
 
     const custoOportunidadeFinanciada = calculateOpportunityCost('financiada', entradaTotal, periodo, anbimaData, allCalculatedValuesForOpportunityCost, annualFinancialDetails);
@@ -683,15 +736,15 @@ function onFormChange(){
     ipvaTotalElement.text(formatCurrency(ipvaTotal));
     licenciamentoTotalElement.text(formatCurrency(totalLicenciamentoPeriodo));
     emplacamentoTotalElement.text(formatCurrency(emplacamentoValue));
-    manutencaoAnoTotalElement.text(formatCurrency(manutencao * 12)); // Display annual average maintenance
-    manutencaoTotalElement.text(formatCurrency(manutencaoTotal)); // Display total cumulative maintenance over period
-    depreciacaoTotalElement.text(formatCurrency(totalDepreciacaoCalculated)); // This now shows the sum of annual depreciations
+    manutencaoAnoTotalElement.text(formatCurrency(manutencao * 12));
+    manutencaoTotalElement.text(formatCurrency(manutencaoTotal));
+    depreciacaoTotalElement.text(formatCurrency(totalDepreciacaoCalculated));
     depreciacaoPrecoElement.text(formatCurrency(depreciacaoPrecoFinal));
     entradaTotalElement.text(formatCurrency(entradaTotal));
     jurosTotalElement.text(formatCurrency(jurosTotal));
     jurosTaxaElement.text(`${taxaAM.toFixed(2).replace('.', ',')}%`);
     custoAssinaturaTotalElement.text(formatCurrency(assinaturaTotal));
-    assinatura1_12TotalElement.text(formatCurrency(parcelas)); // Assuming this is monthly subscription cost
+    assinatura1_12TotalElement.text(formatCurrency(parcelas));
     precoTotalElement.text(formatCurrency(preco0km));
     custoOportunidadeFinanciadaTotalElement.text(formatCurrency(custoOportunidadeFinanciada));
     custoOportunidadeVistaTotalElement.text(formatCurrency(custoOportunidadeVista));
@@ -704,10 +757,40 @@ function onFormChange(){
 
     const vistaCalcTotal = seguroTotal + ipvaTotal + manutencaoTotal + totalLicenciamentoPeriodo + emplacamentoValue*1 + custoOportunidadeVista*1 + totalDepreciacaoCalculated;
     vistaTotalElement.text(formatCurrency(vistaCalcTotal));
-    assinaturaTotalElement.text(formatCurrency(assinaturaTotal + custoOportunidadeAssinatura)); // Ensure usage cost is added to total subscription cost
+    assinaturaTotalElement.text(formatCurrency(assinaturaTotal + custoOportunidadeAssinatura));
 
-    financiadaDiferencaElement.text(formatCurrency(financiadaCalcTotal - (assinaturaTotal + custoOportunidadeAssinatura)));
-    vistaDiferencaElement.text(formatCurrency(vistaCalcTotal - (assinaturaTotal + custoOportunidadeAssinatura)));
+    let assinaturaDif = (assinaturaTotal + custoOportunidadeAssinatura);
+    let financiadaDif = financiadaCalcTotal - assinaturaDif;
+    let vistaDif = vistaCalcTotal - assinaturaDif;
+
+    if(financiadaDif < 0 && financiadaDif < vistaDif){
+        financiadaDiferencaElement.css('color', '#4DCB7B').css('background-color', '#EAF9EF');
+        assinaturaDiferencaElement.css('color', '#FF5A60').css('background-color', '#FFF2F2');
+        vistaDiferencaElement.css('color', '#FF5A60').css('background-color', '#FFF2F2');
+
+        financiadaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px]"></i><span class="font-semibold">Melhor opção</span>`);
+        vistaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(vistaCalcTotal-financiadaCalcTotal)}`);
+        assinaturaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(assinaturaDif-financiadaCalcTotal)}`);
+    }else if(vistaDif < 0 && vistaDif < financiadaDif){
+        vistaDiferencaElement.css('color', '#4DCB7B').css('background-color', '#EAF9EF');
+        assinaturaDiferencaElement.css('color', '#FF5A60').css('background-color', '#FFF2F2');
+        financiadaDiferencaElement.css('color', '#FF5A60').css('background-color', '#FFF2F2');
+
+        vistaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px]"></i><span class="font-semibold">Melhor opção</span>`);
+        financiadaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(financiadaCalcTotal-vistaCalcTotal)}`);
+        assinaturaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(assinaturaDif-vistaCalcTotal)}`);
+    }else{
+        assinaturaDiferencaElement.css('color', '#4DCB7B').css('background-color', '#EAF9EF');
+        vistaDiferencaElement.css('color', '#FF5A60').css('background-color', '#FFF2F2');
+        financiadaDiferencaElement.css('color', '#FF5A60').css('background-color', '#FFF2F2');
+
+        assinaturaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px]"></i><span class="font-semibold">Melhor opção</span>`);
+        financiadaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(financiadaDif)}`);
+        vistaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(vistaDif)}`);
+    }
+
+//     financiadaDiferencaElement.text(formatCurrency(financiadaCalcTotal - (assinaturaTotal + custoOportunidadeAssinatura)));
+//     vistaDiferencaElement.text(formatCurrency(vistaCalcTotal - (assinaturaTotal + custoOportunidadeAssinatura)));
 
     if (anbimaData && Object.keys(anbimaData).length > 0) {
         const formattedAnbima = `beta1: ${anbimaData.beta1.toFixed(4).replace('.', ',')} | beta2: ${anbimaData.beta2.toFixed(4).replace('.', ',')} | beta3: ${anbimaData.beta3.toFixed(4).replace('.', ',')} | beta4: ${anbimaData.beta4.toFixed(4).replace('.', ',')} | lambda1: ${anbimaData.lambda1.toFixed(4).replace('.', ',')} | lambda2: ${anbimaData.lambda2.toFixed(4).replace('.', ',')}`;

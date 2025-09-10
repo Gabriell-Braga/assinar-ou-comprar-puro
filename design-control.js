@@ -14,6 +14,11 @@ $(document).ready(function() {
     // Function to handle step transitions
     
     function goToStep(stepId, menuStep) {
+        if (stepId === '#result') {
+            const url = createShareUrl(); // Reutiliza a função de compartilhamento
+            window.history.pushState({ path: url }, '', url);
+        }
+
         const currentStep = $('.step:not(.op-0)');
         const nextStep = $(stepId);
 
@@ -136,7 +141,7 @@ $(document).ready(function() {
     });
 
     $('.share-button').on('click', async function() {
-        const url = window.location.href;
+        const url = createShareUrl();
 
         try {
             await navigator.clipboard.writeText(url);
@@ -198,7 +203,39 @@ $(document).ready(function() {
     }
 });
 
+/**
+ * Creates the URL with all form parameters.
+ * @returns {string} The formatted URL with query parameters.
+ */
+function createShareUrl() {
+    const modeloSlug = $('#modelo').val();
+    const periodo = $('#periodo').val();
+    const usoMensal = $('#uso_mensal').val();
+    const seguro = parseFloat($('#seguro').val().replace(',', '.').replace('%', ''));
+    const ipva = parseFloat($('#ipva').val().replace(',', '.').replace('%', ''));
+    const licenciamento = parseFloat($('#licenciamento').val().replace('R$', '').replace(/\./g, '').replace(',', '.'));
+    const emplacamento = parseFloat($('#emplacamento').val().replace('R$', '').replace(/\./g, '').replace(',', '.'));
+    const manutencao = parseFloat($('#manutencao').val().replace('R$', '').replace(/\./g, '').replace(',', '.'));
+    const entrada = parseFloat($('#entrada').val().replace(',', '.').replace('%', ''));
+    const taxaAM = parseFloat($('#taxa_am').val().replace(',', '.').replace('%', ''));
 
+    // Cria os parâmetros de URL
+    const params = new URLSearchParams();
+    if (modeloSlug) params.set('modelo', modeloSlug);
+    if (periodo) params.set('periodo', periodo);
+    if (usoMensal) params.set('uso_mensal', usoMensal);
+    if (!isNaN(seguro)) params.set('seguro', seguro);
+    if (!isNaN(ipva)) params.set('ipva', ipva);
+    if (!isNaN(licenciamento)) params.set('licenciamento', licenciamento);
+    if (!isNaN(emplacamento)) params.set('emplacamento', emplacamento);
+    if (!isNaN(manutencao)) params.set('manutencao', manutencao);
+    if (!isNaN(entrada)) params.set('entrada', entrada);
+    if (!isNaN(taxaAM)) params.set('taxa_am', taxaAM);
+    params.set('pular', 'true');
+
+    // Retorna a URL completa
+    return `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+}
 
 // TOOLTIP CONTROL
 document.addEventListener('DOMContentLoaded', () => {
