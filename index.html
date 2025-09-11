@@ -22,7 +22,7 @@
             }
 
             .switch-buttons.active{
-                @apply !bg-[#EDF6FF] !text-[#0F1B67] !fill-[#0F1B67] !font-semibold;
+                @apply !bg-[#EDF6FF] !text-[#0F1B67] !font-semibold;
             }
 
             .switch-buttons:hover{
@@ -222,7 +222,7 @@
 
                                         <!-- FINANCIANDO -->
                                         <div class="w-full lg:max-w-1/4 pb-4 lg:pb-0 lg:pr-4 border--b lg:border-r border-[#D8DBE0]">
-                                            <div class="flex flex-col justify-start items-start w-full gap-6">
+                                            <div class="flex flex-col justify-start items-start w-full">
                                                 <h3 class="font-semibold !text-[#3A4A65] text-[14px] !mb-0">Financiando</h3>
                                                 <div class="grid grid-cols-2 lg:grid-cols-1 w-full gap-6">
                                                     <div class="form-group w-full">
@@ -306,15 +306,8 @@
                                         <i class="far fa-calculator text-[16px]"></i>
                                         Cálculo simples
                                     </button>
-                                    <button class="cursor-pointer p-2 rounded-lg text-[14px] fill-[#616E84] !text-[#616E84] flex flex-col lg:flex-row items-center justify-center gap-1 switch-buttons transition ease-in-out duration-300 w-full lg:w-auto" id="detailed-calculation-button">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 24" class="fill-inherit w-5 h-5">
-                                            <path d="M19.5 21V23H5.5V21H19.5ZM21.5 19V5C21.5 3.89543 20.6046 3 19.5 3H5.5C4.39543 3 3.5 3.89543 3.5 5V19C3.5 20.1046 4.39543 21 5.5 21V23C3.29086 23 1.5 21.2091 1.5 19V5C1.5 2.79086 3.29086 1 5.5 1H19.5C21.7091 1 23.5 2.79086 23.5 5V19C23.5 21.2091 21.7091 23 19.5 23V21C20.6046 21 21.5 20.1046 21.5 19Z"/>
-                                            <path d="M13.5 17.75C13.5 17.3358 13.8358 17 14.25 17H18.75C19.1642 17 19.5 17.3358 19.5 17.75C19.5 18.1642 19.1642 18.5 18.75 18.5H14.25C13.8358 18.5 13.5 18.1642 13.5 17.75Z"/>
-                                            <path d="M13.5 14.75C13.5 14.3358 13.8358 14 14.25 14H18.75C19.1642 14 19.5 14.3358 19.5 14.75C19.5 15.1642 19.1642 15.5 18.75 15.5H14.25C13.8358 15.5 13.5 15.1642 13.5 14.75Z"/>
-                                            <path d="M5.5 8C5.5 7.58579 5.83579 7.25 6.25 7.25H10.75C11.1642 7.25 11.5 7.58579 11.5 8C11.5 8.41421 11.1642 8.75 10.75 8.75H6.25C5.83579 8.75 5.5 8.41421 5.5 8Z"/>
-                                            <path d="M16.5 11C16.0858 11 15.75 10.6642 15.75 10.25V8.75H14.25C13.8358 8.75 13.5 8.41421 13.5 8C13.5 7.58579 13.8358 7.25 14.25 7.25H15.75V5.75C15.75 5.33579 16.0858 5 16.5 5C16.9142 5 17.25 5.33579 17.25 5.75V7.25H18.75C19.1642 7.25 19.5 7.58579 19.5 8C19.5 8.41421 19.1642 8.75 18.75 8.75H17.25V10.25C17.25 10.6642 16.9142 11 16.5 11Z"/>
-                                            <path d="M10.614 18.364C10.3211 18.6569 9.84623 18.6569 9.55334 18.364L8.49268 17.3033L7.43202 18.364C7.13912 18.6569 6.66425 18.6569 6.37136 18.364C6.07846 18.0711 6.07846 17.5962 6.37136 17.3033L7.43202 16.2426L6.37136 15.182C6.07846 14.8891 6.07846 14.4142 6.37136 14.1213C6.66425 13.8284 7.13912 13.8284 7.43202 14.1213L8.49268 15.182L9.55334 14.1213C9.84623 13.8284 10.3211 13.8284 10.614 14.1213C10.9069 14.4142 10.9069 14.8891 10.614 15.182L9.55334 16.2426L10.614 17.3033C10.9069 17.5962 10.9069 18.0711 10.614 18.364Z"/>
-                                        </svg>
+                                    <button class="cursor-pointer p-2 rounded-lg text-[14px] !text-[#616E84] flex flex-col lg:flex-row items-center justify-center gap-1 switch-buttons transition ease-in-out duration-300 w-full lg:w-auto" id="detailed-calculation-button">
+                                        <i class="far fa-calculator-alt text-[16px]"></i>
                                         Cálculo detalhado
                                     </button>
                                 </div>
@@ -356,7 +349,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div data-total="diferenca_financiada" class="!bg-[#FFF2F2] rounded-full py-1 px-2 flex items-center justify-center !text-[#FF5A60] text-[12px] gap-1 font-semibold"></div>
+                                        <div data-total="diferenca_financiada" class="mt-1 bg-[#FFF2F2] rounded-full py-1 px-2 flex items-center justify-center text-[#FF5A60] text-[12px] gap-1 font-semibold"></div>
                                         <div class="flex flex-col items-start justify-center gap-4 mt-4">
                                             <div class="flex items-center justify-start gap-2">
                                                 <i class="far fa-exclamation-triangle !text-[#FF5A60] text-[16px]"></i>
@@ -400,7 +393,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div data-total="diferenca_vista" class="!bg-[#FFF2F2] rounded-full py-1 px-2 flex items-center justify-center !text-[#FF5A60] text-[12px] gap-1 font-semibold"></div>
+                                        <div data-total="diferenca_vista" class="mt-1 bg-[#FFF2F2] rounded-full py-1 px-2 flex items-center justify-center text-[#FF5A60] text-[12px] gap-1 font-semibold"></div>
                                         <div class="flex flex-col items-start justify-center gap-4 mt-4">
                                             <div class="flex items-center justify-start gap-2">
                                                 <i class="far fa-exclamation-triangle !text-[#FF5A60] text-[16px]"></i>
@@ -431,7 +424,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div data-total="diferenca_assinatura" class="!bg-[#EAF9EF] rounded-full py-1 px-2 flex items-center justify-center !text-[#4DCB7B] text-[12px] gap-1"></div>
+                                        <div data-total="diferenca_assinatura" class="mt-1 bg-[#EAF9EF] rounded-full py-1 px-2 flex items-center justify-center text-[#4DCB7B] text-[12px] gap-1"></div>
                                         <div class="flex flex-col items-start justify-center gap-4 mt-4">
                                             <div class="flex items-center justify-start gap-2">
                                                 <i class="far fa-heart !text-[#0066C2] text-[16px]"></i>
@@ -465,7 +458,7 @@
                                 </div>
 
                                 <!-- CALCULO DETALHADO -->
-                                <div class="w-full grid grid-cols-2 lg:grid-cols-4 op-0 abs transition-opacity ease-in-out duration-500" id="detailed-calculation">
+                                <div class="w-full grid grid-cols-2 lg:grid-cols-4 !gap-0 op-0 abs transition-opacity ease-in-out duration-500" id="detailed-calculation">
                                     <!-- CABEÇALHO -->
                                     <div class="lg:flex flex-col justify-center items-start p-4 font-semibold !text-[#3A4A65] text-[14px] hidden">
                                         Itens
@@ -820,7 +813,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div data-total="diferenca_financiada" class="!bg-[#FFF2F2] rounded-full py-1 px-2 flex items-center justify-center !text-[#FF5A60] text-[12px] gap-1 font-semibold"></div>
+                                        <div data-total="diferenca_financiada" class="mt-1 bg-[#FFF2F2] rounded-full py-1 px-2 flex items-center justify-center text-[#FF5A60] text-[12px] gap-1 font-semibold"></div>
                                     </div>
                                     <div class="flex flex-col justify-start items-center gap-1 p-4 font-semibold !text-[#212A3C] text-[16px] lg:text-[24px] vista-items order-32 lg:order-none">
                                         <div class="flex items-center justify-center gap-3">
@@ -838,7 +831,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div data-total="diferenca_vista" class="!bg-[#FFF2F2] rounded-full py-1 px-2 flex items-center justify-center !text-[#FF5A60] text-[12px] gap-1 font-semibold"></div>
+                                        <div data-total="diferenca_vista" class="mt-1 bg-[#FFF2F2] rounded-full py-1 px-2 flex items-center justify-center text-[#FF5A60] text-[12px] gap-1 font-semibold"></div>
                                     </div>
                                     <div class="flex flex-col justify-center items-center gap-1 p-4 font-semibold !text-[#212A3C] text-[16px] lg:text-[24px] lg:border-x border-[#63D6FF] order-31 lg:order-none">
                                         <div class="flex items-center justify-center gap-3">
@@ -851,7 +844,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div data-total="diferenca_assinatura" class="!bg-[#EAF9EF] rounded-full py-1 px-2 flex items-center justify-center !text-[#4DCB7B] text-[12px] gap-1"></div>
+                                        <div data-total="diferenca_assinatura" class="mt-1 bg-[#EAF9EF] rounded-full py-1 px-2 flex items-center justify-center text-[#4DCB7B] text-[12px] gap-1"></div>
                                     </div>
 
                                     <!-- BOTÕES -->
@@ -877,7 +870,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div data-total="diferenca_assinatura" class="!bg-[#EAF9EF] rounded-full py-1 px-2 flex items-center justify-center !text-[#4DCB7B] text-[12px] gap-1"></div>
+                                            <div data-total="diferenca_assinatura" class="mt-1 bg-[#EAF9EF] rounded-full py-1 px-2 flex items-center justify-center text-[#4DCB7B] text-[12px] gap-1"></div>
                                         </div>
                                         <div class="!flex flex-col justify-start items-center gap-1 p-4 font-semibold !text-[#212A3C] text-[16px] lg:text-[24px] financiada-items">
                                             <div class="flex items-center justify-center gap-3">
@@ -896,7 +889,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div data-total="diferenca_financiada" class="!bg-[#FFF2F2] rounded-full py-1 px-2 flex items-center justify-center !text-[#FF5A60] text-[12px] gap-1 font-semibold"></div>
+                                            <div data-total="diferenca_financiada" class="mt-1 bg-[#FFF2F2] rounded-full py-1 px-2 flex items-center justify-center text-[#FF5A60] text-[12px] gap-1 font-semibold"></div>
                                         </div>
                                         <div class="flex flex-col justify-start items-center gap-1 p-4 font-semibold !text-[#212A3C] text-[16px] lg:text-[24px] vista-items ">
                                             <div class="flex items-center justify-center gap-3">
@@ -914,7 +907,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div data-total="diferenca_vista" class="!bg-[#FFF2F2] rounded-full py-1 px-2 flex items-center justify-center !text-[#FF5A60] text-[12px] gap-1 font-semibold"></div>
+                                            <div data-total="diferenca_vista" class="mt-1 bg-[#FFF2F2] rounded-full py-1 px-2 flex items-center justify-center text-[#FF5A60] text-[12px] gap-1 font-semibold"></div>
                                         </div>
                                         <button class="col-span-2 cursor-pointer !bg-[#0066C2] hover:!bg-[#005bb5] !text-white font-semibold py-2.5 rounded-xl transition duration-300 w-full text-center text-[14px]">
                                             Quero assinar
@@ -946,7 +939,7 @@
 
         <!-- VIDEO SECTION -->
         <div class="w-full flex justify-center items-center op-0 h-0" id="video-section">
-            <div class="size-control flex flex-col lg:flex-row py-12 gap-24 lg:gap-0">
+            <div class="size-control flex flex-col lg:flex-row my-12 gap-24 lg:gap-0">
                 <div class="flex items-center justify-center w-full lg:w-2/5">
                     <div class="w-[282px] h-[486px] rounded-3xl overflow-hidden">
                         <iframe width="100%" height="100%"
