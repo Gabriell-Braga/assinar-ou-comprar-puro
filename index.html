@@ -447,10 +447,10 @@
 
                                     <!-- BOTÕES -->
                                     <div class="col-span-2 lg:col-span-1 lg:col-start-3 mt-10 w-full flex flex-col items-center justify-center gap-4 order-5 lg:order-none">
-                                        <button data-popup="Deseja assinar um veículo?" class="cursor-pointer !bg-[#0066C2] hover:!bg-[#005bb5] !text-white font-semibold py-2.5 rounded-xl transition duration-300 w-full text-center text-[14px]">
+                                        <button data-popup="Deseja assinar um veículo?" data-id="calculadora" id="quero-assinar-simples" class="cursor-pointer !bg-[#0066C2] hover:!bg-[#005bb5] !text-white font-semibold py-2.5 rounded-xl transition duration-300 w-full text-center text-[14px]">
                                             Quero assinar
                                         </button>
-                                        <button data-popup="Deseja assinar um veículo?" class="cursor-pointer bg-white hover:bg-gray-100 !text-[#0066C2] font-semibold py-2.5 rounded-xl transition duration-300 w-full text-center text-[14px] !border-2 border-[#0066C2] flex items-center justify-center gap-2">
+                                        <button data-popup="Deseja receber uma oferta por email?" data-id="calculadora" id="email-simples" class="cursor-pointer bg-white hover:bg-gray-100 !text-[#0066C2] font-semibold py-2.5 rounded-xl transition duration-300 w-full text-center text-[14px] !border-2 border-[#0066C2] flex items-center justify-center gap-2">
                                             <i class="fas fa-paper-plane"></i>
                                             Receber por e-mail
                                         </button>
@@ -849,10 +849,10 @@
 
                                     <!-- BOTÕES -->
                                     <div class="col-span-2 lg:col-span-1 lg:col-start-4 w-full flex flex-col items-center justify-center gap-4 order-33 lg:order-none lg:border-x lg:border-b border-[#63D6FF] rounded-b-2xl pt-4 p-2">
-                                        <button id="total-detalhado" data-popup="Deseja assinar um veículo?" class="cursor-pointer !bg-[#0066C2] hover:!bg-[#005bb5] !text-white font-semibold py-2.5 rounded-xl transition duration-300 w-full text-center text-[14px]">
+                                        <button id="total-detalhado" data-popup="Deseja assinar um veículo?" data-id="calculadora" class="cursor-pointer !bg-[#0066C2] hover:!bg-[#005bb5] !text-white font-semibold py-2.5 rounded-xl transition duration-300 w-full text-center text-[14px]">
                                             Quero assinar
                                         </button>
-                                        <button data-popup="Deseja assinar um veículo?" class="cursor-pointer bg-white hover:bg-gray-100 !text-[#0066C2] font-semibold py-2.5 rounded-xl transition duration-300 w-full text-center text-[14px] !border-2 border-[#0066C2] flex items-center justify-center gap-2">
+                                        <button data-popup="Deseja receber uma oferta por email?" data-id="calculadora" id="email-detalhado" class="cursor-pointer bg-white hover:bg-gray-100 !text-[#0066C2] font-semibold py-2.5 rounded-xl transition duration-300 w-full text-center text-[14px] !border-2 border-[#0066C2] flex items-center justify-center gap-2">
                                             <i class="fas fa-paper-plane"></i>
                                             Receber por e-mail
                                         </button>
@@ -909,7 +909,7 @@
                                             </div>
                                             <div data-total="diferenca_vista" class="mt-1 bg-[#FFF2F2] rounded-full py-1 px-2 flex items-center justify-center text-[#FF5A60] text-[12px] gap-1 font-semibold"></div>
                                         </div>
-                                        <button data-popup="Deseja assinar um veículo?" class="col-span-2 cursor-pointer !bg-[#0066C2] hover:!bg-[#005bb5] !text-white font-semibold py-2.5 rounded-xl transition duration-300 w-full text-center text-[14px]">
+                                        <button data-popup="Deseja assinar um veículo?" data-id="calculadora" id="quero-assinar-mobile" class="col-span-2 cursor-pointer !bg-[#0066C2] hover:!bg-[#005bb5] !text-white font-semibold py-2.5 rounded-xl transition duration-300 w-full text-center text-[14px]">
                                             Quero assinar
                                         </button>
                                     </div>
@@ -995,5 +995,6 @@
         <script src="script.js"></script>
         <script src="vars.js"></script>
         <script src="select-control.js"></script>
+        <script src="tags.js"></script>
     </body>
 </html>
