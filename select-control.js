@@ -1,13 +1,13 @@
 function createCustomSelect(selectElement) {
   const $originalSelect = $(selectElement);
-  
+
   // 1. Verifica e remove qualquer select customizado existente
   const existingCustomSelect = $originalSelect.prev('.custom-select-container');
   if (existingCustomSelect.length) {
     existingCustomSelect.remove();
-    $originalSelect.show(); 
+    $originalSelect.show();
   }
-  
+
   $originalSelect.hide(); // Esconde o select original
 
   // Cria o container do select personalizado
@@ -33,7 +33,7 @@ function createCustomSelect(selectElement) {
   const $customOptionsWrapper = $('<div/>', {
     class: 'select-wrapper absolute w-full rounded-md shadow-xl bg-white z-10 hidden mt-1 max-h-48 p-2'
   });
-  
+
   // Cria a lista de opções (agora sem o overflow)
   const $customOptionsList = $('<ul/>', {
     class: 'custom-options-list max-h-44 overflow-y-auto !m-0 !p-0'
@@ -57,18 +57,40 @@ function createCustomSelect(selectElement) {
 
     $customOptionsList.append($listItem);
   });
-  
+
   // Adiciona a lista de opções ao wrapper
   $customOptionsWrapper.append($customOptionsList);
 
   // Adiciona os elementos ao contêiner
   $customSelectContainer.append($customSelectTrigger, $customOptionsWrapper);
 
+  // Adiciona o elemento para a mensagem de erro
+  const $errorMessage = $('<div/>', {
+    class: 'select-error-message text-red-500 text-sm mt-1 hidden'
+  });
+  $customSelectContainer.append($errorMessage);
+
   // Insere o novo select personalizado no DOM
   $originalSelect.before($customSelectContainer);
 
+  // **MODIFICAÇÃO: Função de validação**
+  const validateSelect = () => {
+    // Verifica se o select original tem a propriedade 'required'
+    if ($originalSelect.prop('required')) {
+      // Verifica se o valor é vazio ou igual ao valor do placeholder (normalmente a primeira opção desabilitada)
+      if ($originalSelect.val() === '' || $originalSelect.val() === null) {
+        $customSelectTrigger.addClass('!border-red-500');
+        $errorMessage.text('Este campo é obrigatório.').show();
+        $customSelectContainer.addClass('is-invalid');
+      } else {
+        $customSelectTrigger.removeClass('!border-red-500');
+        $errorMessage.hide();
+        $customSelectContainer.removeClass('is-invalid');
+      }
+    }
+  };
+
   // Adiciona listeners de eventos
-  
   // 1. Alterna a visibilidade da lista de opções ao clicar no botão
   $customSelectTrigger.on('click', function(e) {
     // e.stopPropagation();
@@ -84,7 +106,7 @@ function createCustomSelect(selectElement) {
     const selectedText = $selectedListItem.text();
 
     $customSelectTrigger.text(selectedText).append($arrow);
-    $originalSelect.val(selectedValue).trigger('change'); 
+    $originalSelect.val(selectedValue).trigger('change');
 
     // Fecha o dropdown
     $customOptionsWrapper.slideUp(200);
@@ -94,8 +116,13 @@ function createCustomSelect(selectElement) {
   // 3. Fecha o dropdown se o usuário clicar fora do contêiner
   $(document).on('click', function(e) {
     if (!$customSelectContainer.is(e.target) && $customSelectContainer.has(e.target).length === 0) {
-        $customOptionsWrapper.slideUp(200);
-        $arrow.find('i').removeClass('rotate-180');
+      $customOptionsWrapper.slideUp(200);
+      $arrow.find('i').removeClass('rotate-180');
     }
+  });
+  $originalSelect.on('change', validateSelect);
+
+  $('#next-button-1').on('click', function() {
+      validateSelect();
   });
 }

@@ -789,9 +789,6 @@ function onFormChange(){
         vistaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(vistaDif)}`);
     }
 
-//     financiadaDiferencaElement.text(formatCurrency(financiadaCalcTotal - (assinaturaTotal + custoOportunidadeAssinatura)));
-//     vistaDiferencaElement.text(formatCurrency(vistaCalcTotal - (assinaturaTotal + custoOportunidadeAssinatura)));
-
     if (anbimaData && Object.keys(anbimaData).length > 0) {
         const formattedAnbima = `beta1: ${anbimaData.beta1.toFixed(4).replace('.', ',')} | beta2: ${anbimaData.beta2.toFixed(4).replace('.', ',')} | beta3: ${anbimaData.beta3.toFixed(4).replace('.', ',')} | beta4: ${anbimaData.beta4.toFixed(4).replace('.', ',')} | lambda1: ${anbimaData.lambda1.toFixed(4).replace('.', ',')} | lambda2: ${anbimaData.lambda2.toFixed(4).replace('.', ',')}`;
         baseCalculoElement.text(formattedAnbima);
