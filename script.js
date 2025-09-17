@@ -41,6 +41,11 @@ let custoOportunidadeAssinaturaTotalElement;
 let precoTotalElement;
 let baseCalculoElement;
 
+let licenciamentoAnualElement;
+let ipvaAnualElement;
+let seguroAnualElement;
+let manutencaoAnualElement;
+
 let financiadaDiferencaElement;
 let vistaDiferencaElement;
 
@@ -266,6 +271,11 @@ $(document).ready(function() {
     custoOportunidadeAssinaturaTotalElement = $('[data-total="custo_oportunidade_assinatura"]');
     precoTotalElement = $('[data-total="preco"]');
     baseCalculoElement = $('[data-total="base_calculo"]');
+
+    licenciamentoAnualElement = $('[data-total="licenciamento_anual"]');
+    ipvaAnualElement = $('[data-total="ipva_anual"]');
+    seguroAnualElement = $('[data-total="seguro_anual"]');
+    manutencaoAnualElement = $('[data-total="manutencao_anual"]');
 
     financiadaDiferencaElement = $('[data-total="diferenca_financiada"]');
     vistaDiferencaElement = $('[data-total="diferenca_vista"]');
@@ -637,14 +647,15 @@ function onFormChange(){
     console.group('Cálculo de Seguro, IPVA e Licenciamento por Período');
     console.log(`Valor inicial do carro para cálculo de despesas anuais: ${formatCurrency(preco0km)}`);
 
+    let valueForThisYear = preco0km;
     for (let year = 0; year < fullYearsInPeriod; year++) {
-        let valueForThisYear = preco0km;
+        
         if (year === 0) {
             valueForThisYear = preco0km;
         } else if (year === 1 && selectedCar?.['depreciacao-12']) {
-            valueForThisYear = preco0km * (1- (selectedCar['depreciacao-12'] / 100));
+            valueForThisYear = valueForThisYear * (1- (selectedCar['depreciacao-12'] / 100));
         } else if (year === 2 && selectedCar?.['depreciacao-24']) {
-            valueForThisYear = preco0km * (1- (selectedCar['depreciacao-24'] / 100));
+            valueForThisYear = valueForThisYear * (1- (selectedCar['depreciacao-24'] / 100));
         }
         
         currentCarValueForAnnualCalc = valueForThisYear;
@@ -749,6 +760,11 @@ function onFormChange(){
     custoOportunidadeFinanciadaTotalElement.text(formatCurrency(custoOportunidadeFinanciada));
     custoOportunidadeVistaTotalElement.text(formatCurrency(custoOportunidadeVista));
     custoOportunidadeAssinaturaTotalElement.text(formatCurrency(custoOportunidadeAssinatura));
+
+    licenciamentoAnualElement.text(formatCurrency(licenciamentoValue));
+    ipvaAnualElement.html(`${formatCurrency(annualFinancialDetails[0].annualIpva)} no 1° ano <br>+ ${formatCurrency(annualFinancialDetails[1].annualIpva)} no 2° ano <br>+ ${formatCurrency(annualFinancialDetails[2].annualIpva)} no 3° ano`);
+    seguroAnualElement.html(`${formatCurrency(annualFinancialDetails[0].annualSeguro)} no 1° ano <br>+ ${formatCurrency(annualFinancialDetails[1].annualSeguro)} no 2° ano <br>+ ${formatCurrency(annualFinancialDetails[2].annualSeguro)} no 3° ano`);
+    manutencaoAnualElement.html(`${formatCurrency(selectedCar?.['manutencao-12'])} no 1° ano <br>+ ${formatCurrency(selectedCar?.['manutencao-24'])} no 2° ano <br>+ ${formatCurrency(selectedCar?.['manutencao-36'])} no 3° ano`);
 
     const financiadaCalcTotal = seguroTotal + ipvaTotal + manutencaoTotal + totalLicenciamentoPeriodo + emplacamentoValue + jurosTotal + custoOportunidadeFinanciada + totalDepreciacaoCalculated;
     financiadaTotalElement.text(formatCurrency(financiadaCalcTotal));
