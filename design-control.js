@@ -127,16 +127,31 @@ $(document).ready(function() {
     });
 
 
-    $('.calculo-select').on('change', function() {
-        $('.calculo-select').val($(this).val());
-        const allSelects = document.querySelectorAll('select');
-        allSelects.forEach(select => {
-            createCustomSelect(select);
-        });
-        if($(this).val() === 'financiada'){
+    let isSyncing = false; // A flag deve ser declarada fora do escopo do evento
+
+    $('select.calculo-select').on('change', function() {
+        // Se a flag estiver ativa, significa que a mudança foi feita internamente, então ignora a chamada
+        if (isSyncing) {
+            return;
+        }
+
+        // Ativa a flag para evitar o loop
+        isSyncing = true;
+
+        const selectedValue = $(this).val();
+
+        // Sincroniza o valor de todos os outros selects e dispara o evento `change`
+        // Como a flag `isSyncing` está como true, esta chamada não causará um loop infinito
+        $('select.calculo-select').not(this).val(selectedValue).trigger('change');
+        
+        // Desativa a flag após a sincronização, para permitir novas mudanças do usuário
+        isSyncing = false;
+
+        // Lógica para mostrar/esconder itens
+        if (selectedValue === 'financiada') {
             $('.financiada-items').addClass('!flex');
             $('.vista-items').removeClass('!flex');
-        }else if($(this).val() === 'vista'){
+        } else if (selectedValue === 'vista') {
             $('.vista-items').addClass('!flex');
             $('.financiada-items').removeClass('!flex');
         }
