@@ -157,47 +157,64 @@ $(document).ready(function() {
     });
 
     $('.share-button').on('click', async function() {
-        const url = createShareUrl();
+        const shareUrl = createShareUrl();
+        const shareTitle = document.title;
+        const shareText = "Assinar ou Comprar? Confira o que vale mais a pena!"; // Você pode personalizar este texto
 
-        try {
-            await navigator.clipboard.writeText(url);
-            
-            // Cria o elemento de alerta personalizado
-            const alertDiv = $('<div>', {
-                text: 'Link copiado!',
-                css: {
-                    position: 'fixed',
-                    bottom: '20px',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    backgroundColor: '#0066C2',
-                    color: '#FEFEFE',
-                    padding: '10px 16px',
-                    borderRadius: '8px',
-                    zIndex: '1000',
-                    opacity: '0',
-                    transition: 'opacity 0.5s ease-in-out',
-                    fontWeight: 'semibold',
-                    fontSize: '14px',
-                }
-            }).appendTo('body');
+        // 1. Verifica se a Web Share API é suportada pelo navegador
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: shareTitle,
+                    text: shareText,
+                    url: shareUrl
+                });
+                console.log('Conteúdo compartilhado com sucesso!');
+            } catch (error) {
+                console.error('Erro ao compartilhar:', error);
+                // O erro pode ser causado pelo usuário cancelar a operação.
+            }
+        } else {
+            // 2. Fallback: Se a API não for suportada, copia o link para a área de transferência
+            try {
+                await navigator.clipboard.writeText(shareUrl);
 
-            // Exibe o alerta com um fade-in
-            setTimeout(() => {
-                alertDiv.css('opacity', '1');
-            }, 10);
+                // Cria e exibe o alerta de "Link copiado!"
+                const alertDiv = $('<div>', {
+                    text: 'Link copiado!',
+                    css: {
+                        position: 'fixed',
+                        bottom: '20px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        backgroundColor: '#0066C2',
+                        color: '#FEFEFE',
+                        padding: '10px 16px',
+                        borderRadius: '8px',
+                        zIndex: '1000',
+                        opacity: '0',
+                        transition: 'opacity 0.5s ease-in-out',
+                        fontWeight: '600',
+                        fontSize: '14px',
+                    }
+                }).appendTo('body');
 
-            // Remove o alerta após 3 segundos
-            setTimeout(() => {
-                alertDiv.css('opacity', '0');
                 setTimeout(() => {
-                    alertDiv.remove();
-                }, 500);
-            }, 3000);
+                    alertDiv.css('opacity', '1');
+                }, 10);
 
-        } catch (error) {
-            console.error('Falha ao copiar o link:', error);
-            alert('Falha ao copiar o link. Tente novamente.');
+                setTimeout(() => {
+                    alertDiv.css('opacity', '0');
+                    setTimeout(() => {
+                        alertDiv.remove();
+                    }, 500);
+                }, 3000);
+
+                console.log('Link copiado para a área de transferência.');
+            } catch (error) {
+                console.error('Falha ao copiar o link:', error);
+                alert('Falha ao copiar o link. Tente novamente.');
+            }
         }
     });
 
@@ -219,8 +236,6 @@ $(document).ready(function() {
             } else {
                 totalFixed.removeClass('opacity-0 pointer-events-none');
             }
-
-            console.log($(window).scrollTop(), (banner.offset().top + banner.outerHeight(true)), (calculator.offset().top + calculator.outerHeight(true)));
 
             if($(window).scrollTop() >= (banner.offset().top + banner.outerHeight(true)) && $(window).scrollTop() >= (calculator.offset().top + calculator.outerHeight(true))){
                 fixedButton.removeClass('op-0');
