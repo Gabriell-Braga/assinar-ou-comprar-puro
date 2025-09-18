@@ -10,7 +10,7 @@ $(document).ready(function(){
     $('#modelo').on('change', function(){
         window.dataLayer.push({
             event: "selecao_veiculo",
-            veiculo: this.value
+            veiculo: $("#modelo").children("option").filter(":selected").text()
         });
     });
 
@@ -42,7 +42,7 @@ $(document).ready(function(){
                 preco: $('#preco').val(),
                 km: $('#uso_mensal').val(),
                 periodo: $('#periodo').val(),
-                veiculo: $('#modelo').val()
+                veiculo: $("#modelo").children("option").filter(":selected").text()
             });
         }
     });
@@ -51,8 +51,8 @@ $(document).ready(function(){
         if(document.querySelector('#complementary-form').checkValidity()){
             window.dataLayer.push({
                 event: "calculadora_p2",
-                entrada: $('#entrada').val(),
-                porcentagem: $('#taxa_am').val()
+                entrada: $('[data-total="entrada"]').first().text(),
+                porcentagem: $('#entrada').val().replace('%', '')
             });
 
             dataLayer.push({
@@ -138,6 +138,7 @@ $(document).ready(function(){
             valor_financiado: $('[data-total="financiada"]').first().text(),
             valor_vista: $('[data-total="vista"]').first().text(),
             valor_assinatura: $('[data-total="assinatura"]').first().text(),
+            porcentagem: $('#entrada').val().replace('%', ''),
             ecommerce: {
                 currency: "BRL",
                 value: $('[data-total="assinatura_1_12"]').first().text(),
