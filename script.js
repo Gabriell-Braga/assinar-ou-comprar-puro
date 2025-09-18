@@ -519,12 +519,13 @@ function setupInputFormatting() {
     });
 }
 
-function onFormChange(){
+function onFormChange(itsModeloChange = null){
     const selectedOption = modeloElement.options[modeloElement.selectedIndex];
     const selectedSlug = selectedOption ? selectedOption.value : null;
     const selectedCar = selectedSlug ? window.carros.find(car => car.slug === selectedSlug) : null;
 
-    const preco0km = selectedCar ? selectedCar['preco-0km'] : 0;
+    let preco0km = selectedCar ? selectedCar['preco-0km'] : 0;
+    const precoUsuario = parseCurrencyToFloat(precoElement.value);
     const periodo = parseFloat(periodoElement.value);
     const seguroPercentage = parsePercentageToFloat(seguroElement.value);
     const ipvaPercentage = parsePercentageToFloat(ipvaElement.value);
@@ -542,7 +543,12 @@ function onFormChange(){
     }
 
     if (selectedCar) {
-        precoElement.value = formatCurrency(preco0km);
+        if (precoElement.value === "" || precoUsuario === preco0km || precoUsuario === 0 || itsModeloChange) {
+            precoElement.value = formatCurrency(preco0km);
+        }else{
+            preco0km = parseCurrencyToFloat(precoElement.value);
+        }
+
         parcelasElement.value = formatCurrency(parcelas);
 
         let manutencao12_car = selectedCar?.['manutencao-12']*1 || 0;

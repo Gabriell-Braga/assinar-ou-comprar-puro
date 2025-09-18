@@ -165,7 +165,7 @@
                                     <div class="grid !grid-cols-1 grid-rows-4 lg:!grid-cols-2 lg:grid-rows-2 gap-6 w-full">
                                         <div class="form-group">
                                             <label for="modelo" class="block text-lg font-medium text-gray-700">Veículo*</label>
-                                            <select onchange="onFormChange();" required name="modelo" class="" id="modelo">
+                                            <select onchange="onFormChange(true);" required name="modelo" class="" id="modelo">
                                                 <option value="" selected disabled>Selecione um modelo</option>
                                             </select>
                                         </div>
@@ -322,8 +322,8 @@
                                         Compra à vista
                                     </div>
                                     <div class="form-group order-2 lg:hidden flex justify-center items-center">
-                                        <select required name="calculo" class="calculo-select">
-                                            <option value="financiada" selected>Financiada</option>
+                                        <select id="calculo-simples-select" required name="calculo" class="calculo-select">
+                                            <option value="financiada">Financiada</option>
                                             <option value="vista">À vista</option>
                                         </select>
                                     </div>
@@ -470,8 +470,8 @@
                                         Compra à vista
                                     </div>
                                     <div class="form-group order-2 lg:hidden flex justify-center items-center">
-                                        <select required name="calculo" class="calculo-select">
-                                            <option value="financiada" selected>Financiada</option>
+                                        <select id="calculo-detalhado-select" required name="calculo" class="calculo-select">
+                                            <option value="financiada">Financiada</option>
                                             <option value="vista">À vista</option>
                                         </select>
                                     </div>

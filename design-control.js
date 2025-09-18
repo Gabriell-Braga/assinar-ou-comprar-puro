@@ -126,38 +126,6 @@ $(document).ready(function() {
         }
     });
 
-
-    let isSyncing = false; // A flag deve ser declarada fora do escopo do evento
-
-    $('select.calculo-select').on('change', function() {
-        // Se a flag estiver ativa, significa que a mudança foi feita internamente, então ignora a chamada
-        if (isSyncing) {
-            return;
-        }
-
-        // Ativa a flag para evitar o loop
-        isSyncing = true;
-
-        const selectedValue = $(this).val();
-
-        // Sincroniza o valor de todos os outros selects e dispara o evento `change`
-        // Como a flag `isSyncing` está como true, esta chamada não causará um loop infinito
-        $('select.calculo-select').not(this).val(selectedValue).trigger('change');
-        
-        // Desativa a flag após a sincronização, para permitir novas mudanças do usuário
-        isSyncing = false;
-
-        // Lógica para mostrar/esconder itens
-        if (selectedValue === 'financiada') {
-            $('.financiada-items').addClass('!flex');
-            $('.vista-items').removeClass('!flex');
-        } else if (selectedValue === 'vista') {
-            $('.vista-items').addClass('!flex');
-            $('.financiada-items').removeClass('!flex');
-        }
-    });
-
-
     // Switch between simple and detailed calculation
     $('.switch-buttons').on('click', function() {
         $('.switch-buttons').removeClass('active');
@@ -329,4 +297,43 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+});
+
+$(document).ready(function() {
+
+    // Adiciona um listener no body, escutando o evento 'change' nos seletores
+    $('body').on('change', '#calculo-simples-select', function() {
+        console.log('simples');
+        const selectedValue = $(this).val();
+
+        if (selectedValue === 'financiada') {
+            $('.financiada-items').addClass('!flex');
+            $('.vista-items').removeClass('!flex');
+            $('div:has(#calculo-detalhado-select) button').html('Financiada');
+        } else if (selectedValue === 'vista') {
+            $('.vista-items').addClass('!flex');
+            $('.financiada-items').removeClass('!flex');
+            $('div:has(#calculo-detalhado-select) button').html('À vista');
+        }
+
+        $('#calculo-detalhado-select').val(selectedValue);
+    });
+
+    $('body').on('change', '#calculo-detalhado-select', function() {
+        console.log('detalhado');
+        const selectedValue = $(this).val();
+
+        if (selectedValue === 'financiada') {
+            $('.financiada-items').addClass('!flex');
+            $('.vista-items').removeClass('!flex');
+            $('div:has(#calculo-simples-select) button').html('Financiada');
+        } else if (selectedValue === 'vista') {
+            $('.vista-items').addClass('!flex');
+            $('.financiada-items').removeClass('!flex');
+            $('div:has(#calculo-simples-select) button').html('À vista');
+        }
+
+        $('#calculo-simples-select').val(selectedValue);
+    });
+
 });
