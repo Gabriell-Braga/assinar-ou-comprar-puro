@@ -309,11 +309,11 @@ $(document).ready(function() {
         if (selectedValue === 'financiada') {
             $('.financiada-items').addClass('!flex');
             $('.vista-items').removeClass('!flex');
-            $('div:has(#calculo-detalhado-select) button').html('Financiada');
+            $('div:has(> #calculo-detalhado-select) button').contents().first()[0].nodeValue = 'Financiada';
         } else if (selectedValue === 'vista') {
             $('.vista-items').addClass('!flex');
             $('.financiada-items').removeClass('!flex');
-            $('div:has(#calculo-detalhado-select) button').html('À vista');
+            $('div:has(> #calculo-detalhado-select) button').contents().first()[0].nodeValue = 'À vista';
         }
 
         $('#calculo-detalhado-select').val(selectedValue);
@@ -326,11 +326,11 @@ $(document).ready(function() {
         if (selectedValue === 'financiada') {
             $('.financiada-items').addClass('!flex');
             $('.vista-items').removeClass('!flex');
-            $('div:has(#calculo-simples-select) button').html('Financiada');
+            $('div:has(> #calculo-simples-select) button').contents().first()[0].nodeValue = 'Financiada';
         } else if (selectedValue === 'vista') {
             $('.vista-items').addClass('!flex');
             $('.financiada-items').removeClass('!flex');
-            $('div:has(#calculo-simples-select) button').html('À vista');
+            $('div:has(> #calculo-simples-select) button').contents().first()[0].nodeValue = 'À vista';
         }
 
         $('#calculo-simples-select').val(selectedValue);
