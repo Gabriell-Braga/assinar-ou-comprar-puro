@@ -60,6 +60,10 @@ $(document).ready(function(){
                 valor_financiado: $('[data-total="financiada"]').first().text(),
                 valor_vista: $('[data-total="vista"]').first().text(),
                 valor_assinatura: $('[data-total="assinatura"]').first().text(),
+                km: $('#uso_mensal').val(),
+                periodo: $('#periodo').val(),
+                veiculo: $("#modelo").children("option").filter(":selected").text(),
+                porcentagem: $('#entrada').val().replace('%', '')
             });
         }
     });
