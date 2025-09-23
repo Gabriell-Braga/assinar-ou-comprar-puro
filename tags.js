@@ -134,6 +134,8 @@ $(document).ready(function(){
             event: "begin_checkout",
             descricao: "form-calculadora",
             calculo: calculo,
+            periodo: $('#periodo').val(),
+            km: $('#uso_mensal').val(),
             method: method,
             valor_financiado: $('[data-total="financiada"]').first().text(),
             valor_vista: $('[data-total="vista"]').first().text(),
