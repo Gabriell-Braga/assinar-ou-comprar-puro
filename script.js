@@ -768,9 +768,19 @@ function onFormChange(itsModeloChange = null){
     custoOportunidadeAssinaturaTotalElement.text(formatCurrency(custoOportunidadeAssinatura));
 
     licenciamentoAnualElement.text(formatCurrency(licenciamentoValue));
-    ipvaAnualElement.html(`${formatCurrency(annualFinancialDetails[0]?.annualIpva)} no 1° ano <br>+ ${formatCurrency(annualFinancialDetails[1]?.annualIpva)} no 2° ano <br>+ ${formatCurrency(annualFinancialDetails[2]?.annualIpva)} no 3° ano`);
-    seguroAnualElement.html(`${formatCurrency(annualFinancialDetails[0]?.annualSeguro)} no 1° ano <br>+ ${formatCurrency(annualFinancialDetails[1]?.annualSeguro)} no 2° ano <br>+ ${formatCurrency(annualFinancialDetails[2]?.annualSeguro)} no 3° ano`);
-    manutencaoAnualElement.html(`${formatCurrency(selectedCar?.['manutencao-12'])} no 1° ano <br>+ ${formatCurrency(selectedCar?.['manutencao-24'])} no 2° ano <br>+ ${formatCurrency(selectedCar?.['manutencao-36'])} no 3° ano`);
+    if(periodo == '12'){
+        ipvaAnualElement.html(`${formatCurrency(annualFinancialDetails[0]?.annualIpva)} no 1° ano`);
+        seguroAnualElement.html(`${formatCurrency(annualFinancialDetails[0]?.annualSeguro)} no 1° ano`);
+        manutencaoAnualElement.html(`${formatCurrency(selectedCar?.['manutencao-12'])} no 1° ano`);
+    }else if(periodo == '24'){
+        ipvaAnualElement.html(`${formatCurrency(annualFinancialDetails[0]?.annualIpva)} no 1° ano <br>+ ${formatCurrency(annualFinancialDetails[1]?.annualIpva)} no 2° ano`);
+        seguroAnualElement.html(`${formatCurrency(annualFinancialDetails[0]?.annualSeguro)} no 1° ano <br>+ ${formatCurrency(annualFinancialDetails[1]?.annualSeguro)} no 2° ano`);
+        manutencaoAnualElement.html(`${formatCurrency(selectedCar?.['manutencao-12'])} no 1° ano <br>+ ${formatCurrency(selectedCar?.['manutencao-24'])} no 2° ano`);
+    }else if(periodo == '36'){
+        ipvaAnualElement.html(`${formatCurrency(annualFinancialDetails[0]?.annualIpva)} no 1° ano <br>+ ${formatCurrency(annualFinancialDetails[1]?.annualIpva)} no 2° ano <br>+ ${formatCurrency(annualFinancialDetails[2]?.annualIpva)} no 3° ano`);
+        seguroAnualElement.html(`${formatCurrency(annualFinancialDetails[0]?.annualSeguro)} no 1° ano <br>+ ${formatCurrency(annualFinancialDetails[1]?.annualSeguro)} no 2° ano <br>+ ${formatCurrency(annualFinancialDetails[2]?.annualSeguro)} no 3° ano`);
+        manutencaoAnualElement.html(`${formatCurrency(selectedCar?.['manutencao-12'])} no 1° ano <br>+ ${formatCurrency(selectedCar?.['manutencao-24'])} no 2° ano <br>+ ${formatCurrency(selectedCar?.['manutencao-36'])} no 3° ano`);
+    }
 
     const financiadaCalcTotal = seguroTotal + ipvaTotal + manutencaoTotal + totalLicenciamentoPeriodo + emplacamentoValue + jurosTotal + custoOportunidadeFinanciada + totalDepreciacaoCalculated;
     financiadaTotalElement.text(formatCurrency(financiadaCalcTotal));
