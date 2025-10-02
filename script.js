@@ -56,6 +56,50 @@ let assinaturaTotalElement;
 let anbimaData = {};
 let catalogData = {};
 
+// Taxa de depreciação anual
+let DEPRECIACAO_ANUAL_RATE_DEFAULT = 0.15;
+const DEPRECIACAO_ANUAL_RATE_LONGER_PERIOD = 0.1;
+
+async function fetchApiData() {
+    const apiUrl =
+        "https://assinaroucomprar.listradigital.com.br/api/calculadora/catalog?period=12&franchise=1000";
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        anbimaData = data.anbima;
+        console.log("Dados da ANBIMA carregados.");
+    } catch (error) {
+        console.error("Erro ao carregar dados da API:", error);
+    }
+}
+
+async function fetchFipePrice(fipeCode, year) {
+    const fipeApiUrl = `https://fipe.parallelum.com.br/api/v2/cars/${fipeCode}/years/${year}/history`;
+
+    // Obter o token da variável de configuração global
+    const fipeToken = window.config ? window.config["fipe-token"] : null;
+    const headers = {};
+    if (fipeToken) {
+        headers["X-Subscription-Token"] = fipeToken;
+    }
+
+    try {
+        const response = await fetch(fipeApiUrl, { headers });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("Dados da FIPE carregados:", data);
+        return data.priceHistory;
+    } catch (error) {
+        console.error("Erro ao buscar dados da FIPE:", error);
+        return [];
+    }
+}
+
 function populateModelSelectFromLocalData() {
     if (modeloElement && window.carros && window.carros.length > 0) {
         $(modeloElement).empty();
@@ -114,29 +158,28 @@ function createJurosCurveTable() {
     const beta4 = anbimaData.beta4;
     const lambda1 = anbimaData.lambda1;
     const lambda2 = anbimaData.lambda2;
-    const custoCorretagemMensal = 0.000416;
+    const custoCorretagemMensal = ((1+((window.config["custo-corretagem-anual"] * 1)/100))**(1/12))-1;
 
     for (let month = 1; month <= 36; month++) {
         const periodYears = month / 12;
         let yieldAnnual = 0;
-        if (periodYears > 0) {
-            const term1 = (1 - Math.exp(-lambda1 * periodYears)) / (lambda1 * periodYears);
-            const term2 = term1 - Math.exp(-lambda1 * periodYears);
-            const term3 = (1 - Math.exp(-lambda2 * periodYears)) / (lambda2 * periodYears);
-            const term4 = term3 - Math.exp(-lambda2 * periodYears);
-            yieldAnnual = beta1 + beta2 * term1 + beta3 * term2 + beta4 * term4;
-        } else {
-            yieldAnnual = beta1 + beta2 + beta3 + beta4;
-        }
+
+        const term1 = (beta2 * (1-Math.exp(-lambda1*periodYears))/(lambda1*periodYears));
+        const term2 = (beta3 * (((1 - Math.exp(-lambda1*periodYears)) / (lambda1*periodYears)) - Math.exp(-lambda1*periodYears)));
+        const term3 = (beta4 * (((1 - Math.exp(-lambda2*periodYears)) / (lambda2*periodYears)) - Math.exp(-lambda2*periodYears)));
+        yieldAnnual = beta1 + term1 + term2 + term3;
+
+        //console.log(beta1, term1, term2, term3);
+
         const yieldMonthly = Math.pow(1 + yieldAnnual, 1/12) - 1;
         const taxaBrutaAoPeriodo = Math.pow(1 + yieldMonthly, month) - 1;
         const irAliquot = getIRAliquot(month);
         const taxaLiquidaAoPeriodo = (1 - irAliquot) * (taxaBrutaAoPeriodo - custoCorretagemMensal);
         jurosCurve.push({
             "Mês": month,
-            "Taxa Bruta ao ano": `${(yieldAnnual * 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}%`,
-            "Taxa Bruta ao período": `${(taxaBrutaAoPeriodo * 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}%`,
-            "Taxa Líquida ao período": `${(taxaLiquidaAoPeriodo * 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}%`
+            "Taxa Bruta ao ano": `${(yieldAnnual * 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`,
+            "Taxa Bruta ao período": `${(taxaBrutaAoPeriodo * 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`,
+            "Taxa Líquida ao período": `${(taxaLiquidaAoPeriodo * 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`
         });
     }
     return jurosCurve;
@@ -298,7 +341,7 @@ $(document).ready(function() {
 
     anbimaData = window.anbima || {};
     populateModelSelectFromLocalData();
-    createJurosCurveTable();
+    console.table(createJurosCurveTable());
     applyDefaultConfig();
     setupInputFormatting();
 
@@ -403,8 +446,9 @@ function calculateOpportunityCost(scenarioType, principalValue, period, anbimaDa
         console.warn('Dados insuficientes para calcular Custo de Oportunidade.');
         return 0;
     }
-    const { manutencao, emplacamentoValue, parcelaMensal, parcelas, usoMensal } = allCalculatedValues;
-    console.group(`Custo de Oportunidade - Cenário: ${scenarioType.toUpperCase()}`);
+    const { manutencao, emplacamentoValue, parcelaMensal, parcelas, usoMensal, jurosTotal } = allCalculatedValues;
+//     console.group(`Custo de Oportunidade - Cenário: ${scenarioType.toUpperCase()}`);
+    let tabelaInformacoesOportunidadeCusto = [];
     for (let month = 1; month <= period; month++) {
         let cashOutflowThisMonth = 0;
         const remainingPeriod = period - (month - 1);
@@ -435,24 +479,27 @@ function calculateOpportunityCost(scenarioType, principalValue, period, anbimaDa
             }
             cashOutflowThisMonth += manutencao; 
             cashOutflowThisMonth += annualFinancialDetails[currentYearIndex].annualSeguro/12;
+            cashOutflowThisMonth += parcelaMensal;
+            // cashOutflowThisMonth += jurosTotal/period;
+            // console.log(parcelaMensal, manutencao);
             if (firstMonthOfYear && annualFinancialDetails[currentYearIndex]) {
                 cashOutflowThisMonth += annualFinancialDetails[currentYearIndex].annualIpva;
                 cashOutflowThisMonth += annualFinancialDetails[currentYearIndex].annualLicenciamento;
-            }
-            if (month <= parcelasElement.value) {
-                cashOutflowThisMonth += parcelaMensal;
             }
         } else if (scenarioType === 'assinatura') {
             cashOutflowThisMonth += parcelas;
         }
         const monthlyOpportunityCost = cashOutflowThisMonth * remainingPeriodLiquidRate;
         totalOpportunityCost += monthlyOpportunityCost;
-        console.log(`Mês ${month}:`);
-        console.log(`  Saída de Caixa (Fluxo): ${formatCurrency(cashOutflowThisMonth)}`);
-        console.log(`  Taxa Líquida ao Período Restante (${remainingPeriod} meses): ${(remainingPeriodLiquidRate * 100).toFixed(4).replace('.', ',')}%`);
-        console.log(`  Custo de Oportunidade Mensal: ${formatCurrency(monthlyOpportunityCost)}`);
+
+        tabelaInformacoesOportunidadeCusto.push({"Mês": month,
+        "Saída de Caixa (Fluxo)": `${formatCurrency(cashOutflowThisMonth)}`,
+        "Taxa Líquida ao Período Restante": `${(remainingPeriodLiquidRate * 100).toFixed(2).replace('.', ',')}%`,
+        "Custo de Oportunidade Mensal": `${formatCurrency(monthlyOpportunityCost)}`});
     }
-    console.groupEnd();
+//     console.groupEnd();
+    console.log("CENARIO: ", scenarioType);
+    console.table(tabelaInformacoesOportunidadeCusto);
     return totalOpportunityCost;
 }
 
@@ -737,7 +784,8 @@ function onFormChange(itsModeloChange = null){
         emplacamentoValue: emplacamentoValue,
         parcelaMensal: parcelaMensal,
         parcelas: parcelas,
-        usoMensal: usoMensal
+        usoMensal: usoMensal,
+        jurosTotal: jurosTotal
     };
 
     const custoOportunidadeFinanciada = calculateOpportunityCost('financiada', entradaTotal, periodo, anbimaData, allCalculatedValuesForOpportunityCost, annualFinancialDetails);
