@@ -205,7 +205,7 @@ $(document).ready(function() {
     const totalDetalhado = $('#total-detalhado');
     const totalFixed = $('#total-fixed');
 
-    const fixedButton = $('#fixed-button');
+    const fixedButton = $('#fixed-div');
     const banner = $('#banner');
     const calculator = $('#calculator');
 
@@ -220,7 +220,7 @@ $(document).ready(function() {
                 totalFixed.removeClass('opacity-0 pointer-events-none');
             }
 
-            if($(window).scrollTop() >= (banner.offset().top + banner.outerHeight(true)) && $(window).scrollTop() >= (calculator.offset().top + calculator.outerHeight(true))){
+            if($(window).scrollTop() >= (banner.offset().top + banner.outerHeight(true)) && $(window).scrollTop() >= (calculator.offset().top + calculator.outerHeight(true)) && windowScrollBottom >= ($(window).height() - 50)){
                 fixedButton.removeClass('op-0');
             }else{
                 fixedButton.addClass('op-0');
