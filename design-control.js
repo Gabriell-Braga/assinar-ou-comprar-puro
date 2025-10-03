@@ -221,7 +221,7 @@ $(document).ready(function() {
             }
 
             console.log(windowScrollBottom, ($(document).height() - 50));
-            if($(window).scrollTop() >= (banner.offset().top + banner.outerHeight(true)) && $(window).scrollTop() >= (calculator.offset().top + calculator.outerHeight(true)) && windowScrollBottom <= ($(document).height() - 50)){
+            if($(window).scrollTop() >= (banner.offset().top + banner.outerHeight(true)) && $(window).scrollTop() >= (calculator.offset().top + calculator.outerHeight(true)) && windowScrollBottom <= ($(document).height() - 200)){
                 fixedButton.removeClass('op-0');
             }else{
                 fixedButton.addClass('op-0');
