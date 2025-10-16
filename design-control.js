@@ -2,18 +2,18 @@ $(document).ready(function() {
     $('#compare-button').on('click', function() {
         window.scrollTo(0, 0);
         $('#banner').addClass('op-0 abs h-0');
-        $('#calculator').removeClass('op-0 abs h-0');
+        $('#calculator').removeClass('op-0 abs !w-0');
     });
 
     $('#fixed-button').on('click', function() {
         window.scrollTo(0, 0);
         $('#banner').addClass('op-0 abs h-0');
-        $('#calculator').removeClass('op-0 abs h-0');
+        $('#calculator').removeClass('op-0 abs !w-0');
     });
 
     $('#back-banner').on('click', function() {
         window.scrollTo(0, 0);
-        $('#calculator').addClass('op-0 abs h-0');
+        $('#calculator').addClass('op-0 abs !w-0');
         $('#banner').removeClass('op-0 abs h-0');
     });
 
@@ -220,7 +220,8 @@ $(document).ready(function() {
                 totalFixed.removeClass('opacity-0 pointer-events-none');
             }
 
-            if($(window).scrollTop() >= (banner.offset().top + banner.outerHeight(true)) && $(window).scrollTop() >= (calculator.offset().top + calculator.outerHeight(true)) && windowScrollBottom >= ($(window).height() - 50)){
+            console.log(windowScrollBottom, ($(document).height() - 50));
+            if($(window).scrollTop() >= (banner.offset().top + banner.outerHeight(true)) && $(window).scrollTop() >= (calculator.offset().top + calculator.outerHeight(true)) && windowScrollBottom <= ($(document).height() - 200)){
                 fixedButton.removeClass('op-0');
             }else{
                 fixedButton.addClass('op-0');
