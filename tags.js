@@ -147,7 +147,7 @@ $(document).ready(function(){
             porcentagem: $('#entrada').val().replace('%', ''),
             ecommerce: {
                 currency: "BRL",
-                value: $('[data-total="assinatura_1_12"]').first().text(),
+                value: $('[data-total="assinatura_1_12"]').first().text().replace('R$ ', '').replace('.', '').replace(',', '.'),
                     items: [{
                     item_name: selectedCar['modelo-do-veiculo'],
                     item_brand: selectedCar.marca,
