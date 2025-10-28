@@ -855,7 +855,7 @@ function onFormChange(itsModeloChange = null){
 
         financiadaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px]"></i><span class="font-semibold">Melhor opção</span>`);
         vistaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(vistaCalcTotal-financiadaCalcTotal)} (+${(100-(financiadaCalcTotal/vistaCalcTotal*100)).toFixed(0)}%)`);
-        assinaturaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(assinaturaDif-financiadaCalcTotal)} (+${(100-(financiadaCalcTotal/assinaturaTotal*100)).toFixed(0)}%)`);
+        assinaturaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(assinaturaDif-financiadaCalcTotal)} (+${(100-(financiadaCalcTotal/assinaturaDif*100)).toFixed(0)}%)`);
     }else if(vistaDif < 0 && vistaDif < financiadaDif){
         vistaDiferencaElement.css('color', '#4DCB7B').css('background-color', '#EAF9EF');
         assinaturaDiferencaElement.css('color', '#FF5A60').css('background-color', '#FFF2F2');
@@ -863,15 +863,15 @@ function onFormChange(itsModeloChange = null){
 
         vistaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px]"></i><span class="font-semibold">Melhor opção</span>`);
         financiadaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(financiadaCalcTotal-vistaCalcTotal)} (+${(100-(vistaCalcTotal/financiadaCalcTotal*100)).toFixed(0)}%)`);
-        assinaturaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(assinaturaDif-vistaCalcTotal)} (+${(100-(vistaCalcTotal/assinaturaTotal*100)).toFixed(0)}%)`);
+        assinaturaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(assinaturaDif-vistaCalcTotal)} (+${(100-(vistaCalcTotal/assinaturaDif*100)).toFixed(0)}%)`);
     }else{
         assinaturaDiferencaElement.css('color', '#4DCB7B').css('background-color', '#EAF9EF');
         vistaDiferencaElement.css('color', '#FF5A60').css('background-color', '#FFF2F2');
         financiadaDiferencaElement.css('color', '#FF5A60').css('background-color', '#FFF2F2');
 
         assinaturaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px]"></i><span class="font-semibold">Melhor opção</span>`);
-        financiadaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(financiadaDif)} (+${(100-(assinaturaTotal/financiadaCalcTotal*100)).toFixed(0)}%)`);
-        vistaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(vistaDif)} (+${(100-(assinaturaTotal/vistaCalcTotal*100)).toFixed(0)}%)`);
+        financiadaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(financiadaDif)} (+${(100-(assinaturaDif/financiadaCalcTotal*100)).toFixed(0)}%)`);
+        vistaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(vistaDif)} (+${(100-(assinaturaDif/vistaCalcTotal*100)).toFixed(0)}%)`);
     }
 
     if (anbimaData && Object.keys(anbimaData).length > 0) {
