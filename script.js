@@ -70,7 +70,7 @@ async function fetchApiData() {
         }
         const data = await response.json();
         anbimaData = data.anbima;
-        console.log("Dados da ANBIMA carregados.");
+        // console.log("Dados da ANBIMA carregados.");
     } catch (error) {
         console.error("Erro ao carregar dados da API:", error);
     }
@@ -92,7 +92,7 @@ async function fetchFipePrice(fipeCode, year) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log("Dados da FIPE carregados:", data);
+        // console.log("Dados da FIPE carregados:", data);
         return data.priceHistory;
     } catch (error) {
         console.error("Erro ao buscar dados da FIPE:", error);
@@ -115,7 +115,7 @@ function populateModelSelectFromLocalData() {
         allSelects.forEach(select => {
             createCustomSelect(select);
         });
-        console.log('Select de modelos populado a partir de dados locais.');
+//         console.log('Select de modelos populado a partir de dados locais.');
     } else {
         console.warn('Elemento modelo ou dados de carros locais não disponíveis para popular o select.');
     }
@@ -277,7 +277,7 @@ function readUrlParameters() {
 }
 
 $(document).ready(function() {
-    console.log('Script carregado com sucesso!');
+//     console.log('Script carregado com sucesso!');
 
     modeloElement = document.getElementById('modelo');
     periodoElement = document.getElementById('periodo');
@@ -327,6 +327,9 @@ $(document).ready(function() {
     financiadaTotalElement = $('[data-total="financiada"]');
     vistaTotalElement = $('[data-total="vista"]');
     assinaturaTotalElement = $('[data-total="assinatura"]');
+
+    ipvaPorcentagemElement = $('[data-total="ipva-porcentagem"]');
+    seguroPorcentagemElement = $('[data-total="seguro-porcentagem"]');
     
     $(modeloElement).on('change', onFormChange);
     $(periodoElement).on('change', onFormChange);
@@ -341,7 +344,7 @@ $(document).ready(function() {
 
     anbimaData = window.anbima || {};
     populateModelSelectFromLocalData();
-    console.table(createJurosCurveTable());
+    createJurosCurveTable();
     applyDefaultConfig();
     setupInputFormatting();
 
@@ -378,9 +381,11 @@ function applyDefaultConfig() {
         }
         if (config.ipva) {
             ipvaElement.value = config.ipva;
+            ipvaPorcentagemElement.text(`${formatPercentage(config["ipva-porcentagem"] || 4)}`);
         }
         if (config.seguro) {
             seguroElement.value = config.seguro;
+            seguroPorcentagemElement.text(`${formatPercentage(config["seguro-porcentagem"] || 6.6)}`);
         }
         setupInputFormatting();
         onFormChange();
@@ -498,8 +503,8 @@ function calculateOpportunityCost(scenarioType, principalValue, period, anbimaDa
         "Custo de Oportunidade Mensal": `${formatCurrency(monthlyOpportunityCost)}`});
     }
 //     console.groupEnd();
-    console.log("CENARIO: ", scenarioType);
-    console.table(tabelaInformacoesOportunidadeCusto);
+    // console.log("CENARIO: ", scenarioType);
+    // console.table(tabelaInformacoesOportunidadeCusto);
     return totalOpportunityCost;
 }
 
@@ -640,19 +645,19 @@ function onFormChange(itsModeloChange = null){
         let currentCarValueAfterDepreciation = preco0km; 
 
         for (let year = 1; year <= numFullYearsInPeriod; year++) {
-            console.log(`Ano ${year} (início): Valor do carro para depreciação = ${formatCurrency(currentCarValueAfterDepreciation)}`);
+//             console.log(`Ano ${year} (início): Valor do carro para depreciação = ${formatCurrency(currentCarValueAfterDepreciation)}`);
 
             const depreciationAmountThisYear = currentCarValueAfterDepreciation * (selectedCar['depreciacao-'+(year*12)] / 100);
             currentCarValueAfterDepreciation -= depreciationAmountThisYear; // Atualiza o valor do carro para o próximo cálculo
 
-            console.log(`Ano ${year} (12 meses): Taxa de depreciação anual = ${formatPercentage(selectedCar['depreciacao-'+(year*12)])}, Valor depreciado neste ano = ${formatCurrency(depreciationAmountThisYear)}`);
+//             console.log(`Ano ${year} (12 meses): Taxa de depreciação anual = ${formatPercentage(selectedCar['depreciacao-'+(year*12)])}, Valor depreciado neste ano = ${formatCurrency(depreciationAmountThisYear)}`);
         }
 
         if (remainingMonths > 0) {
             let annualDepreciationRateForPartialYear = 0;
             const currentYearNum = numFullYearsInPeriod + 1;
 
-            console.log(`Ano ${currentYearNum} (início - parcial): Valor do carro para depreciação = ${formatCurrency(currentCarValueAfterDepreciation)}`);
+//             console.log(`Ano ${currentYearNum} (início - parcial): Valor do carro para depreciação = ${formatCurrency(currentCarValueAfterDepreciation)}`);
 
             if (currentYearNum === 1) {
                 annualDepreciationRateForPartialYear = (selectedCar['depreciacao-12'] || 0);
@@ -678,7 +683,7 @@ function onFormChange(itsModeloChange = null){
 
             const depreciationAmountPartialYear = currentCarValueAfterDepreciation * (annualDepreciationRateForPartialYear / 100) * (remainingMonths / 12);
             currentCarValueAfterDepreciation -= depreciationAmountPartialYear; // Atualiza para o valor final
-            console.log(`Ano ${currentYearNum} (${remainingMonths} meses): Taxa de depreciação anual = ${formatPercentage(annualDepreciationRateForPartialYear)}, Valor depreciado neste período = ${formatCurrency(depreciationAmountPartialYear)}`);
+//             console.log(`Ano ${currentYearNum} (${remainingMonths} meses): Taxa de depreciação anual = ${formatPercentage(annualDepreciationRateForPartialYear)}, Valor depreciado neste período = ${formatCurrency(depreciationAmountPartialYear)}`);
         }
         console.groupEnd();
 
@@ -697,8 +702,8 @@ function onFormChange(itsModeloChange = null){
     const fullYearsInPeriod = Math.floor(periodo / 12);
     const remainingMonthsInPartialYear = periodo % 12;
 
-    console.group('Cálculo de Seguro, IPVA e Licenciamento por Período');
-    console.log(`Valor inicial do carro para cálculo de despesas anuais: ${formatCurrency(preco0km)}`);
+//     console.group('Cálculo de Seguro, IPVA e Licenciamento por Período');
+//     console.log(`Valor inicial do carro para cálculo de despesas anuais: ${formatCurrency(preco0km)}`);
 
     let valueForThisYear = preco0km;
     for (let year = 0; year < fullYearsInPeriod; year++) {
@@ -713,7 +718,7 @@ function onFormChange(itsModeloChange = null){
         
         currentCarValueForAnnualCalc = valueForThisYear;
 
-        console.log("VALOR ANO "+ year+1 + " " + currentCarValueForAnnualCalc);
+//         console.log("VALOR ANO "+ year+1 + " " + currentCarValueForAnnualCalc);
 
         const annualSeguroThisYear = seguroPercentage * currentCarValueForAnnualCalc / 100;
         const annualIpvaThisYear = ipvaPercentage * currentCarValueForAnnualCalc / 100;
@@ -729,7 +734,7 @@ function onFormChange(itsModeloChange = null){
             annualIpva: annualIpvaThisYear,
             annualLicenciamento: annualLicenciamentoThisYear,
         });
-        console.log(`Ano ${year + 1}: Valor do carro para cálculo de despesas = ${formatCurrency(currentCarValueForAnnualCalc)}`);
+//         console.log(`Ano ${year + 1}: Valor do carro para cálculo de despesas = ${formatCurrency(currentCarValueForAnnualCalc)}`);
     }
 
     if (remainingMonthsInPartialYear > 0) {
@@ -748,11 +753,11 @@ function onFormChange(itsModeloChange = null){
             annualIpva: annualIpvaThisPartialYear,
             annualLicenciamento: annualLicenciamentoThisPartialYear,
         });
-        console.log(`Fim do Período (após ${periodo} meses): Valor do carro para cálculo de despesas = ${formatCurrency(currentCarValueForAnnualCalc)}`);
+//         console.log(`Fim do Período (após ${periodo} meses): Valor do carro para cálculo de despesas = ${formatCurrency(currentCarValueForAnnualCalc)}`);
     } else if (fullYearsInPeriod === 0 && periodo === 0) {
-        console.log(`Fim do Período (após ${periodo} meses): Valor do carro para cálculo de despesas = ${formatCurrency(currentCarValueForAnnualCalc)}`);
+//         console.log(`Fim do Período (após ${periodo} meses): Valor do carro para cálculo de despesas = ${formatCurrency(currentCarValueForAnnualCalc)}`);
     }
-    console.groupEnd();
+//     console.groupEnd();
 
     seguroTotal = totalSeguroPeriodo;
     ipvaTotal = totalIpvaPeriodo;
@@ -833,7 +838,7 @@ function onFormChange(itsModeloChange = null){
     const financiadaCalcTotal = seguroTotal + ipvaTotal + manutencaoTotal + totalLicenciamentoPeriodo + emplacamentoValue + jurosTotal + custoOportunidadeFinanciada + totalDepreciacaoCalculated;
     financiadaTotalElement.text(formatCurrency(financiadaCalcTotal));
 
-    console.log(seguroTotal, ipvaTotal, manutencaoTotal, totalLicenciamentoPeriodo, emplacamentoValue, jurosTotal, custoOportunidadeFinanciada, totalDepreciacaoCalculated);
+//     console.log(seguroTotal, ipvaTotal, manutencaoTotal, totalLicenciamentoPeriodo, emplacamentoValue, jurosTotal, custoOportunidadeFinanciada, totalDepreciacaoCalculated);
 
     const vistaCalcTotal = seguroTotal + ipvaTotal + manutencaoTotal + totalLicenciamentoPeriodo + emplacamentoValue*1 + custoOportunidadeVista*1 + totalDepreciacaoCalculated;
     vistaTotalElement.text(formatCurrency(vistaCalcTotal));
@@ -849,51 +854,51 @@ function onFormChange(itsModeloChange = null){
         vistaDiferencaElement.css('color', '#FF5A60').css('background-color', '#FFF2F2');
 
         financiadaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px]"></i><span class="font-semibold">Melhor opção</span>`);
-        vistaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(vistaCalcTotal-financiadaCalcTotal)}`);
-        assinaturaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(assinaturaDif-financiadaCalcTotal)}`);
+        vistaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(vistaCalcTotal-financiadaCalcTotal)} (+${(100-(financiadaCalcTotal/vistaCalcTotal*100)).toFixed(0)}%)`);
+        assinaturaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(assinaturaDif-financiadaCalcTotal)} (+${(100-(financiadaCalcTotal/assinaturaTotal*100)).toFixed(0)}%)`);
     }else if(vistaDif < 0 && vistaDif < financiadaDif){
         vistaDiferencaElement.css('color', '#4DCB7B').css('background-color', '#EAF9EF');
         assinaturaDiferencaElement.css('color', '#FF5A60').css('background-color', '#FFF2F2');
         financiadaDiferencaElement.css('color', '#FF5A60').css('background-color', '#FFF2F2');
 
         vistaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px]"></i><span class="font-semibold">Melhor opção</span>`);
-        financiadaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(financiadaCalcTotal-vistaCalcTotal)}`);
-        assinaturaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(assinaturaDif-vistaCalcTotal)}`);
+        financiadaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(financiadaCalcTotal-vistaCalcTotal)} (+${(100-(vistaCalcTotal/financiadaCalcTotal*100)).toFixed(0)}%)`);
+        assinaturaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(assinaturaDif-vistaCalcTotal)} (+${(100-(vistaCalcTotal/assinaturaTotal*100)).toFixed(0)}%)`);
     }else{
         assinaturaDiferencaElement.css('color', '#4DCB7B').css('background-color', '#EAF9EF');
         vistaDiferencaElement.css('color', '#FF5A60').css('background-color', '#FFF2F2');
         financiadaDiferencaElement.css('color', '#FF5A60').css('background-color', '#FFF2F2');
 
         assinaturaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px]"></i><span class="font-semibold">Melhor opção</span>`);
-        financiadaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(financiadaDif)}`);
-        vistaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(vistaDif)}`);
+        financiadaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(financiadaDif)} (+${(100-(assinaturaTotal/financiadaCalcTotal*100)).toFixed(0)}%)`);
+        vistaDiferencaElement.html(`<i class="fal fa-thumbs-up text-[14px] rotate-180"></i>+${formatCurrency(vistaDif)} (+${(100-(assinaturaTotal/vistaCalcTotal*100)).toFixed(0)}%)`);
     }
 
     if (anbimaData && Object.keys(anbimaData).length > 0) {
         const formattedAnbima = `beta1: ${anbimaData.beta1.toFixed(4).replace('.', ',')} | beta2: ${anbimaData.beta2.toFixed(4).replace('.', ',')} | beta3: ${anbimaData.beta3.toFixed(4).replace('.', ',')} | beta4: ${anbimaData.beta4.toFixed(4).replace('.', ',')} | lambda1: ${anbimaData.lambda1.toFixed(4).replace('.', ',')} | lambda2: ${anbimaData.lambda2.toFixed(4).replace('.', ',')}`;
         baseCalculoElement.text(formattedAnbima);
     }
-    console.log('--- Totais Atuais (para depuração) ---');
-    console.log(`Preço (0km): ${preco0km}`);
-    console.log(`Período: ${periodo}`);
-    console.log(`Seguro Total (Período): ${seguroTotal}`);
-    console.log(`IPVA Total (Período): ${ipvaTotal}`);
-    console.log(`Manutenção Total (Período - CUMULATIVA): ${manutencaoTotal}`);
-    console.log(`Depreciação Total Calculada: ${totalDepreciacaoCalculated}`);
-    console.log(`Preço Final Após Depreciação: ${depreciacaoPrecoFinal}`);
-    console.log(`Entrada Total: ${entradaTotal}`);
-    console.log(`Taxa A.M.: ${taxaAM}`);
-    console.log(`Valor Financiado: ${valorFinanciado}`);
-    console.log(`Parcela Mensal (com juros): ${parcelaMensal}`);
-    console.log(`Juros Total: ${jurosTotal}`);
-    console.log(`Licenciamento Total (Período): ${totalLicenciamentoPeriodo}`);
-    console.log(`Emplacamento: ${emplacamentoValue}`);
-    console.log(`Custo de Oportunidade Financiada: ${custoOportunidadeFinanciada}`);
-    console.log(`Custo de Oportunidade à Vista: ${custoOportunidadeVista}`);
-    console.log(`Custo Rentabilidade Assinatura: ${custoOportunidadeAssinatura}`);
-    console.log(`Financiada Total (Calculado): ${financiadaCalcTotal}`);
-    console.log(`Vista Total (Calculado): ${vistaCalcTotal}`);
-    console.log(`Assinatura Total (Calculado): ${assinaturaTotal + custoOportunidadeAssinatura}`);
-    console.log('Dados ANBIMA carregados:', anbimaData);
-    console.log('Dados do Catálogo carregados:', catalogData);
+//     console.log('--- Totais Atuais (para depuração) ---');
+//     console.log(`Preço (0km): ${preco0km}`);
+//     console.log(`Período: ${periodo}`);
+//     console.log(`Seguro Total (Período): ${seguroTotal}`);
+//     console.log(`IPVA Total (Período): ${ipvaTotal}`);
+//     console.log(`Manutenção Total (Período - CUMULATIVA): ${manutencaoTotal}`);
+//     console.log(`Depreciação Total Calculada: ${totalDepreciacaoCalculated}`);
+//     console.log(`Preço Final Após Depreciação: ${depreciacaoPrecoFinal}`);
+//     console.log(`Entrada Total: ${entradaTotal}`);
+//     console.log(`Taxa A.M.: ${taxaAM}`);
+//     console.log(`Valor Financiado: ${valorFinanciado}`);
+//     console.log(`Parcela Mensal (com juros): ${parcelaMensal}`);
+//     console.log(`Juros Total: ${jurosTotal}`);
+//     console.log(`Licenciamento Total (Período): ${totalLicenciamentoPeriodo}`);
+//     console.log(`Emplacamento: ${emplacamentoValue}`);
+//     console.log(`Custo de Oportunidade Financiada: ${custoOportunidadeFinanciada}`);
+//     console.log(`Custo de Oportunidade à Vista: ${custoOportunidadeVista}`);
+//     console.log(`Custo Rentabilidade Assinatura: ${custoOportunidadeAssinatura}`);
+//     console.log(`Financiada Total (Calculado): ${financiadaCalcTotal}`);
+//     console.log(`Vista Total (Calculado): ${vistaCalcTotal}`);
+//     console.log(`Assinatura Total (Calculado): ${assinaturaTotal + custoOportunidadeAssinatura}`);
+//     console.log('Dados ANBIMA carregados:', anbimaData);
+//     console.log('Dados do Catálogo carregados:', catalogData);
 }
